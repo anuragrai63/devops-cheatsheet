@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kubernetes Workloads: A Visual Cheat Sheet</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F3F4F6; /* Light gray background for contrast */
+        }
+        
+        /* Chart Container Styling - Mandatory Requirements */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px; /* Base height */
+            max-height: 400px;
+        }
+
+        /* Specific constraints for different screen sizes if needed, though max-width is handled by parent grid usually */
+        .chart-wrapper-constrained {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Timeline Connector Styling */
+        .timeline-line {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background-color: #E5E7EB;
+            transform: translateX(-50%);
+            z-index: 0;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #888; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555; 
+        }
+    </style>
+    <!-- 
+    Palette Name: Vibrant Tech
+    Colors: 
+    - Primary Blue: #2563EB
+    - Accent Cyan: #06B6D4
+    - Deep Purple: #7C3AED
+    - Success Green: #10B981
+    - Warning Amber: #F59E0B
+    - Danger Red: #EF4444
+    -->
+    
+    <!-- 
+    Analysis of Source Material:
+    The provided text is a Kubernetes Cheat Sheet. It covers technical concepts like Pods, Containers, Lifecycles, and Configurations.
+    The narrative flows from the atomic unit (Container) to the object (Pod) to the management (Workloads) and finally to advanced configs (QoS, Disruptions).
+    
+    Plan:
+    1. Intro: Hook the user with the complexity of K8s.
+    2. The Landscape: Scatter plot of features (Frequency vs Complexity).
+    3. Pod Composition: Donut chart showing Init vs Sidecar vs App.
+    4. Lifecycle: HTML-based vertical timeline of a Pod's life.
+    5. QoS Classes: Bar chart comparing reliability guarantees.
+    6. Workloads: Pie chart of controller types.
+    7. Advanced: Cards for Downward API, Runtime Class.
+    -->
+    
+    <!-- 
+    Chart Selection Justification:
+    1. Feature Landscape -> Scatter Plot -> Best for relating two variables (Usage vs Difficulty). (NO SVG)
+    2. Pod Composition -> Donut Chart -> Best for showing parts of a whole (Pod internals). (NO SVG)
+    3. Workload Types -> Pie Chart -> Comparison of categories. (NO SVG)
+    4. QoS Guarantees -> Bar Chart -> Comparing ordinal values (Reliability Score). (NO SVG)
+    -->
+    
+    <!-- Explicit Confirmation: NEITHER Mermaid JS NOR SVG were used anywhere in the output. -->
+</head>
+<body class="text-gray-800">
+
+    <!-- Header Section -->
+    <header class="bg-gradient-to-r from-blue-600 to-purple-700 text-white p-8 shadow-lg mb-8">
+        <div class="max-w-7xl mx-auto">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Kubernetes Workloads</h1>
+            <p class="text-xl opacity-90">A Visual Guide to Containers, Pods, and Lifecycle Management</p>
+            <div class="mt-6 flex flex-wrap gap-4">
+                <span class="bg-white/20 px-4 py-2 rounded-full text-sm font-semibold backdrop-blur-sm">📦 Pods & Containers</span>
+                <span class="bg-white/20 px-4 py-2 rounded-full text-sm font-semibold backdrop-blur-sm">🔄 Lifecycle Hooks</span>
+                <span class="bg-white/20 px-4 py-2 rounded-full text-sm font-semibold backdrop-blur-sm">🛡️ QoS Classes</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 pb-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8">
+
+        <!-- Introduction -->
+        <div class="lg:col-span-12 bg-white rounded-lg shadow-md p-8 border-l-8 border-blue-600">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">Navigating the Cluster</h2>
+            <p class="text-gray-600 text-lg leading-relaxed">
+                Kubernetes is more than just running containers. It involves managing a complex ecosystem of <strong>Pods</strong>, <strong>Lifecycles</strong>, and <strong>Configurations</strong>. 
+                This interactive guide visualizes the core concepts from the cheat sheet, helping you understand not just <em>how</em> to write the YAML, but <em>why</em> the architecture behaves the way it does.
+                From the atomic unit of the <strong>Pod</strong> to the sophisticated <strong>Quality of Service (QoS)</strong> classes, we break down the essential components.
+            </p>
+        </div>
+
+        <!-- Section 1: The Feature Landscape (Scatter Plot) -->
+        <div class="lg:col-span-8 bg-white rounded-lg shadow-md p-6">
+            <div class="mb-6 border-b pb-4">
+                <h3 class="text-xl font-bold text-gray-800 flex items-center gap-2">
+                    <span class="text-purple-600 text-2xl">📊</span> The K8s Feature Landscape
+                </h3>
+                <p class="text-sm text-gray-500 mt-2">
+                    Mapping cheat sheet topics by their <strong>Usage Frequency</strong> (how often you'll use them) versus their <strong>Configuration Complexity</strong>. 
+                    Master the high-frequency items first.
+                </p>
+            </div>
+            
+            <div class="chart-wrapper-constrained">
+                <div class="chart-container">
+                    <canvas id="landscapeChart"></canvas>
+                </div>
+            </div>
+            <div class="mt-4 text-sm text-gray-600 bg-blue-50 p-4 rounded-md">
+                <strong>Insight:</strong> <em>Pods</em> and <em>Deployments</em> are daily drivers. Advanced features like <em>RuntimeClass</em> and <em>User Namespaces</em> offer powerful security isolation but require deeper configuration.
+            </div>
+        </div>
+
+        <!-- Section 2: Core Definitions (Cards) -->
+        <div class="lg:col-span-4 flex flex-col gap-6">
+            <div class="bg-white rounded-lg shadow-md p-6 border-t-4 border-cyan-500">
+                <h3 class="text-lg font-bold text-gray-800 mb-2">📦 The Container</h3>
+                <p class="text-gray-600 mb-4">A runnable unit of software. Uses immutable <strong>Images</strong> to ensure consistency across environments.</p>
+                <div class="bg-gray-100 p-3 rounded text-xs font-mono text-blue-700">
+                    kubectl run my-pod --image=nginx:latest
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-md p-6 border-t-4 border-indigo-500">
+                <h3 class="text-lg font-bold text-gray-800 mb-2">🚀 The Workload</h3>
+                <p class="text-gray-600 mb-4">Controllers that manage Pods. Never run "naked" Pods; use <strong>Deployments</strong> or <strong>StatefulSets</strong> for availability.</p>
+                <div class="bg-gray-100 p-3 rounded text-xs font-mono text-purple-700">
+                    kubectl create deployment my-dep --replicas=3
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md p-6 border-t-4 border-amber-500">
+                <h3 class="text-lg font-bold text-gray-800 mb-2">🌍 Environment</h3>
+                <p class="text-gray-600 mb-4">Inject config via <strong>ConfigMaps</strong> or <strong>Secrets</strong>. Decouple code from configuration.</p>
+                <div class="bg-gray-100 p-3 rounded text-xs font-mono text-amber-700">
+                    envFrom: - configMapRef: name: my-config
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 3: Pod Anatomy (Donut Chart) -->
+        <div class="lg:col-span-6 bg-white rounded-lg shadow-md p-6">
+            <div class="mb-6 border-b pb-4">
+                <h3 class="text-xl font-bold text-gray-800 flex items-center gap-2">
+                    <span class="text-blue-600 text-2xl">🍩</span> Modern Pod Anatomy
+                </h3>
+                <p class="text-sm text-gray-500 mt-2">
+                    A Pod is rarely just one container anymore. It's a collection of cooperative processes.
+                    The <strong>Init Container</strong> runs to completion first. The <strong>Sidecar</strong> (now native in v1.29+) runs alongside the <strong>App Container</strong>.
+                </p>
+            </div>
+            
+            <div class="chart-wrapper-constrained">
+                <div class="chart-container">
+                    <canvas id="podAnatomyChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
+                <div class="text-center p-2 bg-gray-50 rounded">
+                    <div class="text-xs text-gray-500 uppercase font-bold">First</div>
+                    <div class="font-semibold text-blue-600">Init Container</div>
+                    <div class="text-xs text-gray-400">Setup & Migration</div>
+                </div>
+                <div class="text-center p-2 bg-gray-50 rounded">
+                    <div class="text-xs text-gray-500 uppercase font-bold">Parallel</div>
+                    <div class="font-semibold text-purple-600">Sidecar</div>
+                    <div class="text-xs text-gray-400">Logging & Mesh</div>
+                </div>
+                <div class="text-center p-2 bg-gray-50 rounded">
+                    <div class="text-xs text-gray-500 uppercase font-bold">Core</div>
+                    <div class="font-semibold text-cyan-600">App Container</div>
+                    <div class="text-xs text-gray-400">Business Logic</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 4: Lifecycle Flow (HTML Diagram) -->
+        <div class="lg:col-span-6 bg-white rounded-lg shadow-md p-6 relative overflow-hidden">
+            <div class="mb-6 border-b pb-4">
+                <h3 class="text-xl font-bold text-gray-800 flex items-center gap-2">
+                    <span class="text-green-600 text-2xl">⏳</span> The Pod Lifecycle
+                </h3>
+                <p class="text-sm text-gray-500 mt-2">
+                    A Pod goes through distinct phases. Lifecycle hooks allow you to intervene during startup and shutdown.
+                </p>
+            </div>
+
+            <!-- Vertical Timeline Visualization (NO SVG) -->
+            <div class="relative py-4 pl-8 md:pl-16">
+                <!-- Vertical Line -->
+                <div class="absolute left-4 md:left-10 top-0 bottom-0 w-1 bg-gray-200"></div>
+
+                <!-- Step 1: Pending -->
+                <div class="relative mb-8">
+                    <div class="absolute -left-4 md:-left-10 w-8 h-8 rounded-full bg-gray-300 border-4 border-white shadow flex items-center justify-center font-bold text-white text-sm">1</div>
+                    <div class="bg-gray-50 p-4 rounded-r-lg border-l-4 border-gray-400 shadow-sm">
+                        <h4 class="font-bold text-gray-700">Pending Phase</h4>
+                        <p class="text-xs text-gray-500">Scheduler accepts Pod. Image download happens here.</p>
+                    </div>
+                </div>
+
+                <!-- Step 2: PostStart Hook -->
+                <div class="relative mb-8">
+                    <div class="absolute -left-4 md:-left-10 w-8 h-8 rounded-full bg-blue-500 border-4 border-white shadow flex items-center justify-center font-bold text-white text-sm">2</div>
+                    <div class="bg-blue-50 p-4 rounded-r-lg border-l-4 border-blue-500 shadow-sm">
+                        <h4 class="font-bold text-blue-800">Hook: postStart</h4>
+                        <p class="text-xs text-blue-600">Executes immediately after container creation. Does not wait for app to be ready.</p>
+                        <code class="block mt-2 text-xs bg-white p-1 rounded border border-blue-100">exec: command: ["/bin/sh", "-c", "echo Warmup"]</code>
+                    </div>
+                </div>
+
+                <!-- Step 3: Running -->
+                <div class="relative mb-8">
+                    <div class="absolute -left-4 md:-left-10 w-8 h-8 rounded-full bg-green-500 border-4 border-white shadow flex items-center justify-center font-bold text-white text-sm">3</div>
+                    <div class="bg-green-50 p-4 rounded-r-lg border-l-4 border-green-500 shadow-sm">
+                        <h4 class="font-bold text-green-800">Running Phase</h4>
+                        <p class="text-xs text-green-600">Bound to node. At least one container is running. The main workload happens here.</p>
+                    </div>
+                </div>
+
+                <!-- Step 4: PreStop Hook -->
+                <div class="relative mb-8">
+                    <div class="absolute -left-4 md:-left-10 w-8 h-8 rounded-full bg-amber-500 border-4 border-white shadow flex items-center justify-center font-bold text-white text-sm">4</div>
+                    <div class="bg-amber-50 p-4 rounded-r-lg border-l-4 border-amber-500 shadow-sm">
+                        <h4 class="font-bold text-amber-800">Hook: preStop</h4>
+                        <p class="text-xs text-amber-600">Called <strong>before</strong> container is terminated. Critical for graceful shutdowns.</p>
+                        <code class="block mt-2 text-xs bg-white p-1 rounded border border-amber-100">exec: command: ["nginx", "-s", "quit"]</code>
+                    </div>
+                </div>
+
+                <!-- Step 5: Termination -->
+                <div class="relative">
+                    <div class="absolute -left-4 md:-left-10 w-8 h-8 rounded-full bg-gray-800 border-4 border-white shadow flex items-center justify-center font-bold text-white text-sm">5</div>
+                    <div class="bg-gray-100 p-4 rounded-r-lg border-l-4 border-gray-600 shadow-sm">
+                        <h4 class="font-bold text-gray-800">Succeeded / Failed</h4>
+                        <p class="text-xs text-gray-500">All containers terminated. RestartPolicy determines if it restarts.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 5: QoS Guarantees (Bar Chart) -->
+        <div class="lg:col-span-8 bg-white rounded-lg shadow-md p-6">
+            <div class="mb-6 border-b pb-4">
+                <h3 class="text-xl font-bold text-gray-800 flex items-center gap-2">
+                    <span class="text-red-500 text-2xl">🛡️</span> Quality of Service (QoS) Classes
+                </h3>
+                <p class="text-sm text-gray-500 mt-2">
+                    Kubernetes assigns a QoS class based on your resource requests and limits. 
+                    This chart visualizes the "Protection Level" (how likely the pod is to survive resource starvation) versus "Cost/Rigidity" (how strictly you must define resources).
+                </p>
+            </div>
+            
+            <div class="chart-wrapper-constrained">
+                <div class="chart-container">
+                    <canvas id="qosChart"></canvas>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6 text-sm">
+                <div class="p-3 border rounded bg-green-50 border-green-200">
+                    <div class="font-bold text-green-700">Guaranteed</div>
+                    <p class="text-xs text-gray-600 mt-1">Requests = Limits for ALL containers. Highest survival priority.</p>
+                </div>
+                <div class="p-3 border rounded bg-yellow-50 border-yellow-200">
+                    <div class="font-bold text-yellow-700">Burstable</div>
+                    <p class="text-xs text-gray-600 mt-1">Requests < Limits. Good balance of safety and flexibility.</p>
+                </div>
+                <div class="p-3 border rounded bg-red-50 border-red-200">
+                    <div class="font-bold text-red-700">BestEffort</div>
+                    <p class="text-xs text-gray-600 mt-1">No requests/limits. First to be killed if Node is full.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 6: Advanced Configs (Grid) -->
+        <div class="lg:col-span-4 grid grid-cols-1 gap-6">
+             <div class="bg-white rounded-lg shadow-md p-6 border-t-4 border-pink-500">
+                <h3 class="text-lg font-bold text-gray-800 mb-2">📉 Pod Disruption Budget (PDB)</h3>
+                <p class="text-gray-600 text-sm mb-3">Limits how many pods can be down simultaneously during voluntary disruptions (like upgrades).</p>
+                <div class="flex justify-between items-center mt-2">
+                    <span class="text-xs font-bold bg-pink-100 text-pink-700 px-2 py-1 rounded">Availability</span>
+                    <span class="text-xs font-mono text-gray-500">minAvailable: 2</span>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md p-6 border-t-4 border-teal-500">
+                <h3 class="text-lg font-bold text-gray-800 mb-2">📥 Downward API</h3>
+                <p class="text-gray-600 text-sm mb-3">Expose Pod metadata (IP, Name, Namespace) to the container itself as Environment Variables.</p>
+                <div class="flex justify-between items-center mt-2">
+                    <span class="text-xs font-bold bg-teal-100 text-teal-700 px-2 py-1 rounded">Introspection</span>
+                    <span class="text-xs font-mono text-gray-500">status.podIP</span>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md p-6 border-t-4 border-gray-700">
+                <h3 class="text-lg font-bold text-gray-800 mb-2">🏗️ Runtime Class</h3>
+                <p class="text-gray-600 text-sm mb-3">Switch underlying container runtimes. Run untrusted code in sandboxes like <strong>gVisor</strong> or <strong>Kata</strong>.</p>
+                <div class="flex justify-between items-center mt-2">
+                    <span class="text-xs font-bold bg-gray-200 text-gray-700 px-2 py-1 rounded">Security</span>
+                    <span class="text-xs font-mono text-gray-500">handler: runsc</span>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white p-8 mt-8">
+        <div class="max-w-7xl mx-auto text-center">
+            <p class="opacity-70 text-sm">Generated based on Kubernetes Cheat Sheet source material. Visualization designed for clarity and rapid reference.</p>
+        </div>
+    </footer>
+
+    <script>
+        // --- HELPER FUNCTION: Label Wrapping ---
+        // Splits long strings into arrays of shorter strings for Chart.js
+        function wrapLabel(label, maxLength = 16) {
+            if (label.length <= maxLength) return label;
+            const words = label.split(' ');
+            const lines = [];
+            let currentLine = words[0];
+
+            for (let i = 1; i < words.length; i++) {
+                if ((currentLine + " " + words[i]).length <= maxLength) {
+                    currentLine += " " + words[i];
+                } else {
+                    lines.push(currentLine);
+                    currentLine = words[i];
+                }
+            }
+            lines.push(currentLine);
+            return lines;
+        }
+
+        // --- GLOBAL CHART DEFAULTS ---
+        Chart.defaults.font.family = "'Inter', sans-serif";
+        Chart.defaults.color = '#4B5563';
+        Chart.defaults.scale.grid.color = '#E5E7EB';
+
+        // --- COMMON TOOLTIP CONFIGURATION ---
+        // This plugin configuration handles multi-line titles generated by wrapLabel
+        const commonTooltipConfig = {
+            callbacks: {
+                title: function(tooltipItems) {
+                    const item = tooltipItems[0];
+                    let label = item.chart.data.labels[item.dataIndex];
+                    if (Array.isArray(label)) {
+                        return label.join(' ');
+                    } else {
+                        return label;
+                    }
+                }
+            },
+            padding: 12,
+            cornerRadius: 8,
+            backgroundColor: 'rgba(17, 24, 39, 0.9)', // Tailwind Gray-900
+            titleFont: { size: 14, weight: 'bold' },
+            bodyFont: { size: 13 }
+        };
+
+        // --- CHART 1: LANDSCAPE (SCATTER) ---
+        const landscapeCtx = document.getElementById('landscapeChart').getContext('2d');
+        const landscapeLabels = ["Pods", "Deployments", "ConfigMaps", "Secrets", "Services", "PDB", "Sidecars", "InitContainers", "Downward API", "RuntimeClass", "UserNamespaces"];
+        
+        // Data approximation based on typical K8s learning curve
+        // X: Complexity (0-10), Y: Frequency of Use (0-10)
+        const landscapeData = [
+            { x: 2, y: 10, label: "Pods" },         // Easy, Used Always
+            { x: 3, y: 9, label: "Deployments" },   // Easy-ish, Used Always
+            { x: 2, y: 8, label: "ConfigMaps" },
+            { x: 4, y: 8, label: "Secrets" },
+            { x: 5, y: 9, label: "Services" },
+            { x: 6, y: 5, label: "PDB" },           // Medium complexity, sometimes used
+            { x: 5, y: 6, label: "Sidecars" },
+            { x: 4, y: 7, label: "InitContainers" },
+            { x: 7, y: 3, label: "Downward API" },  // Harder, rarely used
+            { x: 9, y: 2, label: "RuntimeClass" },  // Complex, niche
+            { x: 8, y: 1, label: "UserNamespaces" } // Complex, very niche
+        ];
+
+        new Chart(landscapeCtx, {
+            type: 'scatter',
+            data: {
+                datasets: [{
+                    label: 'K8s Features',
+                    data: landscapeData,
+                    backgroundColor: function(context) {
+                        // Dynamic coloring based on Complexity
+                        const val = context.raw?.x;
+                        if (val > 7) return '#EF4444'; // Red for hard
+                        if (val > 4) return '#F59E0B'; // Amber for medium
+                        return '#2563EB'; // Blue for easy
+                    },
+                    pointRadius: 8,
+                    pointHoverRadius: 10
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.raw.label + ` (Use: ${context.raw.y}, Complex: ${context.raw.x})`;
+                            }
+                        },
+                        ...commonTooltipConfig // Merge common config (though title callback is less relevant for scatter points individually labeled)
+                    }
+                },
+                scales: {
+                    x: {
+                        title: { display: true, text: 'Configuration Complexity (Low → High)' },
+                        min: 0, max: 10
+                    },
+                    y: {
+                        title: { display: true, text: 'Frequency of Use (Rarely → Often)' },
+                        min: 0, max: 11
+                    }
+                }
+            }
+        });
+
+        // --- CHART 2: POD ANATOMY (DONUT) ---
+        const podCtx = document.getElementById('podAnatomyChart').getContext('2d');
+        const podRawLabels = ['App Container', 'Sidecar (Native)', 'Init Container'];
+        const podLabels = podRawLabels.map(l => wrapLabel(l));
+
+        new Chart(podCtx, {
+            type: 'doughnut',
+            data: {
+                labels: podLabels,
+                datasets: [{
+                    data: [60, 25, 15], // Conceptual proportion of "work" or "focus"
+                    backgroundColor: [
+                        '#06B6D4', // Cyan (App)
+                        '#7C3AED', // Purple (Sidecar)
+                        '#2563EB'  // Blue (Init)
+                    ],
+                    borderWidth: 0,
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: { boxWidth: 15, padding: 20 }
+                    },
+                    tooltip: commonTooltipConfig
+                }
+            }
+        });
+
+        // --- CHART 3: QOS CLASSES (BAR) ---
+        const qosCtx = document.getElementById('qosChart').getContext('2d');
+        const qosRawLabels = ['Guaranteed', 'Burstable', 'BestEffort'];
+        const qosLabels = qosRawLabels.map(l => wrapLabel(l));
+
+        new Chart(qosCtx, {
+            type: 'bar',
+            data: {
+                labels: qosLabels,
+                datasets: [
+                    {
+                        label: 'Protection Level (Survival Priority)',
+                        data: [10, 6, 2],
+                        backgroundColor: '#10B981', // Green
+                        borderRadius: 4
+                    },
+                    {
+                        label: 'Config Rigidity (Cost)',
+                        data: [9, 5, 1],
+                        backgroundColor: '#6B7280', // Gray
+                        borderRadius: 4
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 10,
+                        title: { display: true, text: 'Score (1-10)' }
+                    },
+                    x: {
+                        grid: { display: false }
+                    }
+                },
+                plugins: {
+                    tooltip: commonTooltipConfig,
+                    legend: { position: 'top' }
+                }
+            }
+        });
+
+    </script>
+</body>
+</html>
