@@ -457,6 +457,72 @@
                     <div class="chart-container" id="plotlyVpaDiv"></div>
                 </div>
             </div>
+
+            <!-- Configuration Examples for Autoscaling -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+                <!-- HPA Config -->
+                <div class="bg-slate-900 border border-slate-700 rounded-xl p-6 shadow-lg">
+                    <h4 class="text-teal-400 font-bold mb-4 flex items-center">
+                        <span class="text-2xl mr-2">⇹</span> HPA Configuration
+                    </h4>
+                    <div class="code-block mb-4 text-xs">
+                        <span class="code-key">apiVersion:</span> <span class="code-str">autoscaling/v2</span><br>
+                        <span class="code-key">kind:</span> <span class="code-str">HorizontalPodAutoscaler</span><br>
+                        <span class="code-key">metadata:</span><br>
+                        &nbsp;&nbsp;<span class="code-key">name:</span> <span class="code-str">web-hpa</span><br>
+                        <span class="code-key">spec:</span><br>
+                        &nbsp;&nbsp;<span class="code-key">scaleTargetRef:</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">kind:</span> <span class="code-str">Deployment</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">name:</span> <span class="code-str">web-app</span><br>
+                        &nbsp;&nbsp;<span class="code-key">minReplicas:</span> <span class="code-val">2</span><br>
+                        &nbsp;&nbsp;<span class="code-key">maxReplicas:</span> <span class="code-val">10</span><br>
+                        &nbsp;&nbsp;<span class="code-key">metrics:</span><br>
+                        &nbsp;&nbsp;- <span class="code-key">type:</span> <span class="code-str">Resource</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">resource:</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">name:</span> <span class="code-str">cpu</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">target:</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">type:</span> <span class="code-str">Utilization</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">averageUtilization:</span> <span class="code-val">50</span>
+                    </div>
+                    <div class="text-sm text-slate-400">
+                        <strong class="text-white">Note:</strong>
+                        <ul class="list-disc pl-4 mt-2 space-y-1">
+                            <li>Requires <strong>Metrics Server</strong> installed.</li>
+                            <li>Deployment must have CPU <code>requests</code> defined.</li>
+                            <li>Best for stateless apps handling traffic spikes.</li>
+                        </ul>
+                    </div>
+                </div>
+            
+                <!-- VPA Config -->
+                <div class="bg-slate-900 border border-slate-700 rounded-xl p-6 shadow-lg">
+                    <h4 class="text-purple-400 font-bold mb-4 flex items-center">
+                        <span class="text-2xl mr-2">⇕</span> VPA Configuration
+                    </h4>
+                    <div class="code-block mb-4 text-xs">
+                        <span class="code-key">apiVersion:</span> <span class="code-str">autoscaling.k8s.io/v1</span><br>
+                        <span class="code-key">kind:</span> <span class="code-str">VerticalPodAutoscaler</span><br>
+                        <span class="code-key">metadata:</span><br>
+                        &nbsp;&nbsp;<span class="code-key">name:</span> <span class="code-str">web-vpa</span><br>
+                        <span class="code-key">spec:</span><br>
+                        &nbsp;&nbsp;<span class="code-key">targetRef:</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">apiVersion:</span> <span class="code-str">"apps/v1"</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">kind:</span> <span class="code-str">Deployment</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">name:</span> <span class="code-str">web-app</span><br>
+                        &nbsp;&nbsp;<span class="code-key">updatePolicy:</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">updateMode:</span> <span class="code-str">"Auto"</span>
+                    </div>
+                    <div class="text-sm text-slate-400">
+                        <strong class="text-white">Note:</strong>
+                        <ul class="list-disc pl-4 mt-2 space-y-1">
+                            <li>Requires <strong>VPA Controller</strong> (CRD).</li>
+                            <li><code>Auto</code> mode restarts pods to resize them.</li>
+                            <li>Use <code>"Off"</code> for recommendations without restarts.</li>
+                            <li>Avoid mixing HPA (CPU/Mem) and VPA on same metrics.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </section>
 
     </main>
@@ -561,7 +627,20 @@
             },
             options: {
                 ...commonChartOptions,
-                cutout: '60%'
+                cutout: '60%',
+                plugins: {
+                    ...commonChartOptions.plugins,
+                    legend: {
+                        position: 'right', // Moves legend to right for clarity
+                        align: 'start',    // Aligns legend items to top
+                        labels: { 
+                            color: '#F8FAFC',
+                            font: { size: 12 },
+                            boxWidth: 15,
+                            padding: 15
+                        } 
+                    }
+                }
             }
         });
 
