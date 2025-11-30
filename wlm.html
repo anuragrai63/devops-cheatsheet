@@ -111,23 +111,23 @@
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
+
+        /* Code Block Styling */
+        .code-block {
+            background-color: #020617; /* Slate 950 */
+            border: 1px solid #334155;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            font-family: monospace;
+            font-size: 0.8rem;
+            color: #e2e8f0;
+            overflow-x: auto;
+        }
+        .code-key { color: #c084fc; } /* Purple 400 */
+        .code-val { color: #2dd4bf; } /* Teal 400 */
+        .code-str { color: #f472b6; } /* Pink 400 */
+        .code-cmd { color: #fbbf24; } /* Amber 400 */
     </style>
-    <!--
-    SOURCE MATERIAL ANALYSIS PLAN
-    1.  Core Theme: Kubernetes Workloads manage Pods.
-    2.  Narrative:
-        -   Intro: Define the ecosystem.
-        -   Categorization: Break down the "Big 4" (Deploy, STS, DS, Job).
-        -   Comparison: Deep dive into Deployment vs StatefulSet.
-        -   Mechanism: How Deployments work (Diagram).
-        -   Operations: Autoscaling (HPA/VPA) and Batch jobs.
-    3.  Visualizations:
-        -   Doughnut: Workload Types Distribution.
-        -   Radar: Deployment vs StatefulSet traits.
-        -   CSS Diagram: Deployment -> RS -> Pod.
-        -   Line Chart: HPA simulation.
-        -   Scatter (WebGL): VPA node optimization.
-    -->
 </head>
 <body class="antialiased selection:bg-purple-500 selection:text-white">
 
@@ -200,30 +200,29 @@
             </div>
         </section>
 
-        <!-- SECTION 2: DEPLOYMENT ARCHITECTURE (DIAGRAM) -->
+        <!-- SECTION 2: DEPLOYMENT ARCHITECTURE (DIAGRAM & SPECS) -->
         <section class="bg-slate-800 rounded-3xl p-8 md:p-12 shadow-2xl border border-slate-700">
             <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold text-white mb-4">The Deployment Controller Hierarchy</h2>
+                <h2 class="text-3xl font-bold text-white mb-4">Deployment & ReplicaSet</h2>
                 <p class="text-slate-400 max-w-2xl mx-auto">
-                    Understanding the relationship between the high-level definition and the running containers. You create a Deployment, it creates a ReplicaSet to ensure stability, and the ReplicaSet spins up the Pods.
+                    The standard for stateless apps. Deployments provide declarative updates and rollbacks, managing ReplicaSets to ensure the desired number of pods are running.
                 </p>
             </div>
 
             <!-- CSS Diagram Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 relative items-center justify-items-center">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 relative items-center justify-items-center mb-12">
                 
                 <!-- Deployment Node -->
                 <div class="flow-box w-full max-w-xs z-10">
                     <div class="text-purple-400 text-4xl mb-2">⚙️</div>
                     <h3 class="text-xl font-bold text-white mb-2">Deployment</h3>
                     <p class="text-xs text-slate-300 bg-slate-700 p-2 rounded">
-                        kind: Deployment<br>
-                        replicas: 3
+                        Strategy: RollingUpdate
                     </p>
                     <div class="mt-2 text-sm text-teal-300">"The Architect"</div>
                 </div>
 
-                <!-- Arrow Indicator (Hidden on mobile, visible on MD) -->
+                <!-- Arrow Indicator -->
                 <div class="hidden md:block text-4xl text-slate-500 animate-pulse">▶</div>
                 <div class="md:hidden text-4xl text-slate-500 animate-pulse my-2">▼</div>
 
@@ -232,125 +231,203 @@
                     <div class="text-teal-400 text-4xl mb-2">🔄</div>
                     <h3 class="text-xl font-bold text-white mb-2">ReplicaSet</h3>
                     <p class="text-xs text-slate-300 bg-slate-700 p-2 rounded">
-                        selector: app=web<br>
-                        current: 3
+                        selector: app=web
                     </p>
                     <div class="mt-2 text-sm text-teal-300">"The Enforcer"</div>
                 </div>
             </div>
 
-            <!-- Pods Layer -->
-            <div class="mt-8 text-center text-4xl text-slate-500 animate-pulse">▼</div>
-            
-            <div class="grid grid-cols-3 gap-4 mt-8">
-                <!-- Pod 1 -->
-                <div class="flow-box border-purple-500">
-                    <div class="text-2xl mb-1">📦</div>
-                    <div class="font-bold text-white">Pod-abc1</div>
-                    <div class="text-xs text-green-400">Running</div>
+            <!-- Technical Specs Box: Deployment -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 bg-slate-900/50 p-6 rounded-xl border border-slate-600">
+                <div>
+                    <h4 class="text-lg font-bold text-white mb-2 flex items-center">
+                        <span class="w-2 h-2 bg-green-400 rounded-full mr-2"></span> Technical Specs
+                    </h4>
+                    <ul class="text-sm text-slate-300 space-y-2 mb-4">
+                        <li><strong>Use Case:</strong> Stateless Web Apps, Microservices.</li>
+                        <li><strong>Strategy:</strong> <span class="text-pink-400">RollingUpdate</span> (Default) - Updates pods incrementally with zero downtime.</li>
+                        <li><strong>ReplicaSet:</strong> Managed automatically. <span class="text-slate-500 italic">Rarely manipulated directly.</span></li>
+                    </ul>
+                    <div class="code-block mb-2">
+                        <div class="text-xs text-slate-500 mb-1"># Imperative Commands</div>
+                        <span class="code-cmd">kubectl</span> create deploy nginx --image=nginx --replicas=3<br>
+                        <span class="code-cmd">kubectl</span> set image deploy/nginx nginx=nginx:1.22<br>
+                        <span class="code-cmd">kubectl</span> rollout undo deploy/nginx
+                    </div>
                 </div>
-                <!-- Pod 2 -->
-                <div class="flow-box border-purple-500">
-                    <div class="text-2xl mb-1">📦</div>
-                    <div class="font-bold text-white">Pod-abc2</div>
-                    <div class="text-xs text-green-400">Running</div>
-                </div>
-                <!-- Pod 3 -->
-                <div class="flow-box border-purple-500">
-                    <div class="text-2xl mb-1">📦</div>
-                    <div class="font-bold text-white">Pod-abc3</div>
-                    <div class="text-xs text-green-400">Running</div>
+                <div class="code-block h-full">
+                    <div class="text-xs text-slate-500 mb-1"># deployment.yaml</div>
+                    <span class="code-key">apiVersion:</span> <span class="code-str">apps/v1</span><br>
+                    <span class="code-key">kind:</span> <span class="code-str">Deployment</span><br>
+                    <span class="code-key">metadata:</span><br>
+                    &nbsp;&nbsp;<span class="code-key">name:</span> <span class="code-str">web-app</span><br>
+                    <span class="code-key">spec:</span><br>
+                    &nbsp;&nbsp;<span class="code-key">replicas:</span> <span class="code-val">3</span><br>
+                    &nbsp;&nbsp;<span class="code-key">strategy:</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">type:</span> <span class="code-str">RollingUpdate</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">rollingUpdate:</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">maxUnavailable:</span> <span class="code-val">1</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">maxSurge:</span> <span class="code-val">1</span>
                 </div>
             </div>
         </section>
 
         <!-- SECTION 3: STATEFUL VS STATELESS -->
-        <section class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
             <div class="glass-card p-6 rounded-2xl shadow-2xl order-2 lg:order-1">
-                <div class="chart-container">
+                <div class="chart-container mb-6">
                     <canvas id="comparisonRadar"></canvas>
                 </div>
-                <p class="text-center text-sm text-slate-400 mt-4">
-                    <strong>Figure 2:</strong> Radar analysis of operational characteristics.
-                </p>
+                
+                <!-- StatefulSet Technicals -->
+                <div class="bg-slate-900 rounded-lg p-4 border border-slate-700">
+                    <h4 class="text-purple-400 font-bold mb-2">StatefulSet Configuration</h4>
+                    <div class="code-block">
+                        <span class="code-key">kind:</span> <span class="code-str">StatefulSet</span><br>
+                        <span class="code-key">spec:</span><br>
+                        &nbsp;&nbsp;<span class="code-key">serviceName:</span> <span class="code-str">"mysql"</span><br>
+                        &nbsp;&nbsp;<span class="code-key">replicas:</span> <span class="code-val">3</span><br>
+                        &nbsp;&nbsp;<span class="code-key">template:</span> { ... }<br>
+                        &nbsp;&nbsp;<span class="code-key">volumeClaimTemplates:</span><br>
+                        &nbsp;&nbsp;- <span class="code-key">metadata:</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">name:</span> <span class="code-str">db-data</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">spec:</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">accessModes:</span> [<span class="code-str">"ReadWriteOnce"</span>]
+                    </div>
+                </div>
             </div>
 
             <div class="space-y-6 order-1 lg:order-2">
                 <div class="flex items-center space-x-2">
                     <div class="w-8 h-1 bg-purple-400 rounded"></div>
-                    <h2 class="text-2xl font-bold text-white uppercase tracking-wider">Deployment vs. StatefulSet</h2>
+                    <h2 class="text-2xl font-bold text-white uppercase tracking-wider">StatefulSets (STS)</h2>
                 </div>
-                <h3 class="text-4xl font-bold text-slate-100">To Store or Not to Store?</h3>
+                <h3 class="text-4xl font-bold text-slate-100">Persistence & Identity</h3>
                 <p class="text-slate-300 leading-relaxed text-lg">
-                    <strong>Deployments</strong> treat pods as interchangeable cattle. If one dies, another replaces it with no memory of the past. 
-                    <br><br>
-                    <strong>StatefulSets</strong> are for applications that require a stable identity (like `mysql-0`, `mysql-1`), ordered deployment (0 before 1), and persistent storage volumes that stick with the pod even if it moves nodes.
+                    Used for applications that require a stable network identity (like `mysql-0`, `mysql-1`) and persistent storage that sticks with a specific pod instance.
                 </p>
                 
-                <ul class="space-y-4 mt-6">
+                <ul class="space-y-4 mt-6 border-b border-slate-700 pb-6">
                     <li class="flex items-start">
-                        <span class="text-teal-400 mr-3 text-xl">✓</span>
-                        <span class="text-slate-300"><strong>Deployments:</strong> Web Servers, APIs, PHP/Node.js apps.</span>
+                        <span class="text-purple-400 mr-3 text-xl">✓</span>
+                        <div class="text-slate-300">
+                            <strong>Use Case:</strong> Databases (MySQL, Mongo), Kafka, ElasticSearch.
+                        </div>
                     </li>
                     <li class="flex items-start">
                         <span class="text-purple-400 mr-3 text-xl">✓</span>
-                        <span class="text-slate-300"><strong>StatefulSets:</strong> MySQL, MongoDB, Kafka, ElasticSearch.</span>
+                        <div class="text-slate-300">
+                            <strong>Strategy:</strong> <span class="text-pink-400">OrderedReady</span> (Default). Pods are deployed/terminated one at a time, in order (0 -> 1 -> 2).
+                        </div>
                     </li>
                 </ul>
+                
+                <div class="mt-4">
+                    <p class="text-sm font-bold text-teal-400 mb-2">Imperative Command:</p>
+                    <div class="code-block inline-block w-full">
+                         <span class="text-slate-500"># Mostly declarative, but scaling works:</span><br>
+                         <span class="code-cmd">kubectl</span> scale sts mongo --replicas=5
+                    </div>
+                </div>
             </div>
         </section>
 
-        <!-- SECTION 4: BATCH PROCESSING TIMELINE -->
+        <!-- SECTION 4: DAEMONSETS (NEW SECTION) -->
+        <section class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-3xl p-8 border border-slate-700">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <div>
+                    <h2 class="text-3xl font-bold text-white mb-4">DaemonSet (DS)</h2>
+                    <p class="text-slate-300 mb-4">
+                        Ensures that a copy of the Pod runs on <strong>every</strong> node (or a subset selected by selectors) in the cluster. As nodes are added, Pods are added to them.
+                    </p>
+                    <ul class="text-sm text-slate-400 space-y-2 mb-6">
+                        <li><strong class="text-white">Use Case:</strong> Log collectors (Fluentd), Monitoring (Prometheus Node Exporter), CNI Plugins.</li>
+                        <li><strong class="text-white">Strategy:</strong> <span class="text-pink-400">RollingUpdate</span> (Deletes and creates pods on nodes incrementally).</li>
+                    </ul>
+                    <div class="code-block">
+                         <span class="text-slate-500"># Rolling restart of a DS</span><br>
+                         <span class="code-cmd">kubectl</span> rollout restart ds/fluentd
+                    </div>
+                </div>
+                <div class="code-block h-full shadow-lg">
+                    <div class="text-xs text-slate-500 mb-1"># daemonset.yaml</div>
+                    <span class="code-key">apiVersion:</span> <span class="code-str">apps/v1</span><br>
+                    <span class="code-key">kind:</span> <span class="code-str">DaemonSet</span><br>
+                    <span class="code-key">metadata:</span><br>
+                    &nbsp;&nbsp;<span class="code-key">name:</span> <span class="code-str">fluentd</span><br>
+                    <span class="code-key">spec:</span><br>
+                    &nbsp;&nbsp;<span class="code-key">selector:</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">matchLabels:</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">name:</span> <span class="code-str">fluentd</span><br>
+                    &nbsp;&nbsp;<span class="code-key">template:</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">spec:</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">tolerations:</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <span class="code-key">key:</span> <span class="code-str">node-role/master</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">effect:</span> <span class="code-str">NoSchedule</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 5: BATCH PROCESSING TIMELINE -->
         <section class="bg-slate-900 border border-slate-700 rounded-3xl p-8">
             <h2 class="text-3xl font-bold text-white mb-8 border-b border-slate-700 pb-4">Batch Processing Lifecycle</h2>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
                 <!-- Column 1: Jobs -->
                 <div>
-                    <h3 class="text-xl font-bold text-teal-400 mb-6">Standard Job (Run to Completion)</h3>
-                    <div class="border-l-2 border-slate-700 ml-4 space-y-8">
+                    <h3 class="text-xl font-bold text-teal-400 mb-6">Jobs (Run-to-Completion)</h3>
+                    <p class="text-sm text-slate-400 mb-4">For one-off tasks like database migrations or batch calculations.</p>
+                    
+                    <div class="border-l-2 border-slate-700 ml-4 space-y-8 mb-6">
                         <div class="timeline-item">
                             <h4 class="text-white font-bold">Start</h4>
-                            <p class="text-sm text-slate-400">kubectl create job my-job</p>
-                        </div>
-                        <div class="timeline-item">
-                            <h4 class="text-white font-bold">Processing</h4>
-                            <p class="text-sm text-slate-400">Pod performs calculation (e.g., Pi gen)</p>
-                            <div class="mt-2 w-full bg-slate-700 h-2 rounded overflow-hidden">
-                                <div class="bg-teal-500 h-full w-2/3 animate-pulse"></div>
+                            <div class="code-block mt-2">
+                                <span class="code-cmd">kubectl</span> create job pi --image=perl
                             </div>
                         </div>
-                        <div class="timeline-item border-l-transparent">
-                            <h4 class="text-white font-bold">Completion & Cleanup</h4>
-                            <p class="text-sm text-slate-400">Status: Complete. <code>ttlSecondsAfterFinished</code> triggers auto-deletion.</p>
+                        <div class="timeline-item">
+                            <h4 class="text-white font-bold">Auto-Cleanup</h4>
+                            <p class="text-xs text-slate-400 mb-2">Prevent clutter with TTL.</p>
+                            <div class="code-block text-xs">
+                                <span class="code-key">kind:</span> <span class="code-str">Job</span><br>
+                                <span class="code-key">spec:</span><br>
+                                &nbsp;&nbsp;<span class="code-key">ttlSecondsAfterFinished:</span> <span class="code-val">100</span><br>
+                                &nbsp;&nbsp;<span class="code-key">completions:</span> <span class="code-val">1</span><br>
+                                &nbsp;&nbsp;<span class="code-key">backoffLimit:</span> <span class="code-val">4</span>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Column 2: CronJobs -->
                 <div>
-                    <h3 class="text-xl font-bold text-purple-400 mb-6">CronJob (Scheduled)</h3>
+                    <h3 class="text-xl font-bold text-purple-400 mb-6">CronJobs (Scheduled)</h3>
+                    <p class="text-sm text-slate-400 mb-4">Time-based execution (like Linux cron) for backups or reports.</p>
+
                     <div class="space-y-4">
                         <div class="bg-slate-800 p-4 rounded-lg border border-slate-600">
-                            <div class="text-xs text-purple-400 font-mono mb-1">Schedule: "0 0 * * *"</div>
-                            <div class="flex justify-between items-center text-white">
-                                <span>🕛 Midnight Backup</span>
-                                <span class="text-green-400 text-sm">Active</span>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-white font-bold">Imperative Create</span>
+                            </div>
+                            <div class="code-block">
+                                <span class="code-cmd">kubectl</span> create cronjob backup --image=busybox --schedule="*/1 * * * *"
                             </div>
                         </div>
-                        <div class="flex justify-center text-slate-600 text-2xl">⬇</div>
-                        <div class="bg-slate-800/50 p-4 rounded-lg border border-dashed border-slate-600 opacity-50">
-                            <div class="text-xs text-slate-400 font-mono mb-1">Tomorrow</div>
-                            <div class="flex justify-between items-center text-slate-300">
-                                <span>🕐 Pending Job</span>
-                            </div>
+
+                        <div class="code-block">
+                             <span class="text-xs text-slate-500 mb-1"># cronjob.yaml</span><br>
+                             <span class="code-key">kind:</span> <span class="code-str">CronJob</span><br>
+                             <span class="code-key">spec:</span><br>
+                             &nbsp;&nbsp;<span class="code-key">schedule:</span> <span class="code-str">"0 0 * * *"</span><br>
+                             &nbsp;&nbsp;<span class="code-key">jobTemplate:</span><br>
+                             &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">spec:</span> { ... }
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- SECTION 5: AUTOSCALING DYNAMICS -->
+        <!-- SECTION 6: AUTOSCALING DYNAMICS -->
         <section class="space-y-12">
             <div class="text-center max-w-3xl mx-auto">
                 <h2 class="text-3xl font-bold text-white mb-4">Elasticity: The Power of Autoscaling</h2>
@@ -364,21 +441,20 @@
             <!-- HPA Line Chart -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div class="glass-card p-6 rounded-2xl shadow-xl">
-                    <h3 class="text-xl font-bold text-teal-400 mb-4">Horizontal Scaling (HPA)</h3>
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-xl font-bold text-teal-400">HPA (Horizontal)</h3>
+                        <div class="code-block text-xs py-1 px-2">
+                            <span class="code-cmd">kubectl</span> autoscale deploy/web --min=2 --max=10
+                        </div>
+                    </div>
                     <div class="chart-container">
                         <canvas id="hpaChart"></canvas>
                     </div>
-                    <p class="text-xs text-slate-400 mt-2">
-                        Simulated traffic spike causing pod count to increase.
-                    </p>
                 </div>
 
                 <div class="glass-card p-6 rounded-2xl shadow-xl">
-                    <h3 class="text-xl font-bold text-purple-400 mb-4">Cluster Resource Density (VPA Impact)</h3>
+                    <h3 class="text-xl font-bold text-purple-400 mb-4">VPA (Vertical)</h3>
                     <div class="chart-container" id="plotlyVpaDiv"></div>
-                    <p class="text-xs text-slate-400 mt-2">
-                        WebGL visualization of pod resource requests optimizing within node limits.
-                    </p>
                 </div>
             </div>
         </section>
