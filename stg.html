@@ -45,7 +45,7 @@
         .hover-lift { transition: transform 0.2s, box-shadow 0.2s; }
         .hover-lift:hover { transform: translateY(-4px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
 
-        /* Code Block Styling */
+        /* Code Block Styling - UPDATED FOR PRESERVED WHITESPACE */
         .yaml-block {
             font-family: 'Courier New', Courier, monospace;
             background-color: #1E293B; /* Slate-800 */
@@ -53,12 +53,28 @@
             padding: 1rem;
             border-radius: 0.5rem;
             font-size: 0.75rem;
+            line-height: 1.4;
             overflow-x: auto;
             border-left: 4px solid #6366F1;
+            white-space: pre; /* Critical for YAML indentation */
+            max-height: 300px;
+            overflow-y: auto;
         }
         .yaml-comment { color: #94A3B8; font-style: italic; }
         .yaml-key { color: #38BDF8; } /* Sky-400 */
         .yaml-val { color: #A5B4FC; } /* Indigo-300 */
+        
+        .cmd-block {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #0F172A; 
+            color: #4ADE80; /* Green-400 */
+            padding: 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            border: 1px solid #334155;
+            margin-top: 0.5rem;
+            white-space: pre-wrap; /* Allows wrapping for long commands */
+        }
 
         /* Palette: Vibrant & Tech-Focused */
         /* Primary: #4F46E5 (Indigo), Secondary: #06B6D4 (Cyan), Accent: #D946EF (Fuchsia) */
@@ -76,71 +92,86 @@
             <div class="mt-8 flex justify-center space-x-4 flex-wrap gap-2">
                 <span class="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-semibold">PV & PVC</span>
                 <span class="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-semibold">ConfigMap</span>
-                <span class="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-semibold">Access Modes</span>
-                <span class="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-semibold">Reclaim Policy</span>
+                <span class="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-semibold">Snapshots</span>
+                <span class="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-semibold">Attributes Class</span>
             </div>
         </div>
     </header>
 
     <main class="max-w-7xl mx-auto px-4 py-12 space-y-20">
 
-        <!-- SECTION 1: THE STORAGE SPECTRUM (Updated with ConfigMap) -->
+        <!-- SECTION 1: THE STORAGE SPECTRUM -->
         <section>
             <div class="mb-8 border-l-8 border-indigo-500 pl-6">
                 <h2 class="text-3xl font-bold text-gray-800">1. The Storage Spectrum</h2>
                 <p class="mt-2 text-lg text-gray-600">
-                    From configuration data to persistent databases, choosing the right volume type is critical.
+                    Choosing the right volume type: From ephemeral scratch space to projected configurations.
                 </p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-                <!-- Text Content -->
-                <div class="space-y-6">
-                    <!-- Ephemeral Card -->
-                    <div class="bg-white p-6 rounded-xl shadow-md border-t-4 border-cyan-400 hover-lift">
-                        <h3 class="text-xl font-bold text-gray-800 mb-2">Ephemeral (Pod-Local)</h3>
-                        <p class="text-gray-600 mb-4">Tied strictly to the Pod's lifecycle.</p>
-                        <ul class="list-disc list-inside text-sm text-gray-500 space-y-1">
-                            <li><strong>emptyDir:</strong> Scratch space.</li>
-                            <li><strong>hostPath:</strong> Node access (Warning: Security Risk!).</li>
-                        </ul>
-                    </div>
-                    
-                    <!-- ConfigMap Card (New) -->
-                    <div class="bg-white p-6 rounded-xl shadow-md border-t-4 border-fuchsia-500 hover-lift">
-                        <div class="flex justify-between items-center mb-2">
-                            <h3 class="text-xl font-bold text-gray-800">ConfigMap Volume</h3>
-                            <span class="text-xs bg-fuchsia-100 text-fuchsia-800 px-2 py-1 rounded">Configuration</span>
-                        </div>
-                        <p class="text-gray-600 mb-3 text-sm">Injects configuration data (files) into a Pod directory. Updates automatically when ConfigMap changes (eventually).</p>
-                        <div class="yaml-block">
-<span class="yaml-key">volumes:</span>
-  - <span class="yaml-key">name:</span> <span class="yaml-val">config-vol</span>
-    <span class="yaml-key">configMap:</span>
-      <span class="yaml-key">name:</span> <span class="yaml-val">app-settings</span>
-<span class="yaml-comment"># Use Case: Mounting nginx.conf or application.properties</span></div>
-                    </div>
-
-                    <!-- Persistent Card -->
-                    <div class="bg-white p-6 rounded-xl shadow-md border-t-4 border-indigo-600 hover-lift">
-                        <h3 class="text-xl font-bold text-gray-800 mb-2">Persistent (Cluster-Level)</h3>
-                        <p class="text-gray-600 mb-4">Independent lifecycle. Data survives Pod restarts.</p>
-                        <ul class="list-disc list-inside text-sm text-gray-500 space-y-1">
-                            <li><strong>PV/PVC:</strong> Standard database storage.</li>
-                            <li><strong>StatefulSets:</strong> Stable identities.</li>
-                        </ul>
-                    </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <!-- 1. Ephemeral (EmptyDir) -->
+                <div class="bg-white p-6 rounded-xl shadow-md border-t-4 border-cyan-400 hover-lift">
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Ephemeral: emptyDir</h3>
+                    <p class="text-gray-600 mb-2 text-xs">Lifecycle tied to Pod. Good for scratch space/cache.</p>
+                    <div class="yaml-block"><span class="yaml-key">apiVersion:</span> <span class="yaml-val">v1</span>
+<span class="yaml-key">kind:</span> <span class="yaml-val">Pod</span>
+<span class="yaml-key">metadata:</span>
+  <span class="yaml-key">name:</span> <span class="yaml-val">test-emptydir</span>
+<span class="yaml-key">spec:</span>
+  <span class="yaml-key">containers:</span>
+  - <span class="yaml-key">image:</span> <span class="yaml-val">nginx</span>
+    <span class="yaml-key">name:</span> <span class="yaml-val">test-container</span>
+    <span class="yaml-key">volumeMounts:</span>
+    - <span class="yaml-key">mountPath:</span> <span class="yaml-val">/cache</span>
+      <span class="yaml-key">name:</span> <span class="yaml-val">cache-volume</span>
+  <span class="yaml-key">volumes:</span>
+  - <span class="yaml-key">name:</span> <span class="yaml-val">cache-volume</span>
+    <span class="yaml-key">emptyDir:</span> <span class="yaml-val">{}</span></div>
                 </div>
 
-                <!-- Visualization: Volume Usage Distribution -->
-                <div class="bg-white p-6 rounded-xl shadow-lg flex flex-col justify-center">
-                    <h4 class="text-center font-bold text-gray-700 mb-4">Common Volume Usage Strategy</h4>
-                    <div class="chart-container">
-                        <canvas id="volumeTypesChart"></canvas>
-                    </div>
-                    <p class="text-center text-xs text-gray-400 mt-4 italic">
-                        ConfigMaps are heavily used for stateless app configuration, while PVCs dominate stateful workloads.
-                    </p>
+                <!-- 2. Projected Volumes -->
+                <div class="bg-white p-6 rounded-xl shadow-md border-t-4 border-fuchsia-500 hover-lift">
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Projected Volumes</h3>
+                    <p class="text-gray-600 mb-2 text-xs">Map multiple sources (Secrets, ConfigMaps) to one path.</p>
+                    <div class="yaml-block"><span class="yaml-key">volumes:</span>
+  - <span class="yaml-key">name:</span> <span class="yaml-val">all-in-one</span>
+    <span class="yaml-key">projected:</span>
+      <span class="yaml-key">sources:</span>
+      - <span class="yaml-key">secret:</span>
+          <span class="yaml-key">name:</span> <span class="yaml-val">my-secret</span>
+      - <span class="yaml-key">configMap:</span>
+          <span class="yaml-key">name:</span> <span class="yaml-val">my-configmap</span>
+      - <span class="yaml-key">downwardAPI:</span>
+          <span class="yaml-key">items:</span>
+            - <span class="yaml-key">path:</span> <span class="yaml-val">"labels"</span>
+              <span class="yaml-key">fieldRef:</span>
+                <span class="yaml-key">fieldPath:</span> <span class="yaml-val">metadata.labels</span></div>
+                </div>
+
+                <!-- 3. Generic Ephemeral -->
+                <div class="bg-white p-6 rounded-xl shadow-md border-t-4 border-indigo-600 hover-lift">
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Generic Ephemeral</h3>
+                    <p class="text-gray-600 mb-2 text-xs">Per-pod PVCs. Scratch space with StorageClass features.</p>
+                    <div class="yaml-block"><span class="yaml-key">volumes:</span>
+  - <span class="yaml-key">name:</span> <span class="yaml-val">scratch-volume</span>
+    <span class="yaml-key">ephemeral:</span>
+      <span class="yaml-key">volumeClaimTemplate:</span>
+        <span class="yaml-key">spec:</span>
+          <span class="yaml-key">accessModes:</span> <span class="yaml-val">[ "ReadWriteOnce" ]</span>
+          <span class="yaml-key">storageClassName:</span> <span class="yaml-val">"fast-local"</span>
+          <span class="yaml-key">resources:</span>
+            <span class="yaml-key">requests:</span>
+              <span class="yaml-key">storage:</span> <span class="yaml-val">1Gi</span></div>
+                </div>
+            </div>
+
+            <!-- Volume Usage Chart -->
+            <div class="mt-8 bg-white p-6 rounded-xl shadow-lg flex flex-col justify-center max-w-4xl mx-auto border-t-4 border-gray-400">
+                <h4 class="text-center font-bold text-gray-700 mb-4">Common Volume Strategy Distribution</h4>
+                <div class="chart-container">
+                    <canvas id="volumeTypesChart"></canvas>
                 </div>
             </div>
         </section>
@@ -150,96 +181,78 @@
             <div class="mb-10 text-center">
                 <h2 class="text-3xl font-bold text-indigo-900">2. Provisioning Architecture</h2>
                 <p class="mt-4 text-indigo-700 max-w-3xl mx-auto">
-                    How storage actually gets created and consumed.
+                    Comparing Static (Legacy) vs. Dynamic (Cloud Native) provisioning workflows.
                 </p>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-                <!-- Static Provisioning -->
+                
+                <!-- Method A: Static -->
                 <div class="bg-white p-6 rounded-xl shadow border-l-4 border-gray-400">
                     <h3 class="font-bold text-xl mb-2 text-gray-700">Method A: Static Provisioning</h3>
-                    <p class="text-sm text-gray-600 mb-4">The "Old School" way. Admin pre-creates disks.</p>
-                    <ol class="list-decimal list-inside text-sm space-y-2 text-gray-700">
-                        <li>Admin creates physical disk (e.g., EBS volume).</li>
-                        <li>Admin creates <strong>PersistentVolume (PV)</strong> object mapping to disk.</li>
-                        <li>User creates <strong>PVC</strong> which binds to the existing PV.</li>
-                    </ol>
-                    <div class="mt-4 yaml-block">
-<span class="yaml-comment"># PV (Static)</span>
-<span class="yaml-key">kind:</span> <span class="yaml-val">PersistentVolume</span>
+                    <p class="text-sm text-gray-600 mb-4">Admin manually creates PVs (e.g., NFS).</p>
+                    <div class="yaml-block"><span class="yaml-key">kind:</span> <span class="yaml-val">PersistentVolume</span>
+<span class="yaml-key">metadata:</span>
+  <span class="yaml-key">name:</span> <span class="yaml-val">nfs-pv</span>
 <span class="yaml-key">spec:</span>
   <span class="yaml-key">capacity:</span>
-    <span class="yaml-key">storage:</span> <span class="yaml-val">10Gi</span>
-  <span class="yaml-key">awsElasticBlockStore:</span> <span class="yaml-val">...</span></div>
+    <span class="yaml-key">storage:</span> <span class="yaml-val">5Gi</span>
+  <span class="yaml-key">volumeMode:</span> <span class="yaml-val">Filesystem</span>
+  <span class="yaml-key">accessModes:</span>
+    - <span class="yaml-val">ReadWriteMany</span>
+  <span class="yaml-key">persistentVolumeReclaimPolicy:</span> <span class="yaml-val">Retain</span>
+  <span class="yaml-key">storageClassName:</span> <span class="yaml-val">manual</span>
+  <span class="yaml-key">nfs:</span>
+    <span class="yaml-key">path:</span> <span class="yaml-val">/srv/nfs/kubedata</span>
+    <span class="yaml-key">server:</span> <span class="yaml-val">10.0.0.5</span></div>
                 </div>
 
-                <!-- Dynamic Provisioning -->
+                <!-- Method B: Dynamic -->
                 <div class="bg-white p-6 rounded-xl shadow border-l-4 border-indigo-600">
                     <h3 class="font-bold text-xl mb-2 text-indigo-700">Method B: Dynamic Provisioning</h3>
-                    <p class="text-sm text-gray-600 mb-4">The "Cloud Native" way. On-demand creation.</p>
-                    <ol class="list-decimal list-inside text-sm space-y-2 text-gray-700">
-                        <li>Admin creates <strong>StorageClass</strong> (Template).</li>
-                        <li>User creates <strong>PVC</strong> referencing the StorageClass.</li>
-                        <li>Provisioner automatically creates Disk & PV.</li>
-                    </ol>
-                    <div class="mt-4 yaml-block">
-<span class="yaml-comment"># StorageClass (Dynamic)</span>
+                    <p class="text-sm text-gray-600 mb-4">StorageClass automates PV creation.</p>
+                    <div class="yaml-block"><span class="yaml-key">apiVersion:</span> <span class="yaml-val">storage.k8s.io/v1</span>
 <span class="yaml-key">kind:</span> <span class="yaml-val">StorageClass</span>
-<span class="yaml-key">provisioner:</span> <span class="yaml-val">ebs.csi.aws.com</span>
+<span class="yaml-key">metadata:</span>
+  <span class="yaml-key">name:</span> <span class="yaml-val">fast-ssd</span>
+<span class="yaml-key">provisioner:</span> <span class="yaml-val">kubernetes.io/aws-ebs</span>
 <span class="yaml-key">parameters:</span>
-  <span class="yaml-key">type:</span> <span class="yaml-val">gp3</span></div>
+  <span class="yaml-key">type:</span> <span class="yaml-val">gp2</span>
+  <span class="yaml-key">fsType:</span> <span class="yaml-val">ext4</span>
+<span class="yaml-key">reclaimPolicy:</span> <span class="yaml-val">Delete</span>
+<span class="yaml-key">allowVolumeExpansion:</span> <span class="yaml-val">true</span>
+<span class="yaml-key">volumeBindingMode:</span> <span class="yaml-val">WaitForFirstConsumer</span></div>
                 </div>
             </div>
 
-            <!-- HTML/CSS Flow Diagram -->
-            <div class="bg-white p-6 rounded-xl shadow-lg mb-12">
-                <h4 class="text-center font-bold text-gray-800 mb-6">The Dynamic Provisioning Flow</h4>
-                <div class="flex flex-col md:flex-row justify-center items-stretch gap-4 md:gap-0 max-w-5xl mx-auto relative">
-                    <div class="flex-1 text-center p-4 bg-purple-50 rounded border border-purple-200">
-                        <div class="font-bold text-purple-700">1. StorageClass</div>
-                        <div class="text-xs text-gray-500">The "Template"</div>
-                    </div>
-                    <div class="hidden md:flex flex-col justify-center items-center w-12 text-gray-400">▶</div>
-                    <div class="md:hidden text-center text-gray-400">▼</div>
-                    <div class="flex-1 text-center p-4 bg-cyan-50 rounded border border-cyan-200">
-                        <div class="font-bold text-cyan-700">2. User PVC</div>
-                        <div class="text-xs text-gray-500">The "Request"</div>
-                    </div>
-                    <div class="hidden md:flex flex-col justify-center items-center w-12 text-gray-400">▶</div>
-                    <div class="md:hidden text-center text-gray-400">▼</div>
-                    <div class="flex-1 text-center p-4 bg-indigo-50 rounded border border-indigo-200">
-                        <div class="font-bold text-indigo-700">3. PV Created</div>
-                        <div class="text-xs text-gray-500">The "Result"</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- NEW SUBSECTION: POD MOUNTING -->
-            <div class="border-t border-indigo-200 pt-10">
-                <h3 class="text-2xl font-bold text-indigo-900 text-center mb-8">The Final Link: Mounting the Volume</h3>
+            <!-- The Consumption Chain: PVC -> Pod -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-                    
-                    <!-- Explanation Card -->
-                    <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-green-500">
-                        <h4 class="font-bold text-lg mb-4 text-green-700">Pod Configuration Steps</h4>
-                        <p class="text-sm text-gray-600 mb-4">Once the PVC exists, the Pod must reference it to use the storage.</p>
-                        <ul class="space-y-4">
-                            <li class="flex items-start">
-                                <span class="bg-green-100 text-green-700 font-bold rounded-full w-6 h-6 flex items-center justify-center text-xs mr-3 mt-1 flex-shrink-0">1</span>
-                                <p class="text-sm text-gray-600"><strong>Define Volume:</strong> In <code>spec.volumes</code>, declare the volume and link it to the PVC.</p>
-                            </li>
-                            <li class="flex items-start">
-                                <span class="bg-green-100 text-green-700 font-bold rounded-full w-6 h-6 flex items-center justify-center text-xs mr-3 mt-1 flex-shrink-0">2</span>
-                                <p class="text-sm text-gray-600"><strong>Mount Volume:</strong> In <code>spec.containers.volumeMounts</code>, specify the path inside the container where the data should appear.</p>
-                            </li>
-                        </ul>
+                <!-- The Request: PVC -->
+                <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-green-500">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-bold text-lg text-green-700">Step 1: The Request (PVC)</h3>
+                        <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">Claims Storage</span>
                     </div>
+                    <div class="yaml-block"><span class="yaml-key">kind:</span> <span class="yaml-val">PersistentVolumeClaim</span>
+<span class="yaml-key">metadata:</span>
+  <span class="yaml-key">name:</span> <span class="yaml-val">nfs-pvc</span>
+<span class="yaml-key">spec:</span>
+  <span class="yaml-key">storageClassName:</span> <span class="yaml-val">manual</span>
+  <span class="yaml-key">accessModes:</span>
+    - <span class="yaml-val">ReadWriteMany</span>
+  <span class="yaml-key">resources:</span>
+    <span class="yaml-key">requests:</span>
+      <span class="yaml-key">storage:</span> <span class="yaml-val">2Gi</span></div>
+                </div>
 
-                    <!-- Detailed YAML -->
-                    <div class="yaml-block text-sm">
-<span class="yaml-comment"># Pod Consuming a PVC</span>
-<span class="yaml-key">apiVersion:</span> <span class="yaml-val">v1</span>
+                <!-- The Mount: Pod -->
+                <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-teal-500">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-bold text-lg text-teal-700">Step 2: The Mount (Pod)</h3>
+                        <span class="text-xs bg-teal-100 text-teal-800 px-2 py-1 rounded">Uses Storage</span>
+                    </div>
+                    <div class="yaml-block"><span class="yaml-key">apiVersion:</span> <span class="yaml-val">v1</span>
 <span class="yaml-key">kind:</span> <span class="yaml-val">Pod</span>
 <span class="yaml-key">metadata:</span>
   <span class="yaml-key">name:</span> <span class="yaml-val">web-server-pod</span>
@@ -247,170 +260,193 @@
   <span class="yaml-key">containers:</span>
     - <span class="yaml-key">name:</span> <span class="yaml-val">nginx</span>
       <span class="yaml-key">image:</span> <span class="yaml-val">nginx:alpine</span>
-      <span class="yaml-key">volumeMounts:</span>       <span class="yaml-comment"># &lt;-- Step 2: Where to put it</span>
+      <span class="yaml-key">volumeMounts:</span>       <span class="yaml-comment"># Where to put it</span>
         - <span class="yaml-key">mountPath:</span> <span class="yaml-val">"/usr/share/nginx/html"</span>
           <span class="yaml-key">name:</span> <span class="yaml-val">my-web-storage</span>
-  <span class="yaml-key">volumes:</span>                <span class="yaml-comment"># &lt;-- Step 1: What to use</span>
+  <span class="yaml-key">volumes:</span>                <span class="yaml-comment"># What to use</span>
     - <span class="yaml-key">name:</span> <span class="yaml-val">my-web-storage</span>
       <span class="yaml-key">persistentVolumeClaim:</span>
-        <span class="yaml-key">claimName:</span> <span class="yaml-val">my-pvc-request</span>
-</div>
+        <span class="yaml-key">claimName:</span> <span class="yaml-val">nfs-pvc</span></div>
                 </div>
+
             </div>
         </section>
 
         <!-- SECTION 3: ACCESS MODES & RECLAIM POLICIES (NEW) -->
-        <section>
-            <div class="mb-8 border-l-8 border-fuchsia-500 pl-6">
-                <h2 class="text-3xl font-bold text-gray-800">3. Access Modes & Reclaim Policies</h2>
-                <p class="mt-2 text-lg text-gray-600">
-                    Controlling who can read/write and what happens when you delete the claim.
+        <section class="bg-white rounded-3xl p-8 md:p-12 shadow-xl border border-gray-100">
+            <div class="mb-10 text-center">
+                <h2 class="text-3xl font-bold text-gray-900">3. Access Modes & Reclaim Policies</h2>
+                <p class="mt-4 text-gray-600 max-w-3xl mx-auto">
+                    Controlling how pods access storage and what happens to data after deletion.
                 </p>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <!-- Access Modes -->
+            <h3 class="text-xl font-bold text-indigo-700 mb-6 flex items-center">
+                <span class="bg-indigo-100 p-2 rounded mr-3">A</span> Access Modes
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
                 
-                <!-- Access Modes -->
-                <div class="space-y-6">
-                    <h3 class="text-2xl font-bold text-gray-800 flex items-center">
-                        <span class="bg-cyan-100 text-cyan-700 p-2 rounded-lg mr-3 text-sm">spec.accessModes</span>
-                        Access Modes
-                    </h3>
-                    
-                    <!-- RWO -->
-                    <div class="bg-white p-4 rounded-lg shadow border-l-4 border-blue-500">
-                        <h4 class="font-bold text-blue-700">ReadWriteOnce (RWO)</h4>
-                        <p class="text-sm text-gray-600">Mounted by a <span class="font-bold">single node</span> as read-write.</p>
-                        <p class="text-xs text-gray-400 mt-1 italic">Use case: Block storage (EBS, PD), standard Databases.</p>
+                <!-- RWO -->
+                <div class="bg-gray-50 p-5 rounded-lg border-t-4 border-indigo-500">
+                    <h4 class="font-bold text-gray-800 mb-1">ReadWriteOnce (RWO)</h4>
+                    <p class="text-xs text-gray-500 mb-3">Mounted by a single node as read-write.</p>
+                    <div class="bg-indigo-50 text-indigo-800 text-xs p-2 rounded mb-3">
+                        <strong>Use Case:</strong> Block storage (EBS, PD), Databases (MySQL, Postgres).
                     </div>
-
-                    <!-- ROX -->
-                    <div class="bg-white p-4 rounded-lg shadow border-l-4 border-green-500">
-                        <h4 class="font-bold text-green-700">ReadOnlyMany (ROX)</h4>
-                        <p class="text-sm text-gray-600">Mounted by <span class="font-bold">multiple nodes</span> as read-only.</p>
-                        <p class="text-xs text-gray-400 mt-1 italic">Use case: Loading static ML models or web assets across fleet.</p>
-                    </div>
-
-                    <!-- RWX -->
-                    <div class="bg-white p-4 rounded-lg shadow border-l-4 border-orange-500">
-                        <h4 class="font-bold text-orange-700">ReadWriteMany (RWX)</h4>
-                        <p class="text-sm text-gray-600">Mounted by <span class="font-bold">multiple nodes</span> as read-write.</p>
-                        <p class="text-xs text-gray-400 mt-1 italic">Use case: NFS, EFS, GlusterFS, Shared logs/CMS.</p>
-                    </div>
-
-                    <div class="yaml-block">
-<span class="yaml-comment"># PVC Example</span>
-<span class="yaml-key">kind:</span> <span class="yaml-val">PersistentVolumeClaim</span>
-<span class="yaml-key">spec:</span>
-  <span class="yaml-key">accessModes:</span>
-    - <span class="yaml-val">ReadWriteMany</span> <span class="yaml-comment"># Requires NFS/EFS</span></div>
+                    <div class="yaml-block"><span class="yaml-key">accessModes:</span>
+  - <span class="yaml-val">ReadWriteOnce</span></div>
                 </div>
 
-                <!-- Reclaim Policies -->
-                <div class="space-y-6">
-                    <h3 class="text-2xl font-bold text-gray-800 flex items-center">
-                        <span class="bg-fuchsia-100 text-fuchsia-700 p-2 rounded-lg mr-3 text-sm">reclaimPolicy</span>
-                        Reclaim Policies
-                    </h3>
-                    <p class="text-sm text-gray-500">What happens to the PV (data) when the PVC is deleted?</p>
-
-                    <!-- Delete -->
-                    <div class="bg-white p-4 rounded-lg shadow relative overflow-hidden">
-                        <div class="absolute right-0 top-0 bg-red-100 text-red-600 px-2 py-1 text-xs font-bold">Default for Cloud</div>
-                        <h4 class="font-bold text-gray-800">1. Delete</h4>
-                        <p class="text-sm text-gray-600">The physical asset (AWS EBS / GKE PD) is deleted automatically.</p>
+                <!-- RWX -->
+                <div class="bg-gray-50 p-5 rounded-lg border-t-4 border-cyan-500">
+                    <h4 class="font-bold text-gray-800 mb-1">ReadWriteMany (RWX)</h4>
+                    <p class="text-xs text-gray-500 mb-3">Mounted by multiple nodes as read-write.</p>
+                    <div class="bg-cyan-50 text-cyan-800 text-xs p-2 rounded mb-3">
+                        <strong>Use Case:</strong> Shared Filesystems (NFS, EFS, GlusterFS), CMS uploads.
                     </div>
+                    <div class="yaml-block"><span class="yaml-key">accessModes:</span>
+  - <span class="yaml-val">ReadWriteMany</span></div>
+                </div>
 
-                    <!-- Retain -->
-                    <div class="bg-white p-4 rounded-lg shadow relative overflow-hidden">
-                        <div class="absolute right-0 top-0 bg-yellow-100 text-yellow-600 px-2 py-1 text-xs font-bold">Safest</div>
-                        <h4 class="font-bold text-gray-800">2. Retain</h4>
-                        <p class="text-sm text-gray-600">PV object remains "Released". Data persists. Requires manual cleanup.</p>
+                <!-- ROX -->
+                <div class="bg-gray-50 p-5 rounded-lg border-t-4 border-fuchsia-500">
+                    <h4 class="font-bold text-gray-800 mb-1">ReadOnlyMany (ROX)</h4>
+                    <p class="text-xs text-gray-500 mb-3">Mounted by multiple nodes as read-only.</p>
+                    <div class="bg-fuchsia-50 text-fuchsia-800 text-xs p-2 rounded mb-3">
+                        <strong>Use Case:</strong> Serving static AI models or web assets across a fleet.
                     </div>
+                    <div class="yaml-block"><span class="yaml-key">accessModes:</span>
+  - <span class="yaml-val">ReadOnlyMany</span></div>
+                </div>
+            </div>
 
-                    <!-- Recycle -->
-                    <div class="bg-white p-4 rounded-lg shadow opacity-75">
-                        <h4 class="font-bold text-gray-500">3. Recycle (Deprecated)</h4>
-                        <p class="text-sm text-gray-500">Performs <code>rm -rf /thevolume/*</code>. Replaced by Dynamic Provisioning.</p>
+            <!-- Reclaim Policies -->
+            <h3 class="text-xl font-bold text-pink-700 mb-6 flex items-center">
+                <span class="bg-pink-100 p-2 rounded mr-3">B</span> Reclaim Policies
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                
+                <!-- Retain -->
+                <div class="bg-gray-50 p-5 rounded-lg border-l-4 border-yellow-500">
+                    <div class="flex justify-between items-center mb-2">
+                        <h4 class="font-bold text-gray-800">Retain</h4>
+                        <span class="text-[10px] bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded-full">Safe</span>
                     </div>
+                    <p class="text-xs text-gray-600 mb-2">PV is NOT deleted when PVC is removed. Data persists for manual recovery.</p>
+                    <div class="yaml-block"><span class="yaml-key">persistentVolumeReclaimPolicy:</span> <span class="yaml-val">Retain</span></div>
+                </div>
 
-                    <div class="yaml-block">
-<span class="yaml-comment"># StorageClass Example</span>
-<span class="yaml-key">kind:</span> <span class="yaml-val">StorageClass</span>
-<span class="yaml-key">reclaimPolicy:</span> <span class="yaml-val">Retain</span> <span class="yaml-comment"># Prevents data loss</span></div>
+                <!-- Delete -->
+                <div class="bg-gray-50 p-5 rounded-lg border-l-4 border-red-500">
+                    <div class="flex justify-between items-center mb-2">
+                        <h4 class="font-bold text-gray-800">Delete</h4>
+                        <span class="text-[10px] bg-red-100 text-red-800 px-2 py-0.5 rounded-full">Default (Cloud)</span>
+                    </div>
+                    <p class="text-xs text-gray-600 mb-2">Underlying storage asset (EBS/PD) is automatically deleted with the PVC.</p>
+                    <div class="yaml-block"><span class="yaml-key">reclaimPolicy:</span> <span class="yaml-val">Delete</span></div>
+                </div>
+
+                <!-- Recycle -->
+                <div class="bg-gray-50 p-5 rounded-lg border-l-4 border-gray-400 opacity-80">
+                    <div class="flex justify-between items-center mb-2">
+                        <h4 class="font-bold text-gray-600">Recycle</h4>
+                        <span class="text-[10px] bg-gray-200 text-gray-600 px-2 py-0.5 rounded-full">Deprecated</span>
+                    </div>
+                    <p class="text-xs text-gray-600 mb-2"> performs <code>rm -rf /volume/*</code>. Replaced by Dynamic Provisioning.</p>
+                    <div class="yaml-block"><span class="yaml-key">persistentVolumeReclaimPolicy:</span> <span class="yaml-val">Recycle</span></div>
                 </div>
 
             </div>
         </section>
+
 
         <!-- SECTION 4: DATA LIFECYCLE (Snapshots & Clones) -->
         <section>
             <div class="mb-6 border-l-8 border-cyan-500 pl-6">
                 <h2 class="text-3xl font-bold text-gray-800">4. Lifecycle & Protection</h2>
                 <p class="mt-2 text-lg text-gray-600">
-                    Advanced CSI capabilities for backup and debugging.
+                    Advanced CSI capabilities: Backups (Snapshots) and Data Replication (Cloning).
                 </p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <!-- Visualization: Timeline -->
-                <div class="bg-white p-8 rounded-2xl shadow-xl border border-gray-100">
-                    <h4 class="font-bold text-xl text-center mb-8 text-gray-700">The Volume Cloning Workflow</h4>
-                    <div class="relative pl-8 border-l-2 border-indigo-100 space-y-8">
-                        <div class="relative">
-                            <div class="absolute -left-[41px] bg-indigo-500 h-6 w-6 rounded-full border-4 border-white shadow"></div>
-                            <h5 class="font-bold text-indigo-600 text-sm">Prod DB Running</h5>
-                            <p class="text-xs text-gray-500">Data accumulates.</p>
-                        </div>
-                        <div class="relative">
-                            <div class="absolute -left-[41px] bg-cyan-500 h-6 w-6 rounded-full border-4 border-white shadow"></div>
-                            <h5 class="font-bold text-cyan-600 text-sm">Clone PVC Created</h5>
-                            <p class="text-xs text-gray-500"><code>dataSource: my-pvc</code></p>
-                        </div>
-                        <div class="relative">
-                            <div class="absolute -left-[41px] bg-green-500 h-6 w-6 rounded-full border-4 border-white shadow"></div>
-                            <h5 class="font-bold text-green-600 text-sm">Debug Pod Starts</h5>
-                            <p class="text-xs text-gray-500">Uses exact data copy.</p>
-                        </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Snapshots -->
+                <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-fuchsia-500 hover-lift">
+                    <h3 class="text-xl font-bold mb-2">Volume Snapshots</h3>
+                    <p class="text-sm text-gray-600 mb-4">Point-in-time copy via CSI driver.</p>
+                    
+                    <div class="space-y-4">
+                        <div class="yaml-block"><span class="yaml-comment"># 1. Define the Class</span>
+<span class="yaml-key">kind:</span> <span class="yaml-val">VolumeSnapshotClass</span>
+<span class="yaml-key">metadata:</span>
+  <span class="yaml-key">name:</span> <span class="yaml-val">csi-aws-vsc</span>
+<span class="yaml-key">driver:</span> <span class="yaml-val">ebs.csi.aws.com</span>
+<span class="yaml-key">deletionPolicy:</span> <span class="yaml-val">Delete</span></div>
+
+                        <div class="yaml-block"><span class="yaml-comment"># 2. Take the Snapshot</span>
+<span class="yaml-key">kind:</span> <span class="yaml-val">VolumeSnapshot</span>
+<span class="yaml-key">metadata:</span>
+  <span class="yaml-key">name:</span> <span class="yaml-val">db-snapshot</span>
+<span class="yaml-key">spec:</span>
+  <span class="yaml-key">volumeSnapshotClassName:</span> <span class="yaml-val">csi-aws-vsc</span>
+  <span class="yaml-key">source:</span>
+    <span class="yaml-key">persistentVolumeClaimName:</span> <span class="yaml-val">db-pvc-production</span></div>
                     </div>
                 </div>
 
-                <!-- Snapshots -->
-                <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-fuchsia-500">
-                    <h3 class="text-xl font-bold mb-4">Volume Snapshots</h3>
-                    <p class="text-sm text-gray-600 mb-4">Standardized backup trigger via CSI.</p>
-                    <div class="yaml-block">
-<span class="yaml-key">kind:</span> <span class="yaml-val">VolumeSnapshot</span>
+                <!-- CSI Cloning -->
+                <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-cyan-500 hover-lift">
+                    <h3 class="text-xl font-bold mb-2">CSI Volume Cloning</h3>
+                    <p class="text-sm text-gray-600 mb-4">Create a new PVC from an existing one (Data Population).</p>
+                    <div class="yaml-block"><span class="yaml-key">apiVersion:</span> <span class="yaml-val">v1</span>
+<span class="yaml-key">kind:</span> <span class="yaml-val">PersistentVolumeClaim</span>
 <span class="yaml-key">metadata:</span>
-  <span class="yaml-key">name:</span> <span class="yaml-val">db-backup</span>
+  <span class="yaml-key">name:</span> <span class="yaml-val">db-clone-pvc</span>
 <span class="yaml-key">spec:</span>
-  <span class="yaml-key">volumeSnapshotClassName:</span> <span class="yaml-val">csi-hostpath-snapclass</span>
-  <span class="yaml-key">source:</span>
-    <span class="yaml-key">persistentVolumeClaimName:</span> <span class="yaml-val">my-pvc</span></div>
+  <span class="yaml-key">storageClassName:</span> <span class="yaml-val">standard</span>
+  <span class="yaml-key">dataSource:</span>
+    <span class="yaml-key">name:</span> <span class="yaml-val">db-pvc-production</span> <span class="yaml-comment"># Source PVC</span>
+    <span class="yaml-key">kind:</span> <span class="yaml-val">PersistentVolumeClaim</span>
+  <span class="yaml-key">accessModes:</span>
+    - <span class="yaml-val">ReadWriteOnce</span>
+  <span class="yaml-key">resources:</span>
+    <span class="yaml-key">requests:</span>
+      <span class="yaml-key">storage:</span> <span class="yaml-val">10Gi</span> <span class="yaml-comment"># >= source size</span></div>
+                    
+                    <div class="mt-4 p-3 bg-blue-50 rounded text-xs text-blue-800 border border-blue-200">
+                        <strong>Use Case:</strong> Quickly spinning up a staging database with a copy of production data for debugging.
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- SECTION 5: PERFORMANCE & LIMITS -->
+        <!-- SECTION 5: PERFORMANCE & ATTRIBUTES -->
         <section>
             <div class="mb-8 border-l-8 border-gray-700 pl-6">
-                <h2 class="text-3xl font-bold text-gray-800">5. Performance & Scale</h2>
+                <h2 class="text-3xl font-bold text-gray-800">5. Performance & Attributes</h2>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <!-- Chart: Node Capacity -->
+                <!-- Volume Attributes Class -->
                 <div class="bg-white p-6 rounded-xl shadow-lg">
-                    <h4 class="font-bold text-gray-700 mb-2">Node Volume Limits</h4>
-                    <p class="text-xs text-gray-500 mb-4">Limits how many disks attach to one node.</p>
-                    <div class="chart-container">
-                        <canvas id="nodeLimitChart"></canvas>
-                    </div>
+                    <h4 class="font-bold text-gray-700 mb-2">Volume Attributes Class</h4>
+                    <p class="text-xs text-gray-500 mb-4">Modify immutable properties (IOPS/Throughput) dynamically.</p>
+                    <div class="yaml-block mb-4"><span class="yaml-key">kind:</span> <span class="yaml-val">VolumeAttributesClass</span>
+<span class="yaml-key">metadata:</span>
+  <span class="yaml-key">name:</span> <span class="yaml-val">high-iops</span>
+<span class="yaml-key">driverName:</span> <span class="yaml-val">ebs.csi.aws.com</span>
+<span class="yaml-key">parameters:</span>
+  <span class="yaml-key">iops:</span> <span class="yaml-val">"3000"</span>
+  <span class="yaml-key">throughput:</span> <span class="yaml-val">"125"</span></div>
+                    
+                    <div class="text-xs font-bold text-gray-700 mb-1">Imperative Patch:</div>
+                    <code class="cmd-block block break-all">kubectl patch pvc my-pvc --type=merge -p '{"spec": {"volumeAttributesClassName": "high-iops"}}'</code>
                 </div>
 
-                <!-- Chart: Volume Attributes Class -->
+                <!-- IOPS Chart -->
                 <div class="bg-white p-6 rounded-xl shadow-lg">
-                    <h4 class="font-bold text-gray-700 mb-2">Dynamic IOPS (AttributesClass)</h4>
-                    <p class="text-xs text-gray-500 mb-4">Scaling performance without downtime.</p>
+                    <h4 class="font-bold text-gray-700 mb-2">Visualizing IOPS Scaling</h4>
                     <div class="chart-container">
                         <canvas id="attributesChart"></canvas>
                     </div>
@@ -418,7 +454,7 @@
             </div>
         </section>
 
-        <!-- SECTION 6: IMPERATIVE COMMAND CHEAT SHEET (NEW) -->
+        <!-- SECTION 6: IMPERATIVE COMMAND CHEAT SHEET -->
         <section class="bg-slate-900 rounded-3xl p-8 md:p-12 text-slate-300 shadow-2xl">
             <div class="mb-10 text-center">
                 <h2 class="text-3xl font-bold text-white mb-2 flex justify-center items-center gap-3">
@@ -427,87 +463,82 @@
                 <p class="text-slate-400">Essential CLI operations for managing, debugging, and inspecting storage.</p>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 
-                <!-- Category: Inspection -->
-                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 hover:border-indigo-500 transition-colors">
-                    <h3 class="text-xl font-bold text-white mb-6 flex items-center">
-                        <span class="bg-indigo-500 w-2 h-6 rounded mr-3"></span>
-                        Inspection & Debugging
-                    </h3>
-                    <div class="space-y-6">
-                        <div>
-                            <div class="flex justify-between items-baseline mb-2">
-                                <div class="text-xs text-indigo-400 uppercase font-bold">Verify Mounts</div>
-                                <span class="text-[10px] bg-indigo-900 text-indigo-200 px-2 py-0.5 rounded">Inside Pod</span>
-                            </div>
-                            <code class="block bg-black p-3 rounded text-green-400 font-mono text-sm border border-slate-700">
-                                kubectl exec -it &lt;pod&gt; -- df -h
-                            </code>
-                            <p class="text-xs text-slate-500 mt-1">Confirms if the volume is mounted and checks usage.</p>
-                        </div>
-                        
-                        <div>
-                            <div class="flex justify-between items-baseline mb-2">
-                                <div class="text-xs text-indigo-400 uppercase font-bold">Troubleshoot PVC</div>
-                                <span class="text-[10px] bg-red-900 text-red-200 px-2 py-0.5 rounded">Errors</span>
-                            </div>
-                            <code class="block bg-black p-3 rounded text-green-400 font-mono text-sm border border-slate-700">
-                                kubectl describe pvc &lt;pvc-name&gt;
-                            </code>
-                            <p class="text-xs text-slate-500 mt-1">Check "Events" at the bottom (e.g., ProvisioningFailed).</p>
-                        </div>
+                <!-- 1. General & Inspection -->
+                <div class="bg-slate-800 p-5 rounded-lg border border-slate-700">
+                    <h3 class="text-lg font-bold text-indigo-400 mb-4 border-b border-slate-600 pb-2">General & Inspection</h3>
+                    
+                    <div class="mb-4">
+                        <div class="text-xs text-white font-bold mb-1">Verify volume mount inside Pod</div>
+                        <code class="cmd-block block">kubectl exec -it &lt;pod&gt; -- df -h /cache</code>
+                    </div>
 
-                        <div>
-                            <div class="flex justify-between items-baseline mb-2">
-                                <div class="text-xs text-indigo-400 uppercase font-bold">Filter Health Issues</div>
-                                <span class="text-[10px] bg-yellow-900 text-yellow-200 px-2 py-0.5 rounded">Monitoring</span>
-                            </div>
-                            <code class="block bg-black p-3 rounded text-green-400 font-mono text-sm border border-slate-700">
-                                kubectl get events --field-selector reason=VolumeConditionAbnormal
-                            </code>
-                        </div>
+                    <div class="mb-4">
+                        <div class="text-xs text-white font-bold mb-1">Check Pod details (Volume Config)</div>
+                        <code class="cmd-block block">kubectl describe pod &lt;pod&gt;</code>
+                    </div>
+
+                    <div class="mb-4">
+                        <div class="text-xs text-white font-bold mb-1">List all PVs and PVCs</div>
+                        <code class="cmd-block block">kubectl get pv,pvc</code>
+                    </div>
+
+                    <div>
+                        <div class="text-xs text-white font-bold mb-1">Troubleshoot 'Pending' PVC</div>
+                        <code class="cmd-block block">kubectl describe pvc &lt;pvc-name&gt;</code>
                     </div>
                 </div>
 
-                <!-- Category: Management -->
-                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 hover:border-cyan-500 transition-colors">
-                    <h3 class="text-xl font-bold text-white mb-6 flex items-center">
-                        <span class="bg-cyan-500 w-2 h-6 rounded mr-3"></span>
-                        Management & Lifecycle
-                    </h3>
-                    <div class="space-y-6">
-                        <div>
-                            <div class="flex justify-between items-baseline mb-2">
-                                <div class="text-xs text-cyan-400 uppercase font-bold">Sort PVs</div>
-                                <span class="text-[10px] bg-cyan-900 text-cyan-200 px-2 py-0.5 rounded">Inventory</span>
-                            </div>
-                            <code class="block bg-black p-3 rounded text-green-400 font-mono text-sm border border-slate-700">
-                                kubectl get pv --sort-by=.spec.capacity.storage
-                            </code>
-                            <p class="text-xs text-slate-500 mt-1">Quickly find largest volumes in the cluster.</p>
-                        </div>
+                <!-- 2. Dynamic Provisioning & Classes -->
+                <div class="bg-slate-800 p-5 rounded-lg border border-slate-700">
+                    <h3 class="text-lg font-bold text-cyan-400 mb-4 border-b border-slate-600 pb-2">Storage Classes</h3>
+                    
+                    <div class="mb-4">
+                        <div class="text-xs text-white font-bold mb-1">List Storage Classes</div>
+                        <code class="cmd-block block">kubectl get sc</code>
+                    </div>
 
-                        <div>
-                            <div class="flex justify-between items-baseline mb-2">
-                                <div class="text-xs text-cyan-400 uppercase font-bold">Set Default Class</div>
-                                <span class="text-[10px] bg-cyan-900 text-cyan-200 px-2 py-0.5 rounded">Admin</span>
-                            </div>
-                            <code class="block bg-black p-3 rounded text-green-400 font-mono text-sm border border-slate-700 break-all">
-                                kubectl patch sc &lt;name&gt; -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
-                            </code>
-                        </div>
+                    <div>
+                        <div class="text-xs text-white font-bold mb-1">Set Default Storage Class</div>
+                        <code class="cmd-block block break-all">kubectl patch storageclass &lt;name&gt; -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'</code>
+                    </div>
+                </div>
 
-                        <div>
-                            <div class="flex justify-between items-baseline mb-2">
-                                <div class="text-xs text-cyan-400 uppercase font-bold">Delete & Reclaim</div>
-                                <span class="text-[10px] bg-red-900 text-red-200 px-2 py-0.5 rounded">Destructive</span>
-                            </div>
-                            <code class="block bg-black p-3 rounded text-green-400 font-mono text-sm border border-slate-700">
-                                kubectl delete pvc &lt;pvc-name&gt;
-                            </code>
-                            <p class="text-xs text-slate-500 mt-1">Triggers ReclaimPolicy (Retain will keep data, Delete will wipe it).</p>
-                        </div>
+                <!-- 3. Lifecycle (Snapshots) -->
+                <div class="bg-slate-800 p-5 rounded-lg border border-slate-700">
+                    <h3 class="text-lg font-bold text-fuchsia-400 mb-4 border-b border-slate-600 pb-2">Snapshots</h3>
+                    
+                    <div class="mb-4">
+                        <div class="text-xs text-white font-bold mb-1">Check Snapshot Status</div>
+                        <code class="cmd-block block">kubectl get volumesnapshot</code>
+                    </div>
+
+                    <div>
+                        <div class="text-xs text-white font-bold mb-1">View Snapshot Details</div>
+                        <code class="cmd-block block">kubectl describe volumesnapshot &lt;name&gt;</code>
+                    </div>
+                </div>
+
+                <!-- 4. Monitoring & Capacity -->
+                <div class="bg-slate-800 p-5 rounded-lg border border-slate-700">
+                    <h3 class="text-lg font-bold text-green-400 mb-4 border-b border-slate-600 pb-2">Monitoring & Capacity</h3>
+                    
+                    <div class="mb-4">
+                        <div class="text-xs text-white font-bold mb-1">Check Storage Capacity (CSI)</div>
+                        <code class="cmd-block block">kubectl get csistoragecapacities -n kube-system</code>
+                    </div>
+
+                    <div class="mb-4">
+                        <div class="text-xs text-white font-bold mb-1">Check Node Volume Limits</div>
+                        <code class="cmd-block block">kubectl get node &lt;node&gt; -o yaml</code>
+                        <div class="text-[10px] text-gray-500 mt-1">Look for allocatable.attachable-volumes-*</div>
+                    </div>
+
+                    <div>
+                        <div class="text-xs text-white font-bold mb-1">Health Check (Events)</div>
+                        <code class="cmd-block block">kubectl describe pvc &lt;pvc&gt;</code>
+                        <div class="text-[10px] text-gray-500 mt-1">Look for: FileSystemResizeFailed, VolumeMountFailed</div>
                     </div>
                 </div>
 
@@ -518,20 +549,20 @@
 
     <footer class="bg-white py-8 border-t border-gray-200 mt-12">
         <div class="max-w-7xl mx-auto px-4 text-center text-gray-400 text-sm">
-            <p>Generated based on Kubernetes Storage Cheat Sheet v1.1</p>
+            <p>Generated based on Kubernetes Storage Cheat Sheet v1.2</p>
         </div>
     </footer>
 
     <!-- JAVASCRIPT FOR CHARTS -->
     <script>
-        // --- 1. Common Volume Types Donut Chart (Updated Labels) ---
+        // --- 1. Volume Usage Strategy Chart ---
         const ctxTypes = document.getElementById('volumeTypesChart').getContext('2d');
         new Chart(ctxTypes, {
             type: 'doughnut',
             data: {
-                labels: ['Persistent (PVC/EBS)', 'ConfigMap/Secret', 'EmptyDir (Scratch)', 'HostPath (System)'],
+                labels: ['Persistent (PVC/EBS)', 'ConfigMap/Secret', 'EmptyDir (Scratch)', 'Generic Ephemeral'],
                 datasets: [{
-                    data: [40, 25, 25, 10], 
+                    data: [40, 25, 20, 15], 
                     backgroundColor: ['#4F46E5', '#D946EF', '#06B6D4', '#94A3B8'],
                     borderWidth: 0,
                     hoverOffset: 4
@@ -554,28 +585,7 @@
             }
         });
 
-        // --- 2. Node Limits Stacked Bar Chart ---
-        const ctxLimits = document.getElementById('nodeLimitChart').getContext('2d');
-        new Chart(ctxLimits, {
-            type: 'bar',
-            data: {
-                labels: ['Node-A', 'Node-B', 'Node-C'],
-                datasets: [
-                    { label: 'Attached', data: [22, 5, 18], backgroundColor: '#4F46E5', borderRadius: 4 },
-                    { label: 'Available', data: [3, 20, 7], backgroundColor: '#E2E8F0', borderRadius: 4 }
-                ]
-            },
-            options: {
-                maintainAspectRatio: false,
-                scales: {
-                    x: { stacked: true, grid: { display: false } },
-                    y: { stacked: true, beginAtZero: true }
-                },
-                plugins: { tooltip: { callbacks: { title: args => args[0].label } } }
-            }
-        });
-
-        // --- 3. Volume Attributes Class Line Chart ---
+        // --- 2. Volume Attributes Class Line Chart ---
         const ctxAttributes = document.getElementById('attributesChart').getContext('2d');
         new Chart(ctxAttributes, {
             type: 'line',
