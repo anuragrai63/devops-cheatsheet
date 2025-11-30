@@ -45,21 +45,6 @@
             height: 350px;
             max-height: 400px;
         }
-        /* Custom Connector Lines for Diagram */
-        .connector-h {
-            height: 2px;
-            background: #326ce5;
-            position: relative;
-        }
-        .connector-h::after {
-            content: '>';
-            position: absolute;
-            right: -5px;
-            top: -10px;
-            color: #326ce5;
-            font-weight: bold;
-            font-size: 16px;
-        }
         .component-card {
             transition: transform 0.2s;
         }
@@ -68,20 +53,6 @@
             box-shadow: 0 10px 15px -3px rgba(50, 108, 229, 0.2);
         }
     </style>
-    <!-- 
-    Plan:
-    1. Header: K8s Logo/Title.
-    2. Architecture Section:
-       - Control Plane (Brain) vs Worker Node (Muscle).
-       - HTML-based diagram using Grid/Flex to show API Server in center.
-    3. Timeline Section:
-       - Vertical list from 1.27 to 1.34.
-       - Highlight "Code Name" and 2-3 key bullet points per version.
-    4. Deep Dive Charts:
-       - Chart 1: Feature Maturity Gantt (How long Sidecars/DRA took to stabilize).
-       - Chart 2: Release Focus Radar (Comparing v1.32 vs v1.33 vs v1.34).
-    5. Footer.
-    -->
 </head>
 <body class="antialiased">
 
@@ -94,96 +65,140 @@
             </h1>
         </div>
         <p class="text-lg text-gray-300 max-w-3xl mx-auto">
-            From the core components of the Control Plane to the feature-rich releases of v1.34.
+            Detailed breakdown of Components and the feature-rich releases from v1.27 to v1.34.
         </p>
     </header>
 
     <main class="container mx-auto px-4 py-12 space-y-24">
 
-        <!-- SECTION 1: ARCHITECTURE DIAGRAM -->
+        <!-- SECTION 1: ARCHITECTURE DIAGRAM (Detailed) -->
         <section>
             <div class="mb-8 border-l-4 border-k8s-blue pl-6">
                 <h2 class="text-3xl font-bold text-white">1. The Architecture</h2>
-                <p class="text-gray-400 mt-2">The "Brain" (Control Plane) manages the state, while the "Muscle" (Worker Nodes) runs the workloads.</p>
+                <p class="text-gray-400 mt-2">A detailed look at the Control Plane, Worker Nodes, and essential Addons as defined in the official documentation.</p>
             </div>
 
             <!-- Architecture Visual Container -->
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 bg-k8s-card p-8 rounded-2xl border border-gray-700 shadow-2xl relative">
+            <div class="bg-k8s-card p-8 rounded-2xl border border-gray-700 shadow-2xl relative">
                 
-                <!-- Left: Control Plane -->
-                <div class="lg:col-span-5 bg-k8s-dark p-6 rounded-xl border-2 border-dashed border-k8s-blue relative">
-                    <div class="absolute -top-4 left-4 bg-k8s-blue text-white px-3 py-1 text-sm font-bold rounded">CONTROL PLANE (Brain)</div>
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
                     
-                    <div class="space-y-4 mt-4">
-                        <!-- API Server (Central Hub) -->
-                        <div class="component-card bg-blue-900 p-4 rounded-lg border border-blue-700 text-center relative z-10">
+                    <!-- Left: Control Plane -->
+                    <div class="lg:col-span-5 bg-k8s-dark p-6 rounded-xl border-2 border-dashed border-k8s-blue relative flex flex-col gap-4">
+                        <div class="absolute -top-4 left-4 bg-k8s-blue text-white px-3 py-1 text-sm font-bold rounded shadow-lg">CONTROL PLANE</div>
+                        
+                        <!-- API Server -->
+                        <div class="component-card bg-blue-900 p-4 rounded-lg border border-blue-700 text-center relative z-10 shadow-lg">
                             <i class="fas fa-server text-2xl text-k8s-accent mb-2"></i>
                             <h3 class="font-bold text-white">kube-apiserver</h3>
-                            <p class="text-xs text-gray-300">The "Front Door". Validates & Configures data. Only component talking to ETCD.</p>
+                            <p class="text-xs text-gray-300 mt-1">The "Front Door". Exposes the Kubernetes API. The only component that communicates directly with etcd.</p>
                         </div>
 
+                        <!-- ETCD & Scheduler -->
                         <div class="grid grid-cols-2 gap-4">
-                            <!-- ETCD -->
-                            <div class="component-card bg-gray-800 p-4 rounded-lg border border-gray-600 text-center">
-                                <i class="fas fa-database text-xl text-k8s-pop mb-2"></i>
+                            <div class="component-card bg-gray-800 p-3 rounded-lg border border-gray-600 text-center">
+                                <i class="fas fa-database text-lg text-k8s-pop mb-1"></i>
                                 <h3 class="font-bold text-sm text-white">etcd</h3>
-                                <p class="text-[10px] text-gray-400">The "Memory". Consistent Key-Value Store.</p>
+                                <p class="text-[10px] text-gray-400 leading-tight">Consistent, highly-available key-value store for all cluster data.</p>
                             </div>
-                            <!-- Scheduler -->
-                            <div class="component-card bg-gray-800 p-4 rounded-lg border border-gray-600 text-center">
-                                <i class="fas fa-calendar-check text-xl text-k8s-success mb-2"></i>
+                            <div class="component-card bg-gray-800 p-3 rounded-lg border border-gray-600 text-center">
+                                <i class="fas fa-calendar-check text-lg text-k8s-success mb-1"></i>
                                 <h3 class="font-bold text-sm text-white">kube-scheduler</h3>
-                                <p class="text-[10px] text-gray-400">The "Planner". Assigns Pods to Nodes.</p>
+                                <p class="text-[10px] text-gray-400 leading-tight">Watches new Pods and assigns them to Nodes based on constraints.</p>
                             </div>
                         </div>
-                        
-                        <!-- Controllers -->
-                        <div class="component-card bg-gray-800 p-4 rounded-lg border border-gray-600 text-center">
-                            <i class="fas fa-cogs text-xl text-k8s-warn mb-2"></i>
-                            <h3 class="font-bold text-sm text-white">Cloud & Kube Controller Managers</h3>
-                            <p class="text-[10px] text-gray-400">The "Reconcilers". Enforce desired state (Loops).</p>
+
+                        <!-- Controller Managers -->
+                        <div class="grid grid-cols-1 gap-4">
+                            <div class="component-card bg-gray-800 p-3 rounded-lg border border-gray-600 flex items-center gap-3 text-left">
+                                <div class="bg-gray-700 p-2 rounded"><i class="fas fa-cogs text-k8s-warn"></i></div>
+                                <div>
+                                    <h3 class="font-bold text-sm text-white">kube-controller-manager</h3>
+                                    <p class="text-[10px] text-gray-400">Runs core loops (Node, Job, ServiceAccount) to reach desired state.</p>
+                                </div>
+                            </div>
+                            <div class="component-card bg-gray-800 p-3 rounded-lg border border-gray-600 flex items-center gap-3 text-left">
+                                <div class="bg-gray-700 p-2 rounded"><i class="fas fa-cloud text-blue-300"></i></div>
+                                <div>
+                                    <h3 class="font-bold text-sm text-white">cloud-controller-manager</h3>
+                                    <p class="text-[10px] text-gray-400">Embeds cloud-specific logic. Links cluster to cloud provider APIs (LBs, Routes).</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Middle: Connection -->
-                <div class="lg:col-span-2 flex flex-col items-center justify-center text-center opacity-70">
-                    <div class="hidden lg:block w-full h-1 bg-gradient-to-r from-k8s-blue to-k8s-success relative">
-                        <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-k8s-card px-2 text-xs text-k8s-accent">REST API</span>
+                    <!-- Middle: Connection -->
+                    <div class="lg:col-span-2 flex flex-col items-center justify-center text-center opacity-70 py-4 lg:py-0">
+                        <div class="hidden lg:block w-full h-1 bg-gradient-to-r from-k8s-blue to-k8s-success relative">
+                            <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-k8s-card px-2 text-xs text-k8s-accent border border-gray-600 rounded">API Traffic</span>
+                        </div>
+                        <div class="lg:hidden h-12 w-1 bg-gradient-to-b from-k8s-blue to-k8s-success"></div>
                     </div>
-                    <div class="lg:hidden h-12 w-1 bg-gradient-to-b from-k8s-blue to-k8s-success"></div>
-                    <p class="text-xs text-gray-400 mt-2">Communication via API Server</p>
-                </div>
 
-                <!-- Right: Worker Node -->
-                <div class="lg:col-span-5 bg-k8s-dark p-6 rounded-xl border-2 border-dashed border-k8s-success relative">
-                    <div class="absolute -top-4 right-4 bg-k8s-success text-k8s-dark px-3 py-1 text-sm font-bold rounded">WORKER NODE (Muscle)</div>
-                    
-                    <div class="space-y-4 mt-4 h-full flex flex-col justify-center">
+                    <!-- Right: Worker Node -->
+                    <div class="lg:col-span-5 bg-k8s-dark p-6 rounded-xl border-2 border-dashed border-k8s-success relative flex flex-col gap-4">
+                        <div class="absolute -top-4 right-4 bg-k8s-success text-k8s-dark px-3 py-1 text-sm font-bold rounded shadow-lg">WORKER NODE</div>
+                        
                         <!-- Kubelet -->
-                        <div class="component-card bg-green-900 p-4 rounded-lg border border-green-700 text-center">
+                        <div class="component-card bg-green-900 p-4 rounded-lg border border-green-700 text-center shadow-lg">
                             <i class="fas fa-ship text-2xl text-k8s-success mb-2"></i>
                             <h3 class="font-bold text-white">Kubelet</h3>
-                            <p class="text-xs text-gray-300">The "Captain". Talks to API Server. Manages Pod lifecycle.</p>
+                            <p class="text-xs text-gray-300 mt-1">The "Captain". Agent running on every node. Registers node & manages Pods.</p>
                         </div>
 
                         <!-- Proxy & Runtime -->
                         <div class="grid grid-cols-2 gap-4">
-                            <div class="component-card bg-gray-800 p-4 rounded-lg border border-gray-600 text-center">
-                                <i class="fas fa-network-wired text-xl text-k8s-accent mb-2"></i>
+                            <div class="component-card bg-gray-800 p-3 rounded-lg border border-gray-600 text-center">
+                                <i class="fas fa-network-wired text-lg text-k8s-accent mb-1"></i>
                                 <h3 class="font-bold text-sm text-white">kube-proxy</h3>
-                                <p class="text-[10px] text-gray-400">Network rules (iptables/nftables).</p>
+                                <p class="text-[10px] text-gray-400 leading-tight">Maintains network rules (iptables/nftables) for Pod communication.</p>
                             </div>
-                            <div class="component-card bg-gray-800 p-4 rounded-lg border border-gray-600 text-center">
-                                <i class="fas fa-box-open text-xl text-white mb-2"></i>
-                                <h3 class="font-bold text-sm text-white">Runtime</h3>
-                                <p class="text-[10px] text-gray-400">ContainerD / CRI-O.</p>
+                            <div class="component-card bg-gray-800 p-3 rounded-lg border border-gray-600 text-center">
+                                <i class="fas fa-box-open text-lg text-white mb-1"></i>
+                                <h3 class="font-bold text-sm text-white">Container Runtime</h3>
+                                <p class="text-[10px] text-gray-400 leading-tight">Software responsible for running containers (e.g., containerd, CRI-O).</p>
                             </div>
                         </div>
 
-                        <!-- Pod Representation -->
-                        <div class="mt-4 p-3 bg-gray-900 rounded border border-gray-700 text-center">
-                            <span class="text-xs font-mono text-k8s-pop">PODS (Your Apps) running here</span>
+                         <!-- Workload Area -->
+                         <div class="mt-auto p-4 bg-gray-900 rounded border border-gray-700 text-center border-dashed">
+                            <i class="fas fa-cubes text-k8s-pop opacity-50 mb-1"></i>
+                            <p class="text-xs font-mono text-k8s-pop">PODS (Your Workloads)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bottom: Addons Section -->
+                <div class="mt-8 pt-6 border-t border-gray-700">
+                    <h3 class="text-sm font-bold text-gray-400 uppercase tracking-widest mb-4">Cluster Addons (Essential Extensions)</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                        <div class="bg-gray-800 p-3 rounded border border-gray-700 flex items-center gap-2">
+                            <i class="fas fa-globe text-blue-400"></i>
+                            <div class="text-xs">
+                                <span class="font-bold block text-white">DNS</span>
+                                <span class="text-gray-500">Service Discovery</span>
+                            </div>
+                        </div>
+                        <div class="bg-gray-800 p-3 rounded border border-gray-700 flex items-center gap-2">
+                            <i class="fas fa-tachometer-alt text-orange-400"></i>
+                            <div class="text-xs">
+                                <span class="font-bold block text-white">Web UI</span>
+                                <span class="text-gray-500">Dashboard</span>
+                            </div>
+                        </div>
+                        <div class="bg-gray-800 p-3 rounded border border-gray-700 flex items-center gap-2">
+                            <i class="fas fa-chart-line text-green-400"></i>
+                            <div class="text-xs">
+                                <span class="font-bold block text-white">Monitoring</span>
+                                <span class="text-gray-500">Resource Usage</span>
+                            </div>
+                        </div>
+                        <div class="bg-gray-800 p-3 rounded border border-gray-700 flex items-center gap-2">
+                            <i class="fas fa-file-alt text-yellow-400"></i>
+                            <div class="text-xs">
+                                <span class="font-bold block text-white">Logging</span>
+                                <span class="text-gray-500">Cluster Logs</span>
+                            </div>
                         </div>
                     </div>
                 </div>
