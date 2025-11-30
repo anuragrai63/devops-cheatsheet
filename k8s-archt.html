@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kubernetes: Architecture & Evolution (v1.27-v1.34)</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'k8s-blue': '#326ce5',
+                        'k8s-dark': '#0f172a',
+                        'k8s-card': '#1e293b',
+                        'k8s-light': '#f8fafc',
+                        'k8s-accent': '#38bdf8', // Light Blue
+                        'k8s-success': '#34d399', // Green
+                        'k8s-warn': '#fbbf24',    // Amber
+                        'k8s-pop': '#f472b6',     // Pink
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0f172a;
+            color: #f8fafc;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            height: 350px;
+            max-height: 400px;
+        }
+        /* Custom Connector Lines for Diagram */
+        .connector-h {
+            height: 2px;
+            background: #326ce5;
+            position: relative;
+        }
+        .connector-h::after {
+            content: '>';
+            position: absolute;
+            right: -5px;
+            top: -10px;
+            color: #326ce5;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        .component-card {
+            transition: transform 0.2s;
+        }
+        .component-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(50, 108, 229, 0.2);
+        }
+    </style>
+    <!-- 
+    Plan:
+    1. Header: K8s Logo/Title.
+    2. Architecture Section:
+       - Control Plane (Brain) vs Worker Node (Muscle).
+       - HTML-based diagram using Grid/Flex to show API Server in center.
+    3. Timeline Section:
+       - Vertical list from 1.27 to 1.34.
+       - Highlight "Code Name" and 2-3 key bullet points per version.
+    4. Deep Dive Charts:
+       - Chart 1: Feature Maturity Gantt (How long Sidecars/DRA took to stabilize).
+       - Chart 2: Release Focus Radar (Comparing v1.32 vs v1.33 vs v1.34).
+    5. Footer.
+    -->
+</head>
+<body class="antialiased">
+
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-k8s-dark to-blue-900 border-b border-k8s-blue py-12 px-4 text-center sticky top-0 z-50 bg-opacity-95 backdrop-blur-sm">
+        <div class="flex justify-center items-center gap-4 mb-4">
+            <i class="fas fa-dharmachakra text-5xl text-k8s-blue animate-spin-slow" style="animation-duration: 10s;"></i>
+            <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight text-white">
+                Kubernetes <span class="text-k8s-accent">Architecture & Evolution</span>
+            </h1>
+        </div>
+        <p class="text-lg text-gray-300 max-w-3xl mx-auto">
+            From the core components of the Control Plane to the feature-rich releases of v1.34.
+        </p>
+    </header>
+
+    <main class="container mx-auto px-4 py-12 space-y-24">
+
+        <!-- SECTION 1: ARCHITECTURE DIAGRAM -->
+        <section>
+            <div class="mb-8 border-l-4 border-k8s-blue pl-6">
+                <h2 class="text-3xl font-bold text-white">1. The Architecture</h2>
+                <p class="text-gray-400 mt-2">The "Brain" (Control Plane) manages the state, while the "Muscle" (Worker Nodes) runs the workloads.</p>
+            </div>
+
+            <!-- Architecture Visual Container -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 bg-k8s-card p-8 rounded-2xl border border-gray-700 shadow-2xl relative">
+                
+                <!-- Left: Control Plane -->
+                <div class="lg:col-span-5 bg-k8s-dark p-6 rounded-xl border-2 border-dashed border-k8s-blue relative">
+                    <div class="absolute -top-4 left-4 bg-k8s-blue text-white px-3 py-1 text-sm font-bold rounded">CONTROL PLANE (Brain)</div>
+                    
+                    <div class="space-y-4 mt-4">
+                        <!-- API Server (Central Hub) -->
+                        <div class="component-card bg-blue-900 p-4 rounded-lg border border-blue-700 text-center relative z-10">
+                            <i class="fas fa-server text-2xl text-k8s-accent mb-2"></i>
+                            <h3 class="font-bold text-white">kube-apiserver</h3>
+                            <p class="text-xs text-gray-300">The "Front Door". Validates & Configures data. Only component talking to ETCD.</p>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <!-- ETCD -->
+                            <div class="component-card bg-gray-800 p-4 rounded-lg border border-gray-600 text-center">
+                                <i class="fas fa-database text-xl text-k8s-pop mb-2"></i>
+                                <h3 class="font-bold text-sm text-white">etcd</h3>
+                                <p class="text-[10px] text-gray-400">The "Memory". Consistent Key-Value Store.</p>
+                            </div>
+                            <!-- Scheduler -->
+                            <div class="component-card bg-gray-800 p-4 rounded-lg border border-gray-600 text-center">
+                                <i class="fas fa-calendar-check text-xl text-k8s-success mb-2"></i>
+                                <h3 class="font-bold text-sm text-white">kube-scheduler</h3>
+                                <p class="text-[10px] text-gray-400">The "Planner". Assigns Pods to Nodes.</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Controllers -->
+                        <div class="component-card bg-gray-800 p-4 rounded-lg border border-gray-600 text-center">
+                            <i class="fas fa-cogs text-xl text-k8s-warn mb-2"></i>
+                            <h3 class="font-bold text-sm text-white">Cloud & Kube Controller Managers</h3>
+                            <p class="text-[10px] text-gray-400">The "Reconcilers". Enforce desired state (Loops).</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Middle: Connection -->
+                <div class="lg:col-span-2 flex flex-col items-center justify-center text-center opacity-70">
+                    <div class="hidden lg:block w-full h-1 bg-gradient-to-r from-k8s-blue to-k8s-success relative">
+                        <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-k8s-card px-2 text-xs text-k8s-accent">REST API</span>
+                    </div>
+                    <div class="lg:hidden h-12 w-1 bg-gradient-to-b from-k8s-blue to-k8s-success"></div>
+                    <p class="text-xs text-gray-400 mt-2">Communication via API Server</p>
+                </div>
+
+                <!-- Right: Worker Node -->
+                <div class="lg:col-span-5 bg-k8s-dark p-6 rounded-xl border-2 border-dashed border-k8s-success relative">
+                    <div class="absolute -top-4 right-4 bg-k8s-success text-k8s-dark px-3 py-1 text-sm font-bold rounded">WORKER NODE (Muscle)</div>
+                    
+                    <div class="space-y-4 mt-4 h-full flex flex-col justify-center">
+                        <!-- Kubelet -->
+                        <div class="component-card bg-green-900 p-4 rounded-lg border border-green-700 text-center">
+                            <i class="fas fa-ship text-2xl text-k8s-success mb-2"></i>
+                            <h3 class="font-bold text-white">Kubelet</h3>
+                            <p class="text-xs text-gray-300">The "Captain". Talks to API Server. Manages Pod lifecycle.</p>
+                        </div>
+
+                        <!-- Proxy & Runtime -->
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="component-card bg-gray-800 p-4 rounded-lg border border-gray-600 text-center">
+                                <i class="fas fa-network-wired text-xl text-k8s-accent mb-2"></i>
+                                <h3 class="font-bold text-sm text-white">kube-proxy</h3>
+                                <p class="text-[10px] text-gray-400">Network rules (iptables/nftables).</p>
+                            </div>
+                            <div class="component-card bg-gray-800 p-4 rounded-lg border border-gray-600 text-center">
+                                <i class="fas fa-box-open text-xl text-white mb-2"></i>
+                                <h3 class="font-bold text-sm text-white">Runtime</h3>
+                                <p class="text-[10px] text-gray-400">ContainerD / CRI-O.</p>
+                            </div>
+                        </div>
+
+                        <!-- Pod Representation -->
+                        <div class="mt-4 p-3 bg-gray-900 rounded border border-gray-700 text-center">
+                            <span class="text-xs font-mono text-k8s-pop">PODS (Your Apps) running here</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: VERSION TIMELINE -->
+        <section>
+            <div class="mb-10 border-l-4 border-k8s-pop pl-6">
+                <h2 class="text-3xl font-bold text-white">2. The Evolution (v1.27 - v1.34)</h2>
+                <p class="text-gray-400 mt-2">A chronological look at major features, code names, and shifts in the ecosystem.</p>
+            </div>
+
+            <div class="relative border-l-2 border-gray-700 ml-4 md:ml-10 space-y-12 pb-12">
+                
+                <!-- v1.27 -->
+                <div class="relative pl-8 md:pl-12">
+                    <div class="absolute -left-3 top-0 w-6 h-6 bg-gray-700 rounded-full border-4 border-k8s-dark"></div>
+                    <h3 class="text-2xl font-bold text-gray-400">v1.27 <span class="text-sm font-normal text-gray-500">"Chill Vibes" (Apr 2023)</span></h3>
+                    <div class="mt-3 bg-gray-800 p-4 rounded-lg max-w-2xl border-l-4 border-gray-500">
+                        <ul class="list-disc list-inside text-gray-300 text-sm space-y-1">
+                            <li><strong>Registry Freeze:</strong> Shifted from k8s.gcr.io to registry.k8s.io.</li>
+                            <li><strong>Seccomp Default:</strong> Security hardening moved to Beta.</li>
+                            <li><strong>In-place Resize (Alpha):</strong> First look at resizing pods without restart.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- v1.28 -->
+                <div class="relative pl-8 md:pl-12">
+                    <div class="absolute -left-3 top-0 w-6 h-6 bg-gray-700 rounded-full border-4 border-k8s-dark"></div>
+                    <h3 class="text-2xl font-bold text-gray-400">v1.28 <span class="text-sm font-normal text-gray-500">"Planternetes" (Aug 2023)</span></h3>
+                    <div class="mt-3 bg-gray-800 p-4 rounded-lg max-w-2xl border-l-4 border-gray-500">
+                        <ul class="list-disc list-inside text-gray-300 text-sm space-y-1">
+                            <li><strong>Sidecar Containers (Alpha):</strong> Native support for auxiliary containers.</li>
+                            <li><strong>pkgs.k8s.io:</strong> New community-owned package repositories.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- v1.29 -->
+                <div class="relative pl-8 md:pl-12">
+                    <div class="absolute -left-3 top-0 w-6 h-6 bg-gray-700 rounded-full border-4 border-k8s-dark"></div>
+                    <h3 class="text-2xl font-bold text-gray-400">v1.29 <span class="text-sm font-normal text-gray-500">"Mandala" (Dec 2023)</span></h3>
+                    <div class="mt-3 bg-gray-800 p-4 rounded-lg max-w-2xl border-l-4 border-gray-500">
+                        <ul class="list-disc list-inside text-gray-300 text-sm space-y-1">
+                            <li><strong>ReadWriteOncePod (GA):</strong> Safer storage access mode.</li>
+                            <li><strong>Gateway API v1.0:</strong> The modern replacement for Ingress hits GA.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- v1.30 -->
+                <div class="relative pl-8 md:pl-12">
+                    <div class="absolute -left-3 top-0 w-6 h-6 bg-gray-700 rounded-full border-4 border-k8s-dark"></div>
+                    <h3 class="text-2xl font-bold text-gray-400">v1.30 <span class="text-sm font-normal text-gray-500">"Uwubernetes" (Apr 2024)</span></h3>
+                    <div class="mt-3 bg-gray-800 p-4 rounded-lg max-w-2xl border-l-4 border-gray-500">
+                        <ul class="list-disc list-inside text-gray-300 text-sm space-y-1">
+                            <li><strong>Node Log Query (Beta):</strong> View systemd logs via kubectl.</li>
+                            <li><strong>Container Resource Autoscaling:</strong> HPA scales on container metrics.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- v1.31 -->
+                <div class="relative pl-8 md:pl-12">
+                    <div class="absolute -left-3 top-0 w-6 h-6 bg-gray-700 rounded-full border-4 border-k8s-dark"></div>
+                    <h3 class="text-2xl font-bold text-gray-400">v1.31 <span class="text-sm font-normal text-gray-500">"Elli" (Aug 2024)</span></h3>
+                    <div class="mt-3 bg-gray-800 p-4 rounded-lg max-w-2xl border-l-4 border-gray-500">
+                        <ul class="list-disc list-inside text-gray-300 text-sm space-y-1">
+                            <li><strong>AppArmor (GA):</strong> Standardized security profiles.</li>
+                            <li><strong>Traffic Distribution (Beta):</strong> Better routing control for Services.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- v1.32 Highlight -->
+                <div class="relative pl-8 md:pl-12">
+                    <div class="absolute -left-3 top-0 w-6 h-6 bg-k8s-blue rounded-full border-4 border-k8s-dark shadow-[0_0_15px_rgba(50,108,229,0.5)]"></div>
+                    <h3 class="text-3xl font-extrabold text-k8s-blue">v1.32 <span class="text-base font-normal text-gray-400">"Penelope" (Dec 2024)</span></h3>
+                    <div class="mt-3 bg-blue-900 bg-opacity-20 p-6 rounded-lg max-w-3xl border border-k8s-blue">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <h4 class="font-bold text-k8s-accent mb-2"><i class="fas fa-trash-alt mr-2"></i>Auto-Remove PVCs</h4>
+                                <p class="text-sm text-gray-300">StatefulSets can finally clean up their own PVCs upon deletion. No more orphaned storage costs.</p>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-k8s-accent mb-2"><i class="fab fa-windows mr-2"></i>Windows Parity</h4>
+                                <p class="text-sm text-gray-300">Graceful Node Shutdown now supported on Windows nodes.</p>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-k8s-accent mb-2"><i class="fas fa-robot mr-2"></i>Job 'managedBy'</h4>
+                                <p class="text-sm text-gray-300">External controllers (like Kueue) can manage Jobs for AI/Batch workloads.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- v1.33 Highlight -->
+                <div class="relative pl-8 md:pl-12">
+                    <div class="absolute -left-3 top-0 w-6 h-6 bg-k8s-pop rounded-full border-4 border-k8s-dark shadow-[0_0_15px_rgba(244,114,182,0.5)]"></div>
+                    <h3 class="text-3xl font-extrabold text-k8s-pop">v1.33 <span class="text-base font-normal text-gray-400">"Octarine" (Apr 2025)</span></h3>
+                    <div class="mt-3 bg-pink-900 bg-opacity-20 p-6 rounded-lg max-w-3xl border border-k8s-pop">
+                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <h4 class="font-bold text-pink-400 mb-2"><i class="fas fa-layer-group mr-2"></i>Sidecars Stable</h4>
+                                <p class="text-sm text-gray-300">RestartPolicy for init containers is GA. Essential for Service Meshes & Logging agents.</p>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-pink-400 mb-2"><i class="fas fa-expand-arrows-alt mr-2"></i>In-Place Resize (Beta)</h4>
+                                <p class="text-sm text-gray-300">Resize CPU/RAM without restarting pods. Enabled by default. Game changer for Java/DBs.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- v1.34 Highlight -->
+                <div class="relative pl-8 md:pl-12">
+                    <div class="absolute -left-3 top-0 w-6 h-6 bg-k8s-success rounded-full border-4 border-k8s-dark shadow-[0_0_15px_rgba(52,211,153,0.5)]"></div>
+                    <h3 class="text-3xl font-extrabold text-k8s-success">v1.34 <span class="text-base font-normal text-gray-400">"Of Wind & Will" (Aug 2025)</span></h3>
+                    <div class="mt-3 bg-green-900 bg-opacity-20 p-6 rounded-lg max-w-3xl border border-k8s-success">
+                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <h4 class="font-bold text-green-400 mb-2"><i class="fas fa-microchip mr-2"></i>DRA Stable</h4>
+                                <p class="text-sm text-gray-300">Dynamic Resource Allocation is the new standard for GPUs/FPGAs. Replaces Device Plugins.</p>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-green-400 mb-2"><i class="fas fa-sliders-h mr-2"></i>Volume Attributes</h4>
+                                <p class="text-sm text-gray-300">Modify IOPS/Throughput of volumes on the fly via VolumeAttributesClass.</p>
+                            </div>
+                             <div>
+                                <h4 class="font-bold text-green-400 mb-2"><i class="fas fa-file-code mr-2"></i>KYAML</h4>
+                                <p class="text-sm text-gray-300">"Kubernetes Dialect" of YAML to fix quoting/ambiguity issues (The Norway Problem).</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECTION 3: DEEP DIVE ANALYSIS -->
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            
+            <!-- Chart 1: Feature Maturity (Gantt-ish) -->
+            <div class="bg-k8s-card p-6 rounded-xl border border-gray-700">
+                <div class="mb-6">
+                    <h3 class="text-xl font-bold text-white">Feature Maturity Lifecycle</h3>
+                    <p class="text-sm text-gray-400">How long key features took to graduate from Alpha to Stable.</p>
+                </div>
+                <div class="chart-container">
+                    <canvas id="maturityChart"></canvas>
+                </div>
+                <div class="mt-4 text-xs text-gray-500 text-center">
+                    * 1.0 = Alpha, 2.0 = Beta, 3.0 = Stable (GA)
+                </div>
+            </div>
+
+            <!-- Chart 2: Release Focus Radar -->
+            <div class="bg-k8s-card p-6 rounded-xl border border-gray-700">
+                <div class="mb-6">
+                    <h3 class="text-xl font-bold text-white">Release Personality Analysis</h3>
+                    <p class="text-sm text-gray-400">Comparing the thematic focus of the last three versions.</p>
+                </div>
+                <div class="chart-container">
+                    <canvas id="focusRadarChart"></canvas>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <footer class="bg-k8s-dark border-t border-gray-800 py-8 text-center text-gray-500 text-sm">
+        <p>Infographic based on official Kubernetes Release Notes (v1.27 - v1.34). Generated November 2025.</p>
+    </footer>
+
+    <!-- Chart Logic -->
+    <script>
+        // Common Tooltip Config
+        const tooltipConfig = {
+            callbacks: {
+                title: function(tooltipItems) {
+                    const item = tooltipItems[0];
+                    let label = item.chart.data.labels[item.dataIndex];
+                    if (Array.isArray(label)) return label.join(' ');
+                    return label;
+                }
+            }
+        };
+
+        // Label Wrapping Helper (16 char)
+        function splitLabel(label) {
+            if (label.length <= 16) return label;
+            const words = label.split(' ');
+            const lines = [];
+            let currentLine = words[0];
+            for (let i = 1; i < words.length; i++) {
+                if ((currentLine + " " + words[i]).length <= 16) {
+                    currentLine += " " + words[i];
+                } else {
+                    lines.push(currentLine);
+                    currentLine = words[i];
+                }
+            }
+            lines.push(currentLine);
+            return lines;
+        }
+
+        // -------------------------------------------------------
+        // Chart 1: Maturity Lines
+        // Goal: Show progression of major features over versions
+        // -------------------------------------------------------
+        const ctxMaturity = document.getElementById('maturityChart').getContext('2d');
+        new Chart(ctxMaturity, {
+            type: 'line',
+            data: {
+                labels: ['v1.27', 'v1.28', 'v1.29', 'v1.30', 'v1.31', 'v1.32', 'v1.33', 'v1.34'],
+                datasets: [
+                    {
+                        label: 'Sidecar Containers',
+                        data: [null, 1, 1, 2, 2, 2, 3, 3], // Alpha 1.28 -> Beta 1.30 -> Stable 1.33
+                        borderColor: '#f472b6', // Pink
+                        backgroundColor: '#f472b6',
+                        tension: 0.1,
+                        borderWidth: 3
+                    },
+                    {
+                        label: 'In-Place Resize',
+                        data: [1, 1, 1, 1, 1, 1, 2, 2], // Alpha 1.27 -> Beta 1.33
+                        borderColor: '#fbbf24', // Amber
+                        backgroundColor: '#fbbf24',
+                        tension: 0.1,
+                        borderWidth: 3
+                    },
+                    {
+                        label: 'Dynamic Resource Alloc (DRA)',
+                        data: [null, null, null, 1, 1, 2, 2, 3], // Structured Beta 1.32 -> Stable 1.34
+                        borderColor: '#34d399', // Green
+                        backgroundColor: '#34d399',
+                        tension: 0.1,
+                        borderWidth: 3
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        ticks: {
+                            callback: function(value) {
+                                if(value === 1) return 'Alpha';
+                                if(value === 2) return 'Beta';
+                                if(value === 3) return 'Stable';
+                                return '';
+                            },
+                            color: '#94a3b8'
+                        },
+                        grid: { color: '#334155' },
+                        min: 0.5,
+                        max: 3.5
+                    },
+                    x: {
+                        ticks: { color: '#94a3b8' },
+                        grid: { color: '#334155' }
+                    }
+                },
+                plugins: {
+                    tooltip: tooltipConfig,
+                    legend: { labels: { color: '#f8fafc' } }
+                }
+            }
+        });
+
+        // -------------------------------------------------------
+        // Chart 2: Release Focus Radar
+        // Goal: Show "Personality" of 1.32 vs 1.33 vs 1.34
+        // -------------------------------------------------------
+        const ctxFocus = document.getElementById('focusRadarChart').getContext('2d');
+        new Chart(ctxFocus, {
+            type: 'radar',
+            data: {
+                labels: ['Security', 'Storage', 'Hardware/AI', 'UX/DevEx', 'Windows'],
+                datasets: [
+                    {
+                        label: 'v1.32 (Penelope)',
+                        data: [6, 9, 6, 7, 10], // High Storage (PVC Clean), High Windows
+                        borderColor: '#326ce5',
+                        backgroundColor: 'rgba(50, 108, 229, 0.2)',
+                    },
+                    {
+                        label: 'v1.33 (Octarine)',
+                        data: [8, 6, 5, 10, 5], // High DevEx (Sidecars, Resize)
+                        borderColor: '#f472b6',
+                        backgroundColor: 'rgba(244, 114, 182, 0.2)',
+                    },
+                    {
+                        label: 'v1.34 (Wind & Will)',
+                        data: [7, 8, 10, 8, 5], // High Hardware (DRA)
+                        borderColor: '#34d399',
+                        backgroundColor: 'rgba(52, 211, 153, 0.2)',
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    r: {
+                        angleLines: { color: '#475569' },
+                        grid: { color: '#334155' },
+                        pointLabels: { color: '#f8fafc', font: { size: 12 } },
+                        ticks: { display: false, backdropColor: 'transparent' }
+                    }
+                },
+                plugins: {
+                    tooltip: tooltipConfig,
+                    legend: { labels: { color: '#f8fafc' } }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
