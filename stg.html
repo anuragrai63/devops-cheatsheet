@@ -176,65 +176,69 @@
             </div>
         </section>
 
-        <!-- SECTION 2: PROVISIONING ARCHITECTURE -->
+        <!-- SECTION 2: PROVISIONING ARCHITECTURE (UPDATED DETAILED FLOWS) -->
         <section class="bg-indigo-50 rounded-3xl p-8 md:p-12">
             <div class="mb-10 text-center">
                 <h2 class="text-3xl font-bold text-indigo-900">2. Provisioning Architecture</h2>
                 <p class="mt-4 text-indigo-700 max-w-3xl mx-auto">
-                    Comparing Static (Legacy) vs. Dynamic (Cloud Native) provisioning workflows.
+                    A deep dive into the complete object lifecycle for both Static and Dynamic workflows.
                 </p>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+            <!-- METHOD A: STATIC PROVISIONING DETAIL -->
+            <div class="mb-12 bg-white p-6 rounded-2xl shadow-xl border border-gray-300">
+                <h3 class="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+                    <span class="bg-gray-200 text-gray-700 px-3 py-1 rounded-lg mr-3 text-lg">A</span> 
+                    Static Provisioning (Manual)
+                </h3>
+                <p class="mb-6 text-gray-600 text-sm">
+                    In this flow, the administrator is responsible for pre-provisioning the storage and the PV. The user only matches against the storage class and capacity.
+                </p>
                 
-                <!-- Method A: Static -->
-                <div class="bg-white p-6 rounded-xl shadow border-l-4 border-gray-400">
-                    <h3 class="font-bold text-xl mb-2 text-gray-700">Method A: Static Provisioning</h3>
-                    <p class="text-sm text-gray-600 mb-4">Admin manually creates PVs (e.g., NFS).</p>
-                    <div class="yaml-block"><span class="yaml-key">kind:</span> <span class="yaml-val">PersistentVolume</span>
+                <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 relative">
+                    <!-- Step 1: StorageClass -->
+                    <div class="relative">
+                        <div class="absolute -top-3 left-4 bg-gray-700 text-white px-2 py-0.5 rounded text-xs font-bold z-10">Step 1: Admin defines Class</div>
+                        <div class="yaml-block h-full"><span class="yaml-comment"># 1. StorageClass (Manual)</span>
+<span class="yaml-key">apiVersion:</span> <span class="yaml-val">storage.k8s.io/v1</span>
+<span class="yaml-key">kind:</span> <span class="yaml-val">StorageClass</span>
+<span class="yaml-key">metadata:</span>
+  <span class="yaml-key">name:</span> <span class="yaml-val">manual</span>
+<span class="yaml-key">provisioner:</span> <span class="yaml-val">kubernetes.io/no-provisioner</span>
+<span class="yaml-key">volumeBindingMode:</span> <span class="yaml-val">WaitForFirstConsumer</span></div>
+                    </div>
+
+                    <!-- Arrow for Desktop -->
+                    <div class="hidden xl:block absolute top-1/2 left-[32%] text-gray-300 text-2xl -translate-y-1/2 z-20">▶</div>
+
+                    <!-- Step 2: PV -->
+                    <div class="relative">
+                        <div class="absolute -top-3 left-4 bg-gray-700 text-white px-2 py-0.5 rounded text-xs font-bold z-10">Step 2: Admin creates PV</div>
+                        <div class="yaml-block h-full"><span class="yaml-comment"># 2. PersistentVolume</span>
+<span class="yaml-key">apiVersion:</span> <span class="yaml-val">v1</span>
+<span class="yaml-key">kind:</span> <span class="yaml-val">PersistentVolume</span>
 <span class="yaml-key">metadata:</span>
   <span class="yaml-key">name:</span> <span class="yaml-val">nfs-pv</span>
 <span class="yaml-key">spec:</span>
   <span class="yaml-key">capacity:</span>
     <span class="yaml-key">storage:</span> <span class="yaml-val">5Gi</span>
-  <span class="yaml-key">volumeMode:</span> <span class="yaml-val">Filesystem</span>
   <span class="yaml-key">accessModes:</span>
     - <span class="yaml-val">ReadWriteMany</span>
-  <span class="yaml-key">persistentVolumeReclaimPolicy:</span> <span class="yaml-val">Retain</span>
   <span class="yaml-key">storageClassName:</span> <span class="yaml-val">manual</span>
   <span class="yaml-key">nfs:</span>
     <span class="yaml-key">path:</span> <span class="yaml-val">/srv/nfs/kubedata</span>
     <span class="yaml-key">server:</span> <span class="yaml-val">10.0.0.5</span></div>
-                </div>
-
-                <!-- Method B: Dynamic -->
-                <div class="bg-white p-6 rounded-xl shadow border-l-4 border-indigo-600">
-                    <h3 class="font-bold text-xl mb-2 text-indigo-700">Method B: Dynamic Provisioning</h3>
-                    <p class="text-sm text-gray-600 mb-4">StorageClass automates PV creation.</p>
-                    <div class="yaml-block"><span class="yaml-key">apiVersion:</span> <span class="yaml-val">storage.k8s.io/v1</span>
-<span class="yaml-key">kind:</span> <span class="yaml-val">StorageClass</span>
-<span class="yaml-key">metadata:</span>
-  <span class="yaml-key">name:</span> <span class="yaml-val">fast-ssd</span>
-<span class="yaml-key">provisioner:</span> <span class="yaml-val">kubernetes.io/aws-ebs</span>
-<span class="yaml-key">parameters:</span>
-  <span class="yaml-key">type:</span> <span class="yaml-val">gp2</span>
-  <span class="yaml-key">fsType:</span> <span class="yaml-val">ext4</span>
-<span class="yaml-key">reclaimPolicy:</span> <span class="yaml-val">Delete</span>
-<span class="yaml-key">allowVolumeExpansion:</span> <span class="yaml-val">true</span>
-<span class="yaml-key">volumeBindingMode:</span> <span class="yaml-val">WaitForFirstConsumer</span></div>
-                </div>
-            </div>
-
-            <!-- The Consumption Chain: PVC -> Pod -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                
-                <!-- The Request: PVC -->
-                <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-green-500">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="font-bold text-lg text-green-700">Step 1: The Request (PVC)</h3>
-                        <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">Claims Storage</span>
                     </div>
-                    <div class="yaml-block"><span class="yaml-key">kind:</span> <span class="yaml-val">PersistentVolumeClaim</span>
+
+                    <!-- Arrow for Desktop -->
+                    <div class="hidden xl:block absolute top-1/2 left-[65%] text-gray-300 text-2xl -translate-y-1/2 z-20">▶</div>
+
+                    <!-- Step 3: PVC -->
+                    <div class="relative">
+                        <div class="absolute -top-3 left-4 bg-green-600 text-white px-2 py-0.5 rounded text-xs font-bold z-10">Step 3: User Request (PVC)</div>
+                        <div class="yaml-block h-full"><span class="yaml-comment"># 3. PersistentVolumeClaim</span>
+<span class="yaml-key">apiVersion:</span> <span class="yaml-val">v1</span>
+<span class="yaml-key">kind:</span> <span class="yaml-val">PersistentVolumeClaim</span>
 <span class="yaml-key">metadata:</span>
   <span class="yaml-key">name:</span> <span class="yaml-val">nfs-pvc</span>
 <span class="yaml-key">spec:</span>
@@ -244,15 +248,76 @@
   <span class="yaml-key">resources:</span>
     <span class="yaml-key">requests:</span>
       <span class="yaml-key">storage:</span> <span class="yaml-val">2Gi</span></div>
-                </div>
-
-                <!-- The Mount: Pod -->
-                <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-teal-500">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="font-bold text-lg text-teal-700">Step 2: The Mount (Pod)</h3>
-                        <span class="text-xs bg-teal-100 text-teal-800 px-2 py-1 rounded">Uses Storage</span>
                     </div>
-                    <div class="yaml-block"><span class="yaml-key">apiVersion:</span> <span class="yaml-val">v1</span>
+                </div>
+            </div>
+
+            <!-- METHOD B: DYNAMIC PROVISIONING DETAIL -->
+            <div class="mb-12 bg-white p-6 rounded-2xl shadow-xl border border-indigo-400">
+                <h3 class="text-2xl font-bold text-indigo-900 mb-4 flex items-center">
+                    <span class="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-lg mr-3 text-lg">B</span> 
+                    Dynamic Provisioning (Automated)
+                </h3>
+                <p class="mb-6 text-indigo-800 text-sm">
+                    Here, the Admin only sets up the "Template" (StorageClass). The creation of the user's PVC automatically triggers the provisioner to create the PV and physical volume.
+                </p>
+
+                <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 relative">
+                    <!-- Step 1: StorageClass -->
+                    <div class="relative">
+                        <div class="absolute -top-3 left-4 bg-indigo-600 text-white px-2 py-0.5 rounded text-xs font-bold z-10">Step 1: Admin defines Template</div>
+                        <div class="yaml-block h-full"><span class="yaml-comment"># 1. StorageClass (Template)</span>
+<span class="yaml-key">apiVersion:</span> <span class="yaml-val">storage.k8s.io/v1</span>
+<span class="yaml-key">kind:</span> <span class="yaml-val">StorageClass</span>
+<span class="yaml-key">metadata:</span>
+  <span class="yaml-key">name:</span> <span class="yaml-val">fast-ssd</span>
+<span class="yaml-key">provisioner:</span> <span class="yaml-val">kubernetes.io/aws-ebs</span>
+<span class="yaml-key">parameters:</span>
+  <span class="yaml-key">type:</span> <span class="yaml-val">gp3</span>
+  <span class="yaml-key">fsType:</span> <span class="yaml-val">ext4</span>
+<span class="yaml-key">reclaimPolicy:</span> <span class="yaml-val">Delete</span>
+<span class="yaml-key">volumeBindingMode:</span> <span class="yaml-val">WaitForFirstConsumer</span></div>
+                    </div>
+
+                    <!-- Arrow for Desktop -->
+                    <div class="hidden xl:flex absolute top-1/2 left-[50%] -translate-x-1/2 flex-col items-center justify-center z-20">
+                        <span class="bg-indigo-100 text-indigo-700 text-[10px] px-2 py-1 rounded border border-indigo-300 mb-1">References</span>
+                        <div class="text-indigo-400 text-3xl">▶</div>
+                    </div>
+
+                    <!-- Step 2: PVC -->
+                    <div class="relative">
+                        <div class="absolute -top-3 left-4 bg-green-600 text-white px-2 py-0.5 rounded text-xs font-bold z-10">Step 2: User Request (PVC)</div>
+                        <div class="yaml-block h-full"><span class="yaml-comment"># 2. PersistentVolumeClaim</span>
+<span class="yaml-key">apiVersion:</span> <span class="yaml-val">v1</span>
+<span class="yaml-key">kind:</span> <span class="yaml-val">PersistentVolumeClaim</span>
+<span class="yaml-key">metadata:</span>
+  <span class="yaml-key">name:</span> <span class="yaml-val">auto-ebs-pvc</span>
+<span class="yaml-key">spec:</span>
+  <span class="yaml-key">storageClassName:</span> <span class="yaml-val">fast-ssd</span> <span class="yaml-comment"># &lt;-- Matches SC Name</span>
+  <span class="yaml-key">accessModes:</span>
+    - <span class="yaml-val">ReadWriteOnce</span>
+  <span class="yaml-key">resources:</span>
+    <span class="yaml-key">requests:</span>
+      <span class="yaml-key">storage:</span> <span class="yaml-val">10Gi</span></div>
+                    </div>
+                </div>
+                
+                <div class="mt-4 text-center">
+                    <span class="inline-block bg-indigo-50 border border-indigo-200 text-indigo-600 text-xs px-4 py-2 rounded-full">
+                        ✨ System Action: Cloud Provider automatically creates a 10Gi GP3 volume and binds it.
+                    </span>
+                </div>
+            </div>
+
+            <!-- The Mount: Pod (Common to both) -->
+            <div class="bg-white p-6 rounded-2xl shadow-lg border-t-4 border-teal-500">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold text-lg text-teal-700">Final Step: The Mount (Pod)</h3>
+                    <span class="text-xs bg-teal-100 text-teal-800 px-2 py-1 rounded">Consumes PVC</span>
+                </div>
+                <p class="text-sm text-gray-600 mb-4">Regardless of how the PVC was created (Static or Dynamic), the Pod mounts it the same way.</p>
+                <div class="yaml-block"><span class="yaml-key">apiVersion:</span> <span class="yaml-val">v1</span>
 <span class="yaml-key">kind:</span> <span class="yaml-val">Pod</span>
 <span class="yaml-key">metadata:</span>
   <span class="yaml-key">name:</span> <span class="yaml-val">web-server-pod</span>
@@ -266,10 +331,9 @@
   <span class="yaml-key">volumes:</span>                <span class="yaml-comment"># What to use</span>
     - <span class="yaml-key">name:</span> <span class="yaml-val">my-web-storage</span>
       <span class="yaml-key">persistentVolumeClaim:</span>
-        <span class="yaml-key">claimName:</span> <span class="yaml-val">nfs-pvc</span></div>
-                </div>
-
+        <span class="yaml-key">claimName:</span> <span class="yaml-val">nfs-pvc</span> <span class="yaml-comment"># Or auto-ebs-pvc</span></div>
             </div>
+
         </section>
 
         <!-- SECTION 3: ACCESS MODES & RECLAIM POLICIES (NEW) -->
