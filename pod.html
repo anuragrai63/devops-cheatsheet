@@ -41,9 +41,34 @@
             z-index: 0;
         }
 
+        /* Code Block Styling */
+        .code-block {
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+            font-size: 0.75rem;
+            line-height: 1.5;
+            background-color: #1F2937; /* Gray-900 */
+            color: #E5E7EB; /* Gray-200 */
+            padding: 0.75rem;
+            border-radius: 0.375rem;
+            overflow-x: auto;
+            white-space: pre;
+            border-left: 4px solid #3B82F6; /* Blue-500 accent */
+            margin-top: 0.5rem;
+        }
+        
+        .code-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+            display: block;
+        }
+
         /* Custom Scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
+            height: 8px;
         }
         ::-webkit-scrollbar-track {
             background: #f1f1f1; 
@@ -141,34 +166,60 @@
             </div>
         </div>
 
-        <!-- Section 2: Core Definitions (Cards) -->
+        <!-- Section 2: Core Definitions (Cards with Code) -->
         <div class="lg:col-span-4 flex flex-col gap-6">
             <div class="bg-white rounded-lg shadow-md p-6 border-t-4 border-cyan-500">
                 <h3 class="text-lg font-bold text-gray-800 mb-2">📦 The Container</h3>
-                <p class="text-gray-600 mb-4">A runnable unit of software. Uses immutable <strong>Images</strong> to ensure consistency across environments.</p>
-                <div class="bg-gray-100 p-3 rounded text-xs font-mono text-blue-700">
-                    kubectl run my-pod --image=nginx:latest
-                </div>
+                <p class="text-gray-600 mb-3 text-sm">A runnable unit of software. Uses immutable <strong>Images</strong>.</p>
+                
+                <span class="code-label text-blue-600">Imperative:</span>
+                <div class="code-block">kubectl run my-pod --image=nginx:latest
+kubectl set image deployment/dep c=img:tag</div>
+                
+                <span class="code-label text-purple-600 mt-3">YAML Spec:</span>
+                <div class="code-block border-purple-500">spec:
+  containers:
+  - name: app
+    image: nginx:1.14.2
+    imagePullPolicy: IfNotPresent</div>
             </div>
             
             <div class="bg-white rounded-lg shadow-md p-6 border-t-4 border-indigo-500">
                 <h3 class="text-lg font-bold text-gray-800 mb-2">🚀 The Workload</h3>
-                <p class="text-gray-600 mb-4">Controllers that manage Pods. Never run "naked" Pods; use <strong>Deployments</strong> or <strong>StatefulSets</strong> for availability.</p>
-                <div class="bg-gray-100 p-3 rounded text-xs font-mono text-purple-700">
-                    kubectl create deployment my-dep --replicas=3
-                </div>
+                <p class="text-gray-600 mb-3 text-sm">Controllers (Deployments, StatefulSets) that manage Pod availability.</p>
+                
+                <span class="code-label text-blue-600">Imperative:</span>
+                <div class="code-block">kubectl create deployment my-dep --replicas=3
+kubectl get pods -o wide</div>
+
+                <span class="code-label text-purple-600 mt-3">YAML Spec:</span>
+                <div class="code-block border-purple-500">apiVersion: apps/v1
+kind: Deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels: ...</div>
             </div>
 
             <div class="bg-white rounded-lg shadow-md p-6 border-t-4 border-amber-500">
                 <h3 class="text-lg font-bold text-gray-800 mb-2">🌍 Environment</h3>
-                <p class="text-gray-600 mb-4">Inject config via <strong>ConfigMaps</strong> or <strong>Secrets</strong>. Decouple code from configuration.</p>
-                <div class="bg-gray-100 p-3 rounded text-xs font-mono text-amber-700">
-                    envFrom: - configMapRef: name: my-config
-                </div>
+                <p class="text-gray-600 mb-3 text-sm">Inject config via <strong>ConfigMaps</strong> or <strong>Secrets</strong>.</p>
+                
+                <span class="code-label text-blue-600">Imperative:</span>
+                <div class="code-block">kubectl run p --image=busybox --env="KEY=VAL"
+kubectl create configmap cfg --from-literal=k=v</div>
+
+                <span class="code-label text-purple-600 mt-3">YAML Spec:</span>
+                <div class="code-block border-purple-500">env:
+- name: DB_HOST
+  valueFrom:
+    configMapKeyRef:
+      name: db-config
+      key: host</div>
             </div>
         </div>
 
-        <!-- Section 3: Pod Anatomy (Donut Chart) -->
+        <!-- Section 3: Pod Anatomy (Donut Chart & Blueprint) -->
         <div class="lg:col-span-6 bg-white rounded-lg shadow-md p-6">
             <div class="mb-6 border-b pb-4">
                 <h3 class="text-xl font-bold text-gray-800 flex items-center gap-2">
@@ -176,7 +227,6 @@
                 </h3>
                 <p class="text-sm text-gray-500 mt-2">
                     A Pod is rarely just one container anymore. It's a collection of cooperative processes.
-                    The <strong>Init Container</strong> runs to completion first. The <strong>Sidecar</strong> (now native in v1.29+) runs alongside the <strong>App Container</strong>.
                 </p>
             </div>
             
@@ -186,21 +236,30 @@
                 </div>
             </div>
             
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
-                <div class="text-center p-2 bg-gray-50 rounded">
-                    <div class="text-xs text-gray-500 uppercase font-bold">First</div>
-                    <div class="font-semibold text-blue-600">Init Container</div>
-                    <div class="text-xs text-gray-400">Setup & Migration</div>
+            <!-- Code Patterns for Pod Anatomy -->
+            <div class="mt-6 bg-gray-50 p-4 rounded border border-gray-200">
+                <h4 class="font-bold text-gray-700 text-sm mb-2 border-b pb-2">Configuration Blueprint</h4>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <span class="code-label text-blue-600">1. Init Container (YAML)</span>
+                        <div class="code-block h-32">initContainers:
+- name: setup
+  image: busybox
+  command: ['sh', '-c', 'until nslookup db; do sleep 2; done']</div>
+                    </div>
+                    <div>
+                        <span class="code-label text-purple-600">2. Native Sidecar (YAML)</span>
+                        <div class="code-block h-32 border-purple-500">initContainers:
+- name: log-agent
+  image: fluentd
+  restartPolicy: Always # Magic Flag</div>
+                    </div>
                 </div>
-                <div class="text-center p-2 bg-gray-50 rounded">
-                    <div class="text-xs text-gray-500 uppercase font-bold">Parallel</div>
-                    <div class="font-semibold text-purple-600">Sidecar</div>
-                    <div class="text-xs text-gray-400">Logging & Mesh</div>
-                </div>
-                <div class="text-center p-2 bg-gray-50 rounded">
-                    <div class="text-xs text-gray-500 uppercase font-bold">Core</div>
-                    <div class="font-semibold text-cyan-600">App Container</div>
-                    <div class="text-xs text-gray-400">Business Logic</div>
+                <div class="mt-4">
+                    <span class="code-label text-amber-600">3. Ephemeral Container (Imperative Only)</span>
+                     <div class="code-block border-amber-500"># Attach debug shell to running pod
+kubectl debug -it my-pod --image=busybox --target=main-container</div>
                 </div>
             </div>
         </div>
@@ -212,7 +271,7 @@
                     <span class="text-green-600 text-2xl">⏳</span> The Pod Lifecycle
                 </h3>
                 <p class="text-sm text-gray-500 mt-2">
-                    A Pod goes through distinct phases. Lifecycle hooks allow you to intervene during startup and shutdown.
+                    Intervene during startup and shutdown with hooks.
                 </p>
             </div>
 
@@ -226,7 +285,7 @@
                     <div class="absolute -left-4 md:-left-10 w-8 h-8 rounded-full bg-gray-300 border-4 border-white shadow flex items-center justify-center font-bold text-white text-sm">1</div>
                     <div class="bg-gray-50 p-4 rounded-r-lg border-l-4 border-gray-400 shadow-sm">
                         <h4 class="font-bold text-gray-700">Pending Phase</h4>
-                        <p class="text-xs text-gray-500">Scheduler accepts Pod. Image download happens here.</p>
+                        <p class="text-xs text-gray-500">Scheduler accepts Pod.</p>
                     </div>
                 </div>
 
@@ -235,8 +294,11 @@
                     <div class="absolute -left-4 md:-left-10 w-8 h-8 rounded-full bg-blue-500 border-4 border-white shadow flex items-center justify-center font-bold text-white text-sm">2</div>
                     <div class="bg-blue-50 p-4 rounded-r-lg border-l-4 border-blue-500 shadow-sm">
                         <h4 class="font-bold text-blue-800">Hook: postStart</h4>
-                        <p class="text-xs text-blue-600">Executes immediately after container creation. Does not wait for app to be ready.</p>
-                        <code class="block mt-2 text-xs bg-white p-1 rounded border border-blue-100">exec: command: ["/bin/sh", "-c", "echo Warmup"]</code>
+                        <p class="text-xs text-blue-600 mb-2">Executes immediately after container creation.</p>
+                        <div class="code-block">lifecycle:
+  postStart:
+    exec:
+      command: ["/bin/sh", "-c", "echo Warmup"]</div>
                     </div>
                 </div>
 
@@ -245,7 +307,7 @@
                     <div class="absolute -left-4 md:-left-10 w-8 h-8 rounded-full bg-green-500 border-4 border-white shadow flex items-center justify-center font-bold text-white text-sm">3</div>
                     <div class="bg-green-50 p-4 rounded-r-lg border-l-4 border-green-500 shadow-sm">
                         <h4 class="font-bold text-green-800">Running Phase</h4>
-                        <p class="text-xs text-green-600">Bound to node. At least one container is running. The main workload happens here.</p>
+                        <p class="text-xs text-green-600">Bound to node. Containers running.</p>
                     </div>
                 </div>
 
@@ -254,8 +316,12 @@
                     <div class="absolute -left-4 md:-left-10 w-8 h-8 rounded-full bg-amber-500 border-4 border-white shadow flex items-center justify-center font-bold text-white text-sm">4</div>
                     <div class="bg-amber-50 p-4 rounded-r-lg border-l-4 border-amber-500 shadow-sm">
                         <h4 class="font-bold text-amber-800">Hook: preStop</h4>
-                        <p class="text-xs text-amber-600">Called <strong>before</strong> container is terminated. Critical for graceful shutdowns.</p>
-                        <code class="block mt-2 text-xs bg-white p-1 rounded border border-amber-100">exec: command: ["nginx", "-s", "quit"]</code>
+                        <p class="text-xs text-amber-600 mb-2">Called <strong>before</strong> container is terminated.</p>
+                        <div class="code-block border-amber-500">lifecycle:
+  preStop:
+    exec:
+      # Nginx graceful shutdown
+      command: ["/bin/sh","-c","nginx -s quit;"]</div>
                     </div>
                 </div>
 
@@ -264,7 +330,6 @@
                     <div class="absolute -left-4 md:-left-10 w-8 h-8 rounded-full bg-gray-800 border-4 border-white shadow flex items-center justify-center font-bold text-white text-sm">5</div>
                     <div class="bg-gray-100 p-4 rounded-r-lg border-l-4 border-gray-600 shadow-sm">
                         <h4 class="font-bold text-gray-800">Succeeded / Failed</h4>
-                        <p class="text-xs text-gray-500">All containers terminated. RestartPolicy determines if it restarts.</p>
                     </div>
                 </div>
             </div>
@@ -277,29 +342,36 @@
                     <span class="text-red-500 text-2xl">🛡️</span> Quality of Service (QoS) Classes
                 </h3>
                 <p class="text-sm text-gray-500 mt-2">
-                    Kubernetes assigns a QoS class based on your resource requests and limits. 
-                    This chart visualizes the "Protection Level" (how likely the pod is to survive resource starvation) versus "Cost/Rigidity" (how strictly you must define resources).
+                    K8s assigns QoS based on requests/limits. 
                 </p>
             </div>
             
-            <div class="chart-wrapper-constrained">
-                <div class="chart-container">
-                    <canvas id="qosChart"></canvas>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="chart-wrapper-constrained w-full">
+                    <div class="chart-container">
+                        <canvas id="qosChart"></canvas>
+                    </div>
                 </div>
-            </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6 text-sm">
-                <div class="p-3 border rounded bg-green-50 border-green-200">
-                    <div class="font-bold text-green-700">Guaranteed</div>
-                    <p class="text-xs text-gray-600 mt-1">Requests = Limits for ALL containers. Highest survival priority.</p>
-                </div>
-                <div class="p-3 border rounded bg-yellow-50 border-yellow-200">
-                    <div class="font-bold text-yellow-700">Burstable</div>
-                    <p class="text-xs text-gray-600 mt-1">Requests < Limits. Good balance of safety and flexibility.</p>
-                </div>
-                <div class="p-3 border rounded bg-red-50 border-red-200">
-                    <div class="font-bold text-red-700">BestEffort</div>
-                    <p class="text-xs text-gray-600 mt-1">No requests/limits. First to be killed if Node is full.</p>
+                <div class="flex flex-col justify-center space-y-4">
+                     <div class="bg-green-50 p-4 rounded border border-green-200">
+                        <div class="font-bold text-green-800 text-sm mb-1">Guaranteed (The Gold Standard)</div>
+                        <p class="text-xs text-green-700 mb-2">Request = Limit for everything.</p>
+                        <div class="code-block border-green-500">resources:
+  limits:
+    memory: "200Mi"
+    cpu: "700m"
+  requests:
+    memory: "200Mi"
+    cpu: "700m"</div>
+                    </div>
+                    <div class="bg-yellow-50 p-4 rounded border border-yellow-200">
+                         <div class="font-bold text-yellow-800 text-sm mb-1">Burstable</div>
+                         <div class="code-block border-yellow-500">resources:
+  requests:
+    memory: "100Mi"
+  # Limit > Request or No Limit</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -307,30 +379,39 @@
         <!-- Section 6: Advanced Configs (Grid) -->
         <div class="lg:col-span-4 grid grid-cols-1 gap-6">
              <div class="bg-white rounded-lg shadow-md p-6 border-t-4 border-pink-500">
-                <h3 class="text-lg font-bold text-gray-800 mb-2">📉 Pod Disruption Budget (PDB)</h3>
-                <p class="text-gray-600 text-sm mb-3">Limits how many pods can be down simultaneously during voluntary disruptions (like upgrades).</p>
-                <div class="flex justify-between items-center mt-2">
-                    <span class="text-xs font-bold bg-pink-100 text-pink-700 px-2 py-1 rounded">Availability</span>
-                    <span class="text-xs font-mono text-gray-500">minAvailable: 2</span>
-                </div>
+                <h3 class="text-lg font-bold text-gray-800 mb-2">📉 Pod Disruption Budget</h3>
+                <p class="text-gray-600 text-sm mb-3">Limits voluntary disruptions.</p>
+                <span class="code-label text-blue-600">Imperative:</span>
+                <div class="code-block">kubectl create pdb my-pdb \
+--selector=app=nginx --min-available=2</div>
+                <span class="code-label text-purple-600 mt-2">YAML:</span>
+                <div class="code-block border-purple-500">spec:
+  minAvailable: 2
+  selector:
+    matchLabels:
+      app: zookeeper</div>
             </div>
 
             <div class="bg-white rounded-lg shadow-md p-6 border-t-4 border-teal-500">
                 <h3 class="text-lg font-bold text-gray-800 mb-2">📥 Downward API</h3>
-                <p class="text-gray-600 text-sm mb-3">Expose Pod metadata (IP, Name, Namespace) to the container itself as Environment Variables.</p>
-                <div class="flex justify-between items-center mt-2">
-                    <span class="text-xs font-bold bg-teal-100 text-teal-700 px-2 py-1 rounded">Introspection</span>
-                    <span class="text-xs font-mono text-gray-500">status.podIP</span>
-                </div>
+                <p class="text-gray-600 text-sm mb-3">Expose Pod metadata to container.</p>
+                <span class="code-label text-purple-600">YAML:</span>
+                <div class="code-block border-teal-500">env:
+  - name: MY_POD_IP
+    valueFrom:
+      fieldRef:
+        fieldPath: status.podIP</div>
             </div>
 
             <div class="bg-white rounded-lg shadow-md p-6 border-t-4 border-gray-700">
                 <h3 class="text-lg font-bold text-gray-800 mb-2">🏗️ Runtime Class</h3>
-                <p class="text-gray-600 text-sm mb-3">Switch underlying container runtimes. Run untrusted code in sandboxes like <strong>gVisor</strong> or <strong>Kata</strong>.</p>
-                <div class="flex justify-between items-center mt-2">
-                    <span class="text-xs font-bold bg-gray-200 text-gray-700 px-2 py-1 rounded">Security</span>
-                    <span class="text-xs font-mono text-gray-500">handler: runsc</span>
-                </div>
+                <p class="text-gray-600 text-sm mb-3">Switch runtimes (e.g., gVisor).</p>
+                <span class="code-label text-purple-600">YAML:</span>
+                <div class="code-block border-gray-500">apiVersion: v1
+kind: Pod
+spec:
+  runtimeClassName: gvisor
+  containers: ...</div>
             </div>
         </div>
 
