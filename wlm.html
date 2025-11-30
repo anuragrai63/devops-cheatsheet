@@ -332,6 +332,121 @@
             </div>
         </section>
 
+        <!-- SECTION 3.5: STRATEGY TYPES (UPDATED) -->
+        <section class="bg-slate-800 rounded-3xl p-8 border border-slate-700">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold text-white mb-4">Deployment & Update Strategies</h2>
+                <p class="text-slate-400 max-w-2xl mx-auto">
+                    How Kubernetes transitions workloads from version A to version B. The choice of strategy affects availability and rollout speed.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- RollingUpdate (Deployment/DS) -->
+                <div class="bg-slate-900 p-6 rounded-xl border-t-4 border-teal-500 shadow-lg">
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="text-xl font-bold text-white">RollingUpdate</h3>
+                        <span class="text-xs font-mono bg-teal-500/20 text-teal-400 px-2 py-1 rounded">Deploy Default</span>
+                    </div>
+                    <p class="text-slate-300 text-sm mb-4 leading-relaxed">
+                        Replaces Pods gradually to ensure zero downtime.
+                        <br><code>maxSurge</code>: Extra pods allowed above replica count.
+                        <br><code>maxUnavailable</code>: Max pods allowed to be down.
+                    </p>
+                    <div class="code-block text-xs mb-4">
+                        <span class="code-key">strategy:</span><br>
+                        &nbsp;&nbsp;<span class="code-key">type:</span> <span class="code-str">RollingUpdate</span><br>
+                        &nbsp;&nbsp;<span class="code-key">rollingUpdate:</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">maxUnavailable:</span> <span class="code-val">25%</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">maxSurge:</span> <span class="code-val">25%</span>
+                    </div>
+                    <div class="text-xs text-slate-400">
+                        <strong>Best for:</strong> Standard web services requiring high availability.
+                    </div>
+                </div>
+
+                <!-- Recreate (Deployment) -->
+                <div class="bg-slate-900 p-6 rounded-xl border-t-4 border-pink-500 shadow-lg">
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="text-xl font-bold text-white">Recreate</h3>
+                        <span class="text-xs font-mono bg-pink-500/20 text-pink-400 px-2 py-1 rounded">Deploy Option</span>
+                    </div>
+                    <p class="text-slate-300 text-sm mb-4 leading-relaxed">
+                        Terminates <strong>ALL</strong> existing Pods first, then creates new ones.
+                        <br><span class="text-pink-400">⚠ Downtime Inevitable.</span>
+                        <br>Guarantees no version mixing (v1 and v2 never run together).
+                    </p>
+                    <div class="code-block text-xs mb-4">
+                        <span class="code-key">strategy:</span><br>
+                        &nbsp;&nbsp;<span class="code-key">type:</span> <span class="code-str">Recreate</span>
+                    </div>
+                    <div class="text-xs text-slate-400">
+                        <strong>Best for:</strong> Legacy apps or non-locking DB schema changes.
+                    </div>
+                </div>
+
+                <!-- OrderedReady (StatefulSet) -->
+                <div class="bg-slate-900 p-6 rounded-xl border-t-4 border-purple-500 shadow-lg">
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="text-xl font-bold text-white">OrderedReady</h3>
+                        <span class="text-xs font-mono bg-purple-500/20 text-purple-400 px-2 py-1 rounded">STS Default</span>
+                    </div>
+                    <p class="text-slate-300 text-sm mb-4 leading-relaxed">
+                        The default RollingUpdate behavior for StatefulSets.
+                        <br>Updates Pods in strict reverse ordinal order (e.g., 2 → 1 → 0).
+                        <br>Waits for "Ready" state before moving to the next.
+                    </p>
+                    <div class="code-block text-xs mb-4">
+                        <span class="code-key">updateStrategy:</span><br>
+                        &nbsp;&nbsp;<span class="code-key">type:</span> <span class="code-str">RollingUpdate</span><br>
+                        &nbsp;&nbsp;<span class="code-key">rollingUpdate:</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">partition:</span> <span class="code-val">0</span>
+                    </div>
+                    <div class="text-xs text-slate-400">
+                        <strong>Best for:</strong> Databases requiring quorum/ordered startup.
+                    </div>
+                </div>
+
+                <!-- OnDelete (StatefulSet/DaemonSet) -->
+                <div class="bg-slate-900 p-6 rounded-xl border-t-4 border-yellow-500 shadow-lg">
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="text-xl font-bold text-white">OnDelete</h3>
+                        <span class="text-xs font-mono bg-yellow-500/20 text-yellow-400 px-2 py-1 rounded">Manual Mode</span>
+                    </div>
+                    <p class="text-slate-300 text-sm mb-4 leading-relaxed">
+                        The controller will <strong>NOT</strong> automatically update Pods when template changes.
+                        <br>You must manually <code>delete</code> a Pod to trigger the update for that specific instance.
+                    </p>
+                    <div class="code-block text-xs mb-4">
+                        <span class="code-key">updateStrategy:</span><br>
+                        &nbsp;&nbsp;<span class="code-key">type:</span> <span class="code-str">OnDelete</span>
+                    </div>
+                    <div class="text-xs text-slate-400">
+                        <strong>Best for:</strong> Complex distributed systems needing manual operator control.
+                    </div>
+                </div>
+
+                <!-- Parallel (StatefulSet Management) -->
+                <div class="bg-slate-900 p-6 rounded-xl border-t-4 border-blue-500 shadow-lg lg:col-span-2">
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="text-xl font-bold text-white">Parallel (Scaling Policy)</h3>
+                        <span class="text-xs font-mono bg-blue-500/20 text-blue-400 px-2 py-1 rounded">STS Policy</span>
+                    </div>
+                    <p class="text-slate-300 text-sm mb-4 leading-relaxed">
+                        Controls <strong>Scaling</strong> (startup/teardown), NOT rolling updates.
+                        <br>Launches/terminates all Pods in parallel, ignoring ordinal order.
+                        <br><span class="text-slate-500 italic">Note: Rolling Updates will still respect order unless OnDelete is used.</span>
+                    </p>
+                    <div class="code-block text-xs mb-4 inline-block w-full">
+                        <span class="code-key">podManagementPolicy:</span> <span class="code-str">Parallel</span>
+                    </div>
+                    <div class="text-xs text-slate-400">
+                        <strong>Best for:</strong> Stateful apps needing unique IDs but not ordered startup (e.g., AI workers).
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- SECTION 4: DAEMONSETS (NEW SECTION) -->
         <section class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-3xl p-8 border border-slate-700">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
