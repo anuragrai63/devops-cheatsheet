@@ -47,6 +47,10 @@
             background: #4b5563;
             border-radius: 4px;
         }
+        .code-comment { color: #6B7280; font-style: italic; }
+        .code-key { color: #A78BFA; }
+        .code-val { color: #93C5FD; }
+        .code-str { color: #34D399; }
     </style>
     <!-- 
         Palette: Vibrant Tech
@@ -56,22 +60,6 @@
         Success: #10B981 (Emerald)
         Warning: #F59E0B (Amber)
         NO SVG USED. NO MERMAID USED.
-    -->
-    <!--
-        Plan Summary:
-        1. Intro: Overview of K8s Networking complexity.
-        2. Services: 
-           - Enhanced Bar Chart for distribution.
-           - Detailed YAML cards for ClusterIP, NodePort, LoadBalancer, ExternalName with Use Cases.
-        3. External Access: 
-           - Ingress vs Gateway API (Radar).
-           - Gateway Hierarchy (HTML Diagram).
-           - YAML examples for Ingress and Gateway/HTTPRoute.
-        4. Scalability: EndpointSlices vs Endpoints performance (Line).
-        5. Security: 
-           - Network Policy Traffic Matrix (Plotly Heatmap).
-           - YAML examples for Default Deny and Allow Specific.
-        6. Advanced: Topology & Dual Stack adoption (Doughnut).
     -->
 </head>
 <body class="text-gray-800">
@@ -220,8 +208,58 @@ spec:
 </pre>
                     </div>
                 </div>
-
             </div>
+
+            <!-- Advanced Service Properties -->
+            <h4 class="text-2xl font-bold text-indigo-700 mb-4 mt-8">Advanced Service Properties</h4>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                
+                <!-- Internal Traffic Policy -->
+                <div class="bg-gray-900 rounded-lg overflow-hidden shadow-lg flex flex-col">
+                    <div class="bg-pink-600 px-4 py-2 text-white font-bold flex justify-between items-center">
+                        <span>Internal Traffic Policy</span>
+                        <span class="text-xs bg-pink-800 px-2 py-1 rounded">Topology</span>
+                    </div>
+                    <div class="p-4 flex-grow">
+                        <p class="text-gray-300 text-sm mb-3 italic">Use Case: "Route traffic only to endpoints on the same node to avoid network hops."</p>
+<pre class="text-xs text-pink-300 font-mono bg-gray-800 p-3 rounded border border-gray-700 overflow-x-auto">
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-local-service
+spec:
+  # 'Cluster' (default) or 'Local'
+  internalTrafficPolicy: Local 
+  selector:
+    app: logging-agent
+  ports:
+    - port: 80
+</pre>
+                    </div>
+                </div>
+
+                <!-- ClusterIP Allocation -->
+                <div class="bg-gray-900 rounded-lg overflow-hidden shadow-lg flex flex-col">
+                    <div class="bg-teal-600 px-4 py-2 text-white font-bold flex justify-between items-center">
+                        <span>ClusterIP Allocation</span>
+                        <span class="text-xs bg-teal-800 px-2 py-1 rounded">Static/Headless</span>
+                    </div>
+                    <div class="p-4 flex-grow">
+                        <p class="text-gray-300 text-sm mb-3 italic">Use Case: "Fix a specific IP for legacy apps or use Headless for direct Pod discovery."</p>
+<pre class="text-xs text-teal-300 font-mono bg-gray-800 p-3 rounded border border-gray-700 overflow-x-auto">
+spec:
+  # Option 1: Request Specific IP
+  clusterIP: 10.96.0.10
+
+  # Option 2: Headless (No IP)
+  # clusterIP: None
+  ports:
+    - port: 80
+</pre>
+                    </div>
+                </div>
+            </div>
+
         </section>
 
         <!-- Section 2: External Access (Ingress & Gateway) -->
@@ -268,59 +306,121 @@ spec:
                 </div>
             </div>
 
-            <!-- Ingress & Gateway YAMLs -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <!-- Ingress YAML -->
-                <div class="bg-gray-900 rounded-lg overflow-hidden shadow-lg">
-                    <div class="bg-purple-600 px-4 py-2 text-white font-bold">Ingress Resource</div>
-                    <div class="p-4">
-                        <p class="text-gray-300 text-sm mb-3 italic">Use Case: "Route 'example.com/api' to Service A and 'example.com/web' to Service B."</p>
-<pre class="text-xs text-purple-300 font-mono bg-gray-800 p-3 rounded border border-gray-700 overflow-x-auto">
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: minimal-ingress
-spec:
-  ingressClassName: nginx
-  rules:
-  - host: "foo.bar.com"
-    http:
-      paths:
-      - path: /testpath
-        pathType: Prefix
-        backend:
-          service:
-            name: test
-            port:
-              number: 80
+            <!-- Detailed Step-by-Step YAMLs -->
+            <div class="grid grid-cols-1 gap-8 mt-12">
+                
+                <!-- Ingress Breakdown -->
+                <div class="bg-gray-900 rounded-lg shadow-xl overflow-hidden border border-gray-700">
+                    <div class="bg-purple-600 p-4 flex justify-between items-center">
+                        <h4 class="font-bold text-white text-lg">Ingress: Step-by-Step Configuration</h4>
+                        <span class="bg-purple-800 text-xs text-white px-2 py-1 rounded">Standard Resource</span>
+                    </div>
+                    <div class="p-6">
+                        <p class="text-gray-300 text-sm mb-4">Use this for HTTP/HTTPS routing based on Host or Path.</p>
+<pre class="text-sm font-mono text-gray-100 bg-gray-800 p-4 rounded border border-gray-700 overflow-x-auto whitespace-pre">
+<span class="code-key">apiVersion:</span> <span class="code-val">networking.k8s.io/v1</span>
+<span class="code-key">kind:</span> <span class="code-val">Ingress</span>
+<span class="code-key">metadata:</span>
+  <span class="code-key">name:</span> <span class="code-str">minimal-ingress</span>
+  <span class="code-key">annotations:</span>
+    <span class="code-comment"># Optional: Controller-specific config (e.g., Rewrite rules)</span>
+    <span class="code-key">nginx.ingress.kubernetes.io/rewrite-target:</span> <span class="code-str">/</span>
+<span class="code-key">spec:</span>
+  <span class="code-comment"># 1. Specify which Ingress Controller to use (e.g., nginx, traefik)</span>
+  <span class="code-key">ingressClassName:</span> <span class="code-str">nginx</span>
+  
+  <span class="code-key">rules:</span>
+  <span class="code-comment"># 2. Define the Hostname (Domain)</span>
+  - <span class="code-key">host:</span> <span class="code-str">"app.example.com"</span>
+    <span class="code-key">http:</span>
+      <span class="code-key">paths:</span>
+      <span class="code-comment"># 3. Define the Path (URL suffix) and matching type</span>
+      - <span class="code-key">path:</span> <span class="code-str">/api</span>
+        <span class="code-key">pathType:</span> <span class="code-val">Prefix</span>
+        <span class="code-key">backend:</span>
+          <span class="code-comment"># 4. Point to the internal Service</span>
+          <span class="code-key">service:</span>
+            <span class="code-key">name:</span> <span class="code-str">backend-service</span>
+            <span class="code-key">port:</span>
+              <span class="code-key">number:</span> <span class="code-val">8080</span>
 </pre>
                     </div>
                 </div>
 
-                <!-- Gateway API YAML -->
-                <div class="bg-gray-900 rounded-lg overflow-hidden shadow-lg">
-                    <div class="bg-blue-600 px-4 py-2 text-white font-bold">Gateway API (HTTPRoute)</div>
-                    <div class="p-4">
-                        <p class="text-gray-300 text-sm mb-3 italic">Use Case: "Advanced traffic splitting (Canary): Send 90% traffic to v1, 10% to v2."</p>
-<pre class="text-xs text-blue-300 font-mono bg-gray-800 p-3 rounded border border-gray-700 overflow-x-auto">
-apiVersion: gateway.networking.k8s.io/v1
-kind: HTTPRoute
-metadata:
-  name: http-app-1
-spec:
-  parentRefs:
-  - name: my-gateway
-  rules:
-  - matches:
-    - path:
-        type: PathPrefix
-        value: /
-    backendRefs:
-    - name: my-service-v1
-      weight: 90
-    - name: my-service-v2
-      weight: 10
+                <!-- Gateway API Breakdown (Tabs/Cards) -->
+                <div>
+                    <h4 class="text-2xl font-bold text-gray-800 mb-4">Gateway API: The Configuration Triad</h4>
+                    <p class="text-gray-600 mb-6">Gateway API splits configuration into three dedicated resources for better Role-Based Access Control (RBAC).</p>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        
+                        <!-- GatewayClass -->
+                        <div class="bg-gray-900 rounded-lg shadow-lg border-t-4 border-purple-500 overflow-hidden">
+                            <div class="p-3 bg-gray-800 border-b border-gray-700">
+                                <h5 class="text-purple-400 font-bold uppercase text-xs">1. Infrastructure (GatewayClass)</h5>
+                            </div>
+                            <div class="p-4 overflow-x-auto">
+<pre class="text-xs font-mono text-gray-200">
+<span class="code-key">apiVersion:</span> <span class="code-val">gateway.networking.k8s.io/v1</span>
+<span class="code-key">kind:</span> <span class="code-val">GatewayClass</span>
+<span class="code-key">metadata:</span>
+  <span class="code-key">name:</span> <span class="code-str">nginx-gateway-class</span>
+<span class="code-key">spec:</span>
+  <span class="code-comment"># Defines WHO manages this</span>
+  <span class="code-key">controllerName:</span> <span class="code-str">k8s.io/ingress-nginx</span>
 </pre>
+                            </div>
+                        </div>
+
+                        <!-- Gateway -->
+                        <div class="bg-gray-900 rounded-lg shadow-lg border-t-4 border-indigo-500 overflow-hidden">
+                            <div class="p-3 bg-gray-800 border-b border-gray-700">
+                                <h5 class="text-indigo-400 font-bold uppercase text-xs">2. Instance (Gateway)</h5>
+                            </div>
+                            <div class="p-4 overflow-x-auto">
+<pre class="text-xs font-mono text-gray-200">
+<span class="code-key">apiVersion:</span> <span class="code-val">gateway.networking.k8s.io/v1</span>
+<span class="code-key">kind:</span> <span class="code-val">Gateway</span>
+<span class="code-key">metadata:</span>
+  <span class="code-key">name:</span> <span class="code-str">my-gateway</span>
+<span class="code-key">spec:</span>
+  <span class="code-comment"># Links to the Class above</span>
+  <span class="code-key">gatewayClassName:</span> <span class="code-str">nginx-gateway-class</span>
+  <span class="code-key">listeners:</span>
+  - <span class="code-key">name:</span> <span class="code-str">http</span>
+    <span class="code-key">protocol:</span> <span class="code-val">HTTP</span>
+    <span class="code-key">port:</span> <span class="code-val">80</span>
+</pre>
+                            </div>
+                        </div>
+
+                        <!-- HTTPRoute -->
+                        <div class="bg-gray-900 rounded-lg shadow-lg border-t-4 border-sky-500 overflow-hidden">
+                            <div class="p-3 bg-gray-800 border-b border-gray-700">
+                                <h5 class="text-sky-400 font-bold uppercase text-xs">3. Routing (HTTPRoute)</h5>
+                            </div>
+                            <div class="p-4 overflow-x-auto">
+<pre class="text-xs font-mono text-gray-200">
+<span class="code-key">apiVersion:</span> <span class="code-val">gateway.networking.k8s.io/v1</span>
+<span class="code-key">kind:</span> <span class="code-val">HTTPRoute</span>
+<span class="code-key">metadata:</span>
+  <span class="code-key">name:</span> <span class="code-str">my-route</span>
+<span class="code-key">spec:</span>
+  <span class="code-comment"># Attach to Gateway Instance</span>
+  <span class="code-key">parentRefs:</span>
+  - <span class="code-key">name:</span> <span class="code-str">my-gateway</span>
+  <span class="code-key">rules:</span>
+  - <span class="code-key">matches:</span>
+    - <span class="code-key">path:</span>
+        <span class="code-key">type:</span> <span class="code-val">PathPrefix</span>
+        <span class="code-key">value:</span> <span class="code-str">/api</span>
+    <span class="code-key">backendRefs:</span>
+    - <span class="code-key">name:</span> <span class="code-str">my-service</span>
+      <span class="code-key">port:</span> <span class="code-val">8080</span>
+</pre>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
