@@ -10,8 +10,8 @@
       --card:#071328;
       --muted:#9ca3af;
       --accent:#06b6d4;
-      --tf:#7b42f6;
-      --k8s-1:#2563eb;
+      --tf:#7b42f6; /* Terraform Purple */
+      --k8s-1:#2563eb; /* K8s Blue */
       --k8s-2:#1e40af;
       --glass: rgba(255,255,255,0.03);
       --max-width:1100px;
@@ -88,18 +88,6 @@
       border-color:var(--accent);
     }
 
-    .center{
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      margin-bottom:18px;
-      text-align:center;
-      flex-direction:column;
-    }
-
-    .home-title{font-size:28px;font-weight:700;margin-bottom:6px}
-    .sub{color:var(--muted);font-size:14px;margin-top:0}
-
     .grid{
       display:grid;
       grid-template-columns:repeat(2,1fr);
@@ -168,7 +156,6 @@
     <header>
       <div class="brand" aria-hidden="false">
         <div class="logo" aria-hidden="true">
-          <!-- Small combined logo -->
           <svg width="36" height="36" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="DevOps">
             <rect width="48" height="48" rx="10" fill="url(#g)"/>
             <defs>
@@ -179,6 +166,7 @@
             </defs>
             <path d="M14 28 L34 20 L34 28 L14 36 Z" fill="white" opacity="0.06"></path>
             <circle cx="24" cy="24" r="8" fill="white" opacity="0.05"></circle>
+            <path d="M16 24 C16 20 20 20 22 22 L26 26 C28 28 32 28 32 24 C32 20 28 20 26 22 L22 26 C20 28 16 28 16 24 Z" stroke="white" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.9"/>
           </svg>
         </div>
         <div>
@@ -188,24 +176,19 @@
       </div>
 
       <div class="controls" role="search" aria-label="Filter topics">
-        <input id="search" class="search" type="search" placeholder="Search topics (e.g. pods, terraform, storage)..." aria-label="Search topics" />
+        <input id="search" class="search" type="search" placeholder="Search topics (e.g. pods, terraform)..." aria-label="Search topics" />
       </div>
     </header>
 
     <div class="grid">
-      <!-- Terraform Card -->
       <section class="card" aria-labelledby="terraform-title">
         <div class="header">
           <button class="icon" onclick="location.href='Terraform/'" title="Open Terraform folder" aria-label="Open Terraform folder">
-            <!-- Enhanced Terraform-like SVG mark -->
-            <svg width="44" height="44" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Terraform">
-              <rect width="256" height="256" rx="36" fill="#7b42f6"/>
-              <!-- stylized stacked 'T' strokes inspired by Terraform mark -->
-              <g transform="translate(44,44) scale(0.6)" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="18">
-                <path d="M64 32 L128 32 L128 64" opacity="0.98"/>
-                <path d="M64 64 L128 64 L128 96" opacity="0.98"/>
-                <path d="M64 96 L128 96 L128 160" opacity="0.98"/>
-              </g>
+            <svg width="40" height="40" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M32 3L58 17V33L32 19L6 33V17L32 3Z" fill="#5C4EE5"/>
+                <path d="M32 47L58 61V47L32 33L6 47V61L32 47Z" fill="#4040B2" opacity="0.4"/>
+                <path d="M32 33V61L6 47V19L32 33Z" fill="#5C4EE5" opacity="0.8"/>
+                <path d="M32 33V61L58 47V19L32 33Z" fill="#5C4EE5"/>
             </svg>
           </button>
 
@@ -217,42 +200,22 @@
 
         <div class="topics" aria-label="Terraform topics" data-category="terraform">
           <div class="topic"><a href="Terraform/1-TFCMD.html"><span class="label">1. Terraform Command Cheat Sheet</span></a></div>
-          <div class="topic"><a href="Terraform/2-terraform-state.html"><span class="label">2. Terraform State</span></a></div>
-          <div class="topic"><a href="Terraform/3-modules.html"><span class="label">3. Modules & Outputs</span></a></div>
-        </div>
+          </div>
       </section>
 
-      <!-- Kubernetes Card -->
       <section class="card" aria-labelledby="k8s-title">
         <div class="header">
           <button class="icon" onclick="location.href='k8s/'" title="Open Kubernetes folder" aria-label="Open Kubernetes folder">
-            <!-- Improved Kubernetes SVG: hexagon + ship wheel -->
-            <svg width="44" height="44" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Kubernetes">
-              <defs>
-                <linearGradient id="kg" x1="0" x2="1">
-                  <stop offset="0" stop-color="#2563eb"/>
-                  <stop offset="1" stop-color="#1e40af"/>
-                </linearGradient>
-              </defs>
-              <rect width="100" height="100" rx="16" fill="url(#kg)" />
-              <g transform="translate(18,15) scale(0.65)" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M50 8 L61 18 L54 31 L38 31 L31 18 Z" fill="#fff" opacity="0.06"/>
-                <circle cx="50" cy="40" r="6" fill="#fff"/>
-                <path d="M50 6 L50 16"/>
-                <path d="M50 64 L50 54"/>
-                <path d="M26 40 L36 40"/>
-                <path d="M74 40 L64 40"/>
-                <path d="M36 21 L42 27"/>
-                <path d="M64 59 L58 53"/>
-                <path d="M36 59 L42 53"/>
-                <path d="M64 21 L58 27"/>
-              </g>
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2L14.5 7H19.5L15.5 11L17 16L12 13.5L7 16L8.5 11L4.5 7H9.5L12 2Z" fill="#326CE5"/>
+                <circle cx="12" cy="12" r="9" stroke="#326CE5" stroke-width="1.5"/>
+                <path d="M12 2V6M19.5 7L16 9M17 16L14 14M7 16L10 14M4.5 7L8 9" stroke="#326CE5" stroke-width="1.5" stroke-linecap="round"/>
             </svg>
           </button>
 
           <div style="flex:1">
             <div id="k8s-title" class="title">Kubernetes</div>
-            <div class="muted">K8s cheatsheet</div>
+            <div class="muted">Container Orchestration</div>
           </div>
         </div>
 
@@ -266,7 +229,7 @@
           <div class="topic"><a href="k8s/7-cfg.html">7. K8s Configurations</a></div>
           <div class="topic"><a href="k8s/8-sec.html">8. K8s Security</a></div>
           <div class="topic"><a href="k8s/9-pol.html">9. K8s Policies</a></div>
-          <div class="topic"><a href="k8s/10-scm.html">10. K8s Scheduling, Preemption and Eviction</a></div>
+          <div class="topic"><a href="k8s/10-scm.html">10. K8s Scheduling</a></div>
         </div>
       </section>
     </div>
@@ -313,7 +276,7 @@
         });
       });
 
-      // Allow pressing "/" to focus search (like many sites)
+      // Allow pressing "/" to focus search
       window.addEventListener('keydown', (e) => {
         if (e.key === '/' && document.activeElement !== input) {
           e.preventDefault();
