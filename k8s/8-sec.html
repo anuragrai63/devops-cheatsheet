@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kubernetes Security Infographic</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #0f172a; /* Slate 900 */
+            color: #f8fafc; /* Slate 50 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .card {
+            background-color: #1e293b; /* Slate 800 */
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+        }
+        .gradient-text {
+            background: linear-gradient(to right, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .connector-line {
+            width: 2px;
+            background-color: #475569;
+        }
+        .arrow-down {
+            width: 0; 
+            height: 0; 
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 10px solid #475569;
+        }
+        /* Code Block Styling */
+        .code-preview {
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.75rem;
+            line-height: 1.4;
+            color: #e2e8f0;
+            background-color: #020617; /* Very dark slate */
+            border: 1px solid #334155;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            overflow-x: auto;
+            white-space: pre;
+            margin-top: auto;
+        }
+        .k-key { color: #7dd3fc; } /* Sky Blue */
+        .k-val { color: #bef264; } /* Lime Green */
+        .k-com { color: #64748b; font-style: italic; } /* Slate Comment */
+        .k-str { color: #fca5a5; } /* Red String */
+    </style>
+    <!-- 
+    Source Material Analysis:
+    The source material is a Kubernetes Security Cheat Sheet covering PSS, RBAC, Secrets, Node Security, Network Policies, and Control Plane hardening.
+    
+    Narrative Plan:
+    1. Title/Hook: K8s Security Landscape.
+    2. Foundation: Pod Security Standards (PSS) - comparing levels.
+    3. Access Control: Visualizing RBAC and Service Accounts.
+    4. Workload Hardening: Comparing a Default Pod vs. Hardened Pod (Radar Chart).
+    5. Network Security: Visualizing Isolation (Bar Chart/Process).
+    6. Checklists: Summarizing App and Cluster hardening steps.
+
+    Visualization Choices (NO SVG, NO MERMAID):
+    1. PSS Levels: Bar Chart (Chart.js) - Goal: Compare. Justification: Shows the increasing strictness of the three levels clearly.
+    2. Workload Hardening: Radar Chart (Chart.js) - Goal: Relationships. Justification: Effectively compares multiple security dimensions (Root, FS, Caps) between a Default and Hardened pod.
+    3. RBAC Flow: HTML/CSS Flowchart - Goal: Process. Justification: Shows the relationship between User, RoleBinding, and Role using styled divs.
+    4. Checklist Summary: Doughnut Chart (Chart.js) - Goal: Inform. Justification: Shows the completion status or breakdown of checklist categories.
+    
+    Palette: "Cyber Security Blue & Purple" (Vibrant)
+    - Background: #0f172a (Deep Slate)
+    - Primary: #38bdf8 (Sky Blue)
+    - Secondary: #818cf8 (Indigo)
+    - Accent: #22d3ee (Cyan)
+    - Text: #f8fafc (Slate White)
+    
+    Confirming NO SVG and NO Mermaid JS used.
+    -->
+</head>
+<body class="antialiased">
+
+    <!-- Header Section -->
+    <header class="w-full py-12 px-4 text-center bg-slate-900 border-b border-slate-800">
+        <h1 class="text-4xl md:text-6xl font-bold mb-4 tracking-tight">
+            Kubernetes <span class="gradient-text">Security Hardening</span>
+        </h1>
+        <p class="text-xl text-slate-400 max-w-3xl mx-auto">
+            A visual guide to securing Cloud Native infrastructure, from Pod Security Standards to Network Policies. Based on the K8s Security Cheat Sheet.
+        </p>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-8 space-y-16">
+
+        <!-- SECTION 1: Pod Security Standards (PSS) -->
+        <section>
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-sky-400 mb-4 border-l-4 border-sky-400 pl-4">1. Pod Security Standards (PSS)</h2>
+                <p class="text-slate-300 text-lg leading-relaxed">
+                    With the deprecation of Pod Security Policies (PSP), Kubernetes now relies on Pod Security Standards. These standards define three distinct levels of isolation, enforceable via Namespace labels.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
+                <!-- PSS Chart -->
+                <div class="card p-6 col-span-1 lg:col-span-2">
+                    <h3 class="text-xl font-semibold text-white mb-4">Security Strictness Levels</h3>
+                    <p class="text-slate-400 text-sm mb-4">Comparison of restrictions applied at each PSS level.</p>
+                    <div class="chart-container">
+                        <canvas id="pssChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- PSS Implementation YAML -->
+                <div class="card p-6 bg-slate-800 border border-slate-700">
+                    <h3 class="text-xl font-semibold text-white mb-2">Namespace Implementation</h3>
+                    <p class="text-slate-400 text-sm mb-4">Enforce the 'Restricted' profile on a namespace.</p>
+                    <div class="code-preview">
+<span class="k-key">apiVersion:</span> <span class="k-val">v1</span>
+<span class="k-key">kind:</span> <span class="k-val">Namespace</span>
+<span class="k-key">metadata:</span>
+  <span class="k-key">name:</span> <span class="k-str">secure-app-ns</span>
+  <span class="k-key">labels:</span>
+    <span class="k-com"># Enforce restricted mode</span>
+    <span class="k-key">pod-security.kubernetes.io/enforce:</span> <span class="k-str">restricted</span>
+    <span class="k-key">pod-security.kubernetes.io/enforce-version:</span> <span class="k-str">"latest"</span>
+    
+    <span class="k-com"># Warn on baseline violations</span>
+    <span class="k-key">pod-security.kubernetes.io/warn:</span> <span class="k-str">baseline</span></div>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                 <div class="bg-slate-800 p-4 rounded-lg border border-red-900/50">
+                    <h4 class="text-red-400 font-bold text-lg">Privileged</h4>
+                    <p class="text-slate-400 text-sm">Unrestricted access. Use only for system agents (CNI, Storage Drivers).</p>
+                </div>
+                <div class="bg-slate-800 p-4 rounded-lg border border-yellow-900/50">
+                    <h4 class="text-yellow-400 font-bold text-lg">Baseline</h4>
+                    <p class="text-slate-400 text-sm">Minimally restrictive. Prevents known privilege escalations.</p>
+                </div>
+                <div class="bg-slate-800 p-4 rounded-lg border border-green-900/50">
+                    <h4 class="text-green-400 font-bold text-lg">Restricted</h4>
+                    <p class="text-slate-400 text-sm">Heavily restricted. No root, seccomp required. Best practice for web apps.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: Workload Hardening -->
+        <section>
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-indigo-400 mb-4 border-l-4 border-indigo-400 pl-4">2. Workload & Kernel Security</h2>
+                <p class="text-slate-300 text-lg leading-relaxed">
+                    Default container configurations are often insecure. Hardening involves modifying the `securityContext` to isolate the container from the host OS.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Hardening Radar Chart -->
+                <div class="card p-6">
+                    <h3 class="text-xl font-semibold text-white mb-4">Attack Surface Reduction</h3>
+                    <p class="text-slate-400 text-sm mb-4">Comparing a Default Pod vs. a Hardened Pod.</p>
+                    <div class="chart-container">
+                        <canvas id="hardeningRadar"></canvas>
+                    </div>
+                </div>
+
+                <!-- Hardened Pod YAML -->
+                <div class="card p-6 border border-indigo-500/30">
+                    <h3 class="text-xl font-semibold text-white mb-2">Hardened Pod Manifest</h3>
+                    <p class="text-slate-400 text-sm mb-4">Example of a secure Pod configuration.</p>
+                    <div class="code-preview">
+<span class="k-key">apiVersion:</span> <span class="k-val">v1</span>
+<span class="k-key">kind:</span> <span class="k-val">Pod</span>
+<span class="k-key">metadata:</span>
+  <span class="k-key">name:</span> <span class="k-str">hardened-app</span>
+<span class="k-key">spec:</span>
+  <span class="k-key">securityContext:</span>
+    <span class="k-key">runAsNonRoot:</span> <span class="k-val">true</span>
+    <span class="k-key">runAsUser:</span> <span class="k-val">1000</span>
+    <span class="k-key">seccompProfile:</span>
+      <span class="k-key">type:</span> <span class="k-str">RuntimeDefault</span>
+  <span class="k-key">containers:</span>
+  <span class="k-key">- name:</span> <span class="k-str">app</span>
+    <span class="k-key">image:</span> <span class="k-str">my-app:1.0</span>
+    <span class="k-key">securityContext:</span>
+      <span class="k-key">allowPrivilegeEscalation:</span> <span class="k-val">false</span>
+      <span class="k-key">readOnlyRootFilesystem:</span> <span class="k-val">true</span>
+      <span class="k-key">capabilities:</span>
+        <span class="k-key">drop:</span> <span class="k-str">["ALL"]</span></div>
+                    
+                    <ul class="mt-4 space-y-2 text-sm text-slate-400">
+                        <li class="flex items-center"><span class="text-green-400 mr-2">✓</span> Drops all Linux capabilities</li>
+                        <li class="flex items-center"><span class="text-green-400 mr-2">✓</span> Enforces non-root user execution</li>
+                        <li class="flex items-center"><span class="text-green-400 mr-2">✓</span> Prevents privilege escalation</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: RBAC & Identity -->
+        <section>
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-purple-400 mb-4 border-l-4 border-purple-400 pl-4">3. RBAC & Service Accounts</h2>
+                <p class="text-slate-300 text-lg leading-relaxed">
+                    Role-Based Access Control (RBAC) answers the question: "Who can do what on which resource?" Service Accounts provide identity for pods.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                <!-- Concept Visualizer using CSS/HTML -->
+                <div class="col-span-1 lg:col-span-3 card p-8 overflow-hidden">
+                    <h3 class="text-center text-2xl font-bold text-white mb-8">The Anatomy of an RBAC Binding</h3>
+                    
+                    <div class="flex flex-col md:flex-row justify-center items-center gap-4 md:gap-8">
+                        <!-- Subject -->
+                        <div class="flex flex-col items-center w-full md:w-1/4">
+                            <div class="w-full bg-slate-700 p-4 rounded-lg border-2 border-sky-500 text-center relative">
+                                <span class="text-sky-400 font-bold uppercase text-xs tracking-wider">Subject</span>
+                                <div class="text-white font-bold text-lg mt-2">User / Group</div>
+                                <div class="text-slate-400 text-sm">"Bob"</div>
+                            </div>
+                        </div>
+
+                        <!-- Connector -->
+                        <div class="hidden md:flex flex-col items-center">
+                            <div class="h-1 w-8 bg-slate-600"></div>
+                        </div>
+                        <div class="md:hidden h-8 w-1 bg-slate-600"></div>
+
+                        <!-- Binding -->
+                        <div class="flex flex-col items-center w-full md:w-1/4">
+                            <div class="w-full bg-slate-700 p-4 rounded-lg border-2 border-purple-500 text-center">
+                                <span class="text-purple-400 font-bold uppercase text-xs tracking-wider">RoleBinding</span>
+                                <div class="text-white font-bold text-lg mt-2">The Glue</div>
+                                <div class="text-slate-400 text-sm">Connects Who to What</div>
+                            </div>
+                        </div>
+
+                        <!-- Connector -->
+                        <div class="hidden md:flex flex-col items-center">
+                            <div class="h-1 w-8 bg-slate-600"></div>
+                        </div>
+                        <div class="md:hidden h-8 w-1 bg-slate-600"></div>
+
+                        <!-- Role -->
+                        <div class="flex flex-col items-center w-full md:w-1/4">
+                            <div class="w-full bg-slate-700 p-4 rounded-lg border-2 border-green-500 text-center">
+                                <span class="text-green-400 font-bold uppercase text-xs tracking-wider">Role</span>
+                                <div class="text-white font-bold text-lg mt-2">Permissions</div>
+                                <div class="text-slate-400 text-sm">Verbs + Resources</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- RBAC Implementation YAML -->
+                <div class="card p-6 bg-slate-800 border border-slate-700">
+                    <h3 class="text-xl font-semibold text-white mb-2">Role & RoleBinding (Namespace)</h3>
+                    <p class="text-slate-400 text-sm mb-4">Granting read-only access to Pods within a specific namespace.</p>
+                    <div class="code-preview">
+<span class="k-key">apiVersion:</span> <span class="k-val">rbac.authorization.k8s.io/v1</span>
+<span class="k-key">kind:</span> <span class="k-val">Role</span>
+<span class="k-key">metadata:</span>
+  <span class="k-key">namespace:</span> <span class="k-str">default</span>
+  <span class="k-key">name:</span> <span class="k-str">pod-reader</span>
+<span class="k-key">rules:</span>
+<span class="k-key">- apiGroups:</span> <span class="k-str">[""]</span>
+  <span class="k-key">resources:</span> <span class="k-str">["pods"]</span>
+  <span class="k-key">verbs:</span> <span class="k-str">["get", "list"]</span>
+---
+<span class="k-key">apiVersion:</span> <span class="k-val">rbac.authorization.k8s.io/v1</span>
+<span class="k-key">kind:</span> <span class="k-val">RoleBinding</span>
+<span class="k-key">metadata:</span>
+  <span class="k-key">name:</span> <span class="k-str">read-pods-binding</span>
+<span class="k-key">subjects:</span>
+<span class="k-key">- kind:</span> <span class="k-val">User</span>
+  <span class="k-key">name:</span> <span class="k-str">bob</span>
+<span class="k-key">roleRef:</span>
+  <span class="k-key">kind:</span> <span class="k-val">Role</span>
+  <span class="k-key">name:</span> <span class="k-str">pod-reader</span>
+  <span class="k-key">apiGroup:</span> <span class="k-str">rbac.authorization.k8s.io</span></div>
+                </div>
+
+                <!-- ClusterRole Implementation YAML -->
+                <div class="card p-6 bg-slate-800 border border-slate-700">
+                    <h3 class="text-xl font-semibold text-white mb-2">ClusterRole & Binding (Global)</h3>
+                    <p class="text-slate-400 text-sm mb-4">Granting node viewing access across the entire cluster.</p>
+                    <div class="code-preview">
+<span class="k-key">apiVersion:</span> <span class="k-val">rbac.authorization.k8s.io/v1</span>
+<span class="k-key">kind:</span> <span class="k-val">ClusterRole</span>
+<span class="k-key">metadata:</span>
+  <span class="k-key">name:</span> <span class="k-str">cluster-node-reader</span>
+<span class="k-key">rules:</span>
+<span class="k-key">- apiGroups:</span> <span class="k-str">[""]</span>
+  <span class="k-key">resources:</span> <span class="k-str">["nodes"]</span>
+  <span class="k-key">verbs:</span> <span class="k-str">["get", "list"]</span>
+---
+<span class="k-key">apiVersion:</span> <span class="k-val">rbac.authorization.k8s.io/v1</span>
+<span class="k-key">kind:</span> <span class="k-val">ClusterRoleBinding</span>
+<span class="k-key">metadata:</span>
+  <span class="k-key">name:</span> <span class="k-str">read-nodes-global</span>
+<span class="k-key">subjects:</span>
+<span class="k-key">- kind:</span> <span class="k-val">Group</span>
+  <span class="k-key">name:</span> <span class="k-str">dev-leads</span>
+<span class="k-key">roleRef:</span>
+  <span class="k-key">kind:</span> <span class="k-val">ClusterRole</span>
+  <span class="k-key">name:</span> <span class="k-str">cluster-node-reader</span>
+  <span class="k-key">apiGroup:</span> <span class="k-str">rbac.authorization.k8s.io</span></div>
+                </div>
+
+                <!-- Service Account Implementation YAML -->
+                 <div class="card p-6 bg-slate-800 border border-slate-700">
+                    <h3 class="text-xl font-semibold text-white mb-2">Service Account Hardening</h3>
+                    <p class="text-slate-400 text-sm mb-4">Disabling auto-mounted tokens to reduce attack surface.</p>
+                    <div class="code-preview">
+<span class="k-key">apiVersion:</span> <span class="k-val">v1</span>
+<span class="k-key">kind:</span> <span class="k-val">ServiceAccount</span>
+<span class="k-key">metadata:</span>
+  <span class="k-key">name:</span> <span class="k-str">minimal-sa</span>
+<span class="k-com"># Prevents token injection into Pods</span>
+<span class="k-key">automountServiceAccountToken:</span> <span class="k-val">false</span>
+
+---
+<span class="k-com"># Usage in Pod</span>
+<span class="k-key">apiVersion:</span> <span class="k-val">v1</span>
+<span class="k-key">kind:</span> <span class="k-val">Pod</span>
+<span class="k-key">metadata:</span>
+  <span class="k-key">name:</span> <span class="k-str">secure-backend</span>
+<span class="k-key">spec:</span>
+  <span class="k-key">serviceAccountName:</span> <span class="k-str">minimal-sa</span>
+  <span class="k-key">containers:</span>
+  <span class="k-key">- name:</span> <span class="k-str">app</span>
+    <span class="k-key">image:</span> <span class="k-str">myapp:1.0</span></div>
+                </div>
+
+                <!-- Authentication Token YAML -->
+                <div class="card p-6 bg-slate-800 border border-slate-700">
+                    <h3 class="text-xl font-semibold text-white mb-2">Auth Tokens (CI/CD)</h3>
+                    <p class="text-slate-400 text-sm mb-4">Creating a long-lived token for external authentication (K8s 1.24+).</p>
+                    <div class="code-preview">
+<span class="k-key">apiVersion:</span> <span class="k-val">v1</span>
+<span class="k-key">kind:</span> <span class="k-val">ServiceAccount</span>
+<span class="k-key">metadata:</span>
+  <span class="k-key">name:</span> <span class="k-str">cicd-robot</span>
+---
+<span class="k-key">apiVersion:</span> <span class="k-val">v1</span>
+<span class="k-key">kind:</span> <span class="k-val">Secret</span>
+<span class="k-key">metadata:</span>
+  <span class="k-key">name:</span> <span class="k-str">cicd-token-secret</span>
+  <span class="k-key">annotations:</span>
+    <span class="k-com"># Binds secret to the ServiceAccount</span>
+    <span class="k-key">kubernetes.io/service-account.name:</span> <span class="k-str">cicd-robot</span>
+<span class="k-key">type:</span> <span class="k-val">kubernetes.io/service-account-token</span>
+
+<span class="k-com"># The token in this secret can now be used</span>
+<span class="k-com"># in kubeconfig for external authentication.</span></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: Network & Secrets -->
+        <section>
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-teal-400 mb-4 border-l-4 border-teal-400 pl-4">4. Network Isolation & Secrets</h2>
+                <p class="text-slate-300 text-lg leading-relaxed">
+                    Kubernetes networks are flat by default. Network Policies act as an internal firewall to enforce a Zero Trust model.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch mb-8">
+                <!-- Network Policy Visualization -->
+                <div class="card p-6">
+                    <h3 class="text-xl font-semibold text-white mb-4">Zero Trust Network Model</h3>
+                    <p class="text-slate-400 text-sm mb-6">Traffic flow with "Default Deny" policy enabled.</p>
+                    
+                    <div class="bg-slate-900 p-4 rounded-lg h-64 flex flex-col justify-center relative overflow-hidden">
+                        <!-- Traffic Viz -->
+                        <div class="flex justify-between items-center mb-8 relative z-10">
+                            <div class="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-xs z-10 shadow-lg shadow-blue-500/50">Frontend</div>
+                            
+                            <!-- Allowed Path -->
+                            <div class="flex-1 mx-2 relative group cursor-pointer">
+                                <div class="h-1 bg-green-500/30 w-full absolute top-1/2 transform -translate-y-1/2"></div>
+                                <div class="h-1 bg-green-500 w-1/2 absolute top-1/2 transform -translate-y-1/2 animate-pulse"></div>
+                                <div class="text-center text-xs text-green-400 mb-2">Allow 5432</div>
+                            </div>
+                            
+                            <div class="w-16 h-16 bg-indigo-600 rounded-full flex items-center justify-center text-white font-bold text-xs z-10 shadow-lg shadow-indigo-500/50">Database</div>
+                        </div>
+
+                        <div class="flex justify-between items-center relative z-10">
+                            <div class="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center text-white font-bold text-xs z-10 opacity-75">Attacker</div>
+                            
+                            <!-- Blocked Path -->
+                            <div class="flex-1 mx-2 relative">
+                                <div class="h-1 bg-slate-700 w-full absolute top-1/2 transform -translate-y-1/2"></div>
+                                <div class="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 text-2xl">❌</div>
+                                <div class="text-center text-xs text-slate-500 mt-4">Denied by Default</div>
+                            </div>
+
+                             <div class="w-16 h-16 bg-indigo-600 rounded-full flex items-center justify-center text-white font-bold text-xs z-10 shadow-lg shadow-indigo-500/50 opacity-50">Database</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Network Policy Implementation YAML -->
+                 <div class="card p-6 bg-slate-800 border border-slate-700">
+                    <h3 class="text-xl font-semibold text-white mb-2">Network Policy Manifest</h3>
+                    <p class="text-slate-400 text-sm mb-4">1. Deny All (Default) & 2. Allow Specific Ingress.</p>
+                    <div class="code-preview">
+<span class="k-key">apiVersion:</span> <span class="k-val">networking.k8s.io/v1</span>
+<span class="k-key">kind:</span> <span class="k-val">NetworkPolicy</span>
+<span class="k-key">metadata:</span>
+  <span class="k-key">name:</span> <span class="k-str">default-deny-all</span>
+  <span class="k-key">namespace:</span> <span class="k-str">prod</span>
+<span class="k-key">spec:</span>
+  <span class="k-key">podSelector:</span> <span class="k-val">{}</span>
+  <span class="k-key">policyTypes:</span>
+  <span class="k-key">-</span> <span class="k-str">Ingress</span>
+  <span class="k-key">-</span> <span class="k-str">Egress</span>
+
+<span class="k-com">---</span>
+<span class="k-key">kind:</span> <span class="k-val">NetworkPolicy</span>
+<span class="k-key">metadata:</span> { <span class="k-key">name:</span> <span class="k-str">allow-db</span> }
+<span class="k-key">spec:</span>
+  <span class="k-key">podSelector:</span>
+    <span class="k-key">matchLabels:</span> { <span class="k-key">app:</span> <span class="k-str">db</span> }
+  <span class="k-key">ingress:</span>
+  <span class="k-key">- from:</span>
+    <span class="k-key">- podSelector:</span>
+        <span class="k-key">matchLabels:</span> { <span class="k-key">app:</span> <span class="k-str">api</span> }</div>
+                </div>
+            </div>
+
+            <!-- New Grid for Secrets -->
+            <div class="mt-8 pt-8 border-t border-slate-700/50">
+                <h3 class="text-xl font-bold text-teal-400 mb-4 pl-2 border-l-2 border-teal-400/50">Docker Registry Authentication</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Command Card -->
+                    <div class="card p-6 bg-slate-800 border border-slate-700">
+                        <h3 class="text-xl font-semibold text-white mb-2">1. Create Secret (Imperative)</h3>
+                        <p class="text-slate-400 text-sm mb-4">Generate the auth token for your private registry.</p>
+                        <div class="code-preview">
+<span class="k-com"># Create a docker-registry secret type</span>
+kubectl create secret docker-registry regcred \
+  --docker-server=<span class="k-str">https://index.docker.io/v1/</span> \
+  --docker-username=<span class="k-str">myuser</span> \
+  --docker-password=<span class="k-str">mypassword</span> \
+  --docker-email=<span class="k-str">myuser@example.com</span></div>
+                    </div>
+
+                    <!-- Usage Card -->
+                    <div class="card p-6 bg-slate-800 border border-slate-700">
+                        <h3 class="text-xl font-semibold text-white mb-2">2. Use in Pod (Declarative)</h3>
+                        <p class="text-slate-400 text-sm mb-4">Reference the secret to pull the private image.</p>
+                        <div class="code-preview">
+<span class="k-key">apiVersion:</span> <span class="k-val">v1</span>
+<span class="k-key">kind:</span> <span class="k-val">Pod</span>
+<span class="k-key">metadata:</span>
+  <span class="k-key">name:</span> <span class="k-str">private-pod</span>
+<span class="k-key">spec:</span>
+  <span class="k-key">containers:</span>
+  <span class="k-key">- name:</span> <span class="k-str">private-app</span>
+    <span class="k-key">image:</span> <span class="k-str">my-private-reg/app:1.0</span>
+  <span class="k-com"># Matches the secret name created</span>
+  <span class="k-key">imagePullSecrets:</span>
+  <span class="k-key">- name:</span> <span class="k-str">regcred</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="mt-16 pt-8 border-t border-slate-800 text-center text-slate-500 text-sm">
+            <p>Generated based on Kubernetes Security Cheat Sheet | 2023</p>
+        </footer>
+
+    </main>
+
+    <script>
+        // --- HELPER FUNCTION: Label Wrapping (16 chars) ---
+        function wrapLabel(label) {
+            if (typeof label !== 'string' || label.length <= 16) return label;
+            const words = label.split(' ');
+            const lines = [];
+            let currentLine = words[0];
+
+            for (let i = 1; i < words.length; i++) {
+                if ((currentLine + " " + words[i]).length <= 16) {
+                    currentLine += " " + words[i];
+                } else {
+                    lines.push(currentLine);
+                    currentLine = words[i];
+                }
+            }
+            lines.push(currentLine);
+            return lines;
+        }
+
+        // --- COMMON CHART OPTIONS ---
+        Chart.defaults.color = '#94a3b8';
+        Chart.defaults.font.family = "'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
+        
+        const commonOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: { color: '#f8fafc' }
+                },
+                tooltip: {
+                    backgroundColor: '#1e293b',
+                    titleColor: '#f8fafc',
+                    bodyColor: '#cbd5e1',
+                    borderColor: '#475569',
+                    borderWidth: 1,
+                    callbacks: {
+                        title: function(tooltipItems) {
+                            const item = tooltipItems[0];
+                            let label = item.chart.data.labels[item.dataIndex];
+                            if (Array.isArray(label)) {
+                              return label.join(' ');
+                            } else {
+                              return label;
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        // --- CHART 1: PSS Levels (Bar Chart) ---
+        const pssLabels = ['Privileged (Unrestricted)', 'Baseline (Default)', 'Restricted (Hardened)'];
+        const pssWrappedLabels = pssLabels.map(wrapLabel);
+        
+        const ctxPSS = document.getElementById('pssChart').getContext('2d');
+        new Chart(ctxPSS, {
+            type: 'bar',
+            data: {
+                labels: pssWrappedLabels,
+                datasets: [{
+                    label: 'Security Strictness Score',
+                    data: [20, 60, 95], // Conceptual values
+                    backgroundColor: [
+                        'rgba(248, 113, 113, 0.7)', // Red for Privileged
+                        'rgba(250, 204, 21, 0.7)',  // Yellow for Baseline
+                        'rgba(52, 211, 153, 0.7)'   // Green for Restricted
+                    ],
+                    borderColor: [
+                        '#f87171',
+                        '#facc15',
+                        '#34d399'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                ...commonOptions,
+                indexAxis: 'y', // Horizontal Bar
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        max: 100,
+                        grid: { color: '#334155' }
+                    },
+                    y: {
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+
+        // --- CHART 2: Hardening Radar (Radar Chart) ---
+        const radarLabels = [
+            'Root User Access', 
+            'Writable Filesystem', 
+            'Privilege Escalation', 
+            'Linux Capabilities', 
+            'Network Access'
+        ];
+        const radarWrappedLabels = radarLabels.map(wrapLabel);
+
+        const ctxRadar = document.getElementById('hardeningRadar').getContext('2d');
+        new Chart(ctxRadar, {
+            type: 'radar',
+            data: {
+                labels: radarWrappedLabels,
+                datasets: [{
+                    label: 'Default Pod Profile',
+                    data: [100, 100, 100, 100, 100], // High vulnerability
+                    fill: true,
+                    backgroundColor: 'rgba(248, 113, 113, 0.2)',
+                    borderColor: '#f87171',
+                    pointBackgroundColor: '#f87171',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: '#f87171'
+                }, {
+                    label: 'Hardened Pod Profile',
+                    data: [0, 0, 0, 20, 40], // Low vulnerability (Target)
+                    fill: true,
+                    backgroundColor: 'rgba(56, 189, 248, 0.2)',
+                    borderColor: '#38bdf8',
+                    pointBackgroundColor: '#38bdf8',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: '#38bdf8'
+                }]
+            },
+            options: {
+                ...commonOptions,
+                scales: {
+                    r: {
+                        angleLines: { color: '#475569' },
+                        grid: { color: '#334155' },
+                        pointLabels: { color: '#cbd5e1' },
+                        suggestedMin: 0,
+                        suggestedMax: 100,
+                        ticks: { display: false } // Hide numbers for cleaner look
+                    }
+                }
+            }
+        });
+
+    </script>
+</body>
+</html>
