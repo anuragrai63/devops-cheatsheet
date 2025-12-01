@@ -1,326 +1,118 @@
-<!-- 1. Cluster Basics -->
-<section id="1" class="card">
-  <div class="glass rounded-2xl p-6">
-    <div class="flex items-center justify-between mb-4">
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DevOps Cheatsheet — Home</title>
+  <style>
+    :root{--bg:#0f172a;--card:#0b1220;--muted:#9ca3af;--accent:#06b6d4}
+    body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial;min-height:100vh;background:linear-gradient(180deg,#071022 0%,#071126 100%);color:#e6eef8;display:flex;align-items:center;justify-content:center;padding:36px}
+    .container{max-width:1000px;width:100%;}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+    .card{background:rgba(255,255,255,0.02);border-radius:12px;padding:24px;border:1px solid rgba(255,255,255,0.03)}
+    .header{display:flex;align-items:center;gap:16px}
+    .title{font-size:20px;font-weight:600}
+    .icon{width:72px;height:72px;display:flex;align-items:center;justify-content:center;border-radius:12px;background:rgba(255,255,255,0.03);cursor:pointer}
+    .muted{color:var(--muted);font-size:13px;margin-top:6px}
+    .topics{margin-top:16px;display:flex;flex-direction:column;gap:8px}
+    .topic a{color:#dbeafe;text-decoration:none;padding:8px 10px;border-radius:8px;display:block;background:transparent}
+    .topic a:hover{background:rgba(255,255,255,0.02)}
+    .center{display:flex;align-items:center;justify-content:center;margin-bottom:18px}
+    .home-title{font-size:28px;font-weight:700;margin-bottom:6px}
+    .sub{color:var(--muted);font-size:14px}
+    @media(max-width:800px){.grid{grid-template-columns:1fr;}}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="center">
       <div>
-        <h2 class="text-xl font-semibold">1. Cluster Basics</h2>
-        <div class="muted">Cluster and kubeconfig management</div>
+        <div class="home-title">DevOps Cheatsheet</div>
+        <div class="sub">Select a category to view topic-wise cheatsheets</div>
       </div>
-      <div class="muted">#1</div>
     </div>
 
-    <div class="space-y-2">
-      <div class="command-row cmd" onclick="copyToClipboard('kubectl config view', this)">
-        kubectl config view
-        <span class="copy-tooltip">Copied!</span>
-        <div class="muted">Show merged kubeconfig.</div>
-      </div>
-      <div class="command-row cmd" onclick="copyToClipboard('kubectl config current-context', this)">
-        kubectl config current-context
-        <span class="copy-tooltip">Copied!</span>
-        <div class="muted">Show the current context.</div>
-      </div>
-      <div class="command-row cmd" onclick="copyToClipboard('kubectl config use-context my-cluster', this)">
-        kubectl config use-context my-cluster
-        <span class="copy-tooltip">Copied!</span>
-        <div class="muted">Switch kubeconfig context to another cluster.</div>
-      </div>
+    <div class="grid">
+      <!-- Terraform Card -->
+      <section class="card">
+        <div class="header">
+          <div class="icon" onclick="location.href='Terraform/'" title="Open Terraform folder" aria-hidden="false">
+            <!-- Simple Terraform 'T' mark using SVG -->
+            <svg width="40" height="40" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="256" height="256" rx="32" fill="#7b42f6"/>
+              <path d="M128 40v176" stroke="#fff" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M64 96h128" stroke="#fff" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div style="flex:1">
+            <div class="title">Terraform</div>
+            <div class="muted">Infrastructure as Code — Terraform topics</div>
+          </div>
+        </div>
+
+        <div class="topics" aria-label="Terraform topics">
+          <div class="topic"><a href="Terraform/index.html#1">1. Getting Started</a></div>
+          <div class="topic"><a href="Terraform/index.html#2">2. Providers</a></div>
+          <div class="topic"><a href="Terraform/index.html#3">3. Resources</a></div>
+          <div class="topic"><a href="Terraform/index.html#4">4. Variables & Outputs</a></div>
+          <div class="topic"><a href="Terraform/index.html#5">5. Modules</a></div>
+          <div class="topic"><a href="Terraform/index.html#6">6. State & Backends</a></div>
+          <div class="topic"><a href="Terraform/index.html#7">7. Workspaces</a></div>
+          <div class="topic"><a href="Terraform/index.html#8">8. Provisioners & Provisioning</a></div>
+          <div class="topic"><a href="Terraform/index.html#9">9. CLI Commands</a></div>
+          <div class="topic"><a href="Terraform/index.html#10">10. Best Practices</a></div>
+        </div>
+      </section>
+
+      <!-- Kubernetes Card -->
+      <section class="card">
+        <div class="header">
+          <div class="icon" onclick="location.href='K8s/'" title="Open K8s folder">
+            <!-- Simple Kubernetes logo (hexagon + ship wheel) -->
+            <svg width="40" height="40" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="g" x1="0" x2="1">
+                  <stop offset="0" stop-color="#2563eb"/>
+                  <stop offset="1" stop-color="#1e40af"/>
+                </linearGradient>
+              </defs>
+              <rect width="100" height="100" rx="18" fill="url(#g)" />
+              <g transform="translate(20,20) scale(0.6)" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M50 8 L61 18 L54 31 L38 31 L31 18 Z" fill="#fff" opacity="0.06"/>
+                <circle cx="50" cy="40" r="6" fill="#fff"/>
+                <path d="M50 6 L50 16"/>
+                <path d="M50 64 L50 54"/>
+                <path d="M26 40 L36 40"/>
+                <path d="M74 40 L64 40"/>
+                <path d="M36 21 L42 27"/>
+                <path d="M64 59 L58 53"/>
+                <path d="M36 59 L42 53"/>
+                <path d="M64 21 L58 27"/>
+              </g>
+            </svg>
+          </div>
+          <div style="flex:1">
+            <div class="title">Kubernetes</div>
+            <div class="muted">K8s cheatsheet — topic-wise quick links</div>
+          </div>
+        </div>
+
+        <div class="topics" aria-label="Kubernetes topics">
+          <div class="topic"><a href="K8s/index.html#1">1. Cluster Basics</a></div>
+          <div class="topic"><a href="K8s/index.html#2">2. kubectl Basics</a></div>
+          <div class="topic"><a href="K8s/index.html#3">3. Deployments & Pods</a></div>
+          <div class="topic"><a href="K8s/index.html#4">4. Services & Networking</a></div>
+          <div class="topic"><a href="K8s/index.html#5">5. ConfigMaps & Secrets</a></div>
+          <div class="topic"><a href="K8s/index.html#6">6. Volumes & Storage</a></div>
+          <div class="topic"><a href="K8s/index.html#7">7. Scaling & Autoscaling</a></div>
+          <div class="topic"><a href="K8s/index.html#8">8. Observability & Logs</a></div>
+          <div class="topic"><a href="K8s/index.html#9">9. Debugging & Troubleshooting</a></div>
+          <div class="topic"><a href="K8s/index.html#10">10. Maintenance & Security</a></div>
+        </div>
+      </section>
     </div>
+
+    <div style="margin-top:22px;color:var(--muted);font-size:13px">If the linked index pages don't exist yet, create <code>K8s/index.html</code> and <code>Terraform/index.html</code> or adjust the hrefs to match your folder structure.</div>
   </div>
-</section>
-
-<!-- 2. kubectl Basics -->
-<section id="2" class="card">
-  <div class="glass rounded-2xl p-6">
-    <div class="flex items-center justify-between mb-4">
-      <div>
-        <h2 class="text-xl font-semibold">2. kubectl Basics</h2>
-        <div class="muted">Common get/describe/apply/delete commands</div>
-      </div>
-      <div class="muted">#2</div>
-    </div>
-
-    <div class="space-y-2">
-      <div class="command-row cmd" onclick="copyToClipboard('kubectl get pods -A', this)">
-        kubectl get pods -A
-        <span class="copy-tooltip">Copied!</span>
-        <div class="muted">List all pods in all namespaces.</div>
-      </div>
-      <div class="command-row cmd" onclick="copyToClipboard('kubectl describe pod nginx-123 -n web', this)">
-        kubectl describe pod nginx-123 -n web
-        <span class="copy-tooltip">Copied!</span>
-        <div class="muted">Detailed pod info and events.</div>
-      </div>
-      <div class="command-row cmd" onclick="copyToClipboard('kubectl apply -f deployment.yaml', this)">
-        kubectl apply -f deployment.yaml
-        <span class="copy-tooltip">Copied!</span>
-        <div class="muted">Create/update resources from file.</div>
-      </div>
-      <div class="command-row cmd" onclick="copyToClipboard('kubectl delete -f deployment.yaml', this)">
-        kubectl delete -f deployment.yaml
-        <span class="copy-tooltip">Copied!</span>
-        <div class="muted">Remove resources defined in file.</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- 3. Deployments & Pods -->
-<section id="3" class="card">
-  <div class="glass rounded-2xl p-6">
-    <div class="flex items-center justify-between mb-4">
-      <div>
-        <h2 class="text-xl font-semibold">3. Deployments & Pods</h2>
-        <div class="muted">Rolling updates, scaling and rollbacks</div>
-      </div>
-      <div class="muted">#3</div>
-    </div>
-
-    <div class="space-y-2">
-      <div class="command-row cmd" onclick="copyToClipboard('kubectl set image deployment/web web=nginx:1.19', this)">
-        kubectl set image deployment/web web=nginx:1.19
-        <span class="copy-tooltip">Copied!</span>
-        <div class="muted">Trigger a rolling update by changing image.</div>
-      </div>
-      <div class="command-row cmd" onclick="copyToClipboard('kubectl rollout status deployment/web', this)">
-        kubectl rollout status deployment/web
-        <span class="copy-tooltip">Copied!</span>
-        <div class="muted">Watch rollout progress.</div>
-      </div>
-      <div class="command-row cmd" onclick="copyToClipboard('kubectl rollout undo deployment/web', this)">
-        kubectl rollout undo deployment/web
-        <span class="copy-tooltip">Copied!</span>
-        <div class="muted">Rollback to previous ReplicaSet.</div>
-      </div>
-      <div class="command-row cmd" onclick="copyToClipboard('kubectl scale deployment/web --replicas=5', this)">
-        kubectl scale deployment/web --replicas=5
-        <span class="copy-tooltip">Copied!</span>
-        <div class="muted">Change replica count for scaling.</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- 4. Services & Networking -->
-<section id="4" class="card">
-  <div class="glass rounded-2xl p-6">
-    <div class="flex items-center justify-between mb-4">
-      <div>
-        <h2 class="text-xl font-semibold">4. Services & Networking</h2>
-        <div class="muted">Service types, port-forwarding and ingress</div>
-      </div>
-      <div class="muted">#4</div>
-    </div>
-
-    <div class="space-y-2">
-      <div class="command-row cmd" onclick="copyToClipboard('kubectl get svc -n web', this)">
-        kubectl get svc -n web
-        <span class="copy-tooltip">Copied!</span>
-        <div class="muted">List services in namespace.</div>
-      </div>
-      <div class="command-row cmd" onclick="copyToClipboard('kubectl port-forward svc/web 8080:80 -n web', this)">
-        kubectl port-forward svc/web 8080:80 -n web
-        <span class="copy-tooltip">Copied!</span>
-        <div class="muted">Forward local port to a service for debugging.</div>
-      </div>
-      <div class="command-row cmd" onclick="copyToClipboard('kubectl get ingress -A', this)">
-        kubectl get ingress -A
-        <span class="copy-tooltip">Copied!</span>
-        <div class="muted">List all ingress resources across namespaces.</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- 5. ConfigMaps & Secrets -->
-<section id="5" class="card">
-  <div class="glass rounded-2xl p-6">
-    <div class="flex items-center justify-between mb-4">
-      <div>
-        <h2 class="text-xl font-semibold">5. ConfigMaps & Secrets</h2>
-        <div class="muted">Storage for non-secret and secret configuration</div>
-      </div>
-      <div class="muted">#5</div>
-    </div>
-
-    <div class="space-y-2">
-      <div class="command-row cmd" onclick="copyToClipboard('kubectl create configmap app-config --from-file=conf/', this)">
-        kubectl create configmap app-config --from-file=conf/
-        <span class="copy-tooltip">Copied!</span>
-        <div class="muted">Create ConfigMap from files.</div>
-      </div>
-      <div class="command-row cmd" onclick="copyToClipboard('kubectl create secret generic db-pass --from-literal=password=Pa$$w0rd', this)">
-        kubectl create secret generic db-pass --from-literal=password=Pa$$w0rd
-        <span class="copy-tooltip">Copied!</span>
-        <div class="muted">Create a generic secret from literal.</div>
-      </div>
-      <div class="command-row cmd" onclick="copyToClipboard('kubectl get secret db-pass -o yaml', this)">
-        kubectl get secret db-pass -o yaml
-        <span class="copy-tooltip">Copied!</span>
-        <div class="muted">Inspect secret (base64 encoded values).</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- 6. Volumes & Storage -->
-<section id="6" class="card">
-  <div class="glass rounded-2xl p-6">
-    <div class="flex items-center justify-between mb-4">
-      <div>
-        <h2 class="text-xl font-semibold">6. Volumes & Storage</h2>
-        <div class="muted">Persistent volumes, PVC and storage classes</div>
-      </div>
-      <div class="muted">#6</div>
-    </div>
-
-    <div class="space-y-2">
-      <div class="command-row cmd" onclick="copyToClipboard('kubectl get pv,pvc -A', this)">
-        kubectl get pv,pvc -A
-        <span class="copy-tooltip">Copied!</span>
-        <div class="muted">List persistent volumes & claims.</div>
-      </div>
-      <div class="command-row cmd" onclick="copyToClipboard('kubectl describe pvc my-claim -n web', this)">
-        kubectl describe pvc my-claim -n web
-        <span class="copy-tooltip">Copied!</span>
-        <div class="muted">Check PVC binding events and storage class.</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- 7. Scaling & Autoscaling -->
-<section id="7" class="card">
-  <div class="glass rounded-2xl p-6">
-    <div class="flex items-center justify-between mb-4">
-      <div>
-        <h2 class="text-xl font-semibold">7. Scaling & Autoscaling</h2>
-        <div class="muted">Manual and Horizontal Pod Autoscaler (HPA)</div>
-      </div>
-      <div class="muted">#7</div>
-    </div>
-
-    <div class="space-y-2">
-      <div class="command-row cmd" onclick="copyToClipboard('kubectl scale deployment/web --replicas=10', this)">
-        kubectl scale deployment/web --replicas=10
-        <span class="copy-tooltip">Copied!</span>
-        <div class="muted">Scale a deployment manually.</div>
-      </div>
-      <div class="command-row cmd" onclick="copyToClipboard('kubectl autoscale deployment/web --min=2 --max=10 --cpu-percent=70', this)">
-        kubectl autoscale deployment/web --min=2 --max=10 --cpu-percent=70
-        <span class="copy-tooltip">Copied!</span>
-        <div class="muted">Create HPA based on CPU utilization.</div>
-      </div>
-      <div class="command-row cmd" onclick="copyToClipboard('kubectl get hpa -n web', this)">
-        kubectl get hpa -n web
-        <span class="copy-tooltip">Copied!</span>
-        <div class="muted">List HPAs in namespace.</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- 8. Observability & Logs -->
-<section id="8" class="card">
-  <div class="glass rounded-2xl p-6">
-    <div class="flex items-center justify-between mb-4">
-      <div>
-        <h2 class="text-xl font-semibold">8. Observability & Logs</h2>
-        <div class="muted">Logs, exec, top and port-forward for debugging</div>
-      </div>
-      <div class="muted">#8</div>
-    </div>
-
-    <div class="space-y-2">
-      <div class="command-row cmd" onclick="copyToClipboard('kubectl logs pod/nginx-123 -n web', this)">
-        kubectl logs pod/nginx-123 -n web
-        <span class="copy-tooltip">Copied!</span>
-        <div class="muted">View container logs (for single container pod).</div>
-      </div>
-
-      <div class="command-row cmd" onclick="copyToClipboard('kubectl logs deploy/web -n web --since=1h', this)">
-        kubectl logs deploy/web -n web --since=1h
-        <span class="copy-tooltip">Copied!</span>
-        <div class="muted">Tail logs for a deployment for the last hour.</div>
-      </div>
-
-      <div class="command-row cmd" onclick="copyToClipboard('kubectl top pods -n web', this)">
-        kubectl top pods -n web
-        <span class="copy-tooltip">Copied!</span>
-        <div class="muted">Show pod CPU/memory metrics (metrics-server required).</div>
-      </div>
-
-      <div class="command-row cmd" onclick="copyToClipboard('kubectl port-forward svc/web 8080:80 -n web', this)">
-        kubectl port-forward svc/web 8080:80 -n web
-        <span class="copy-tooltip">Copied!</span>
-        <div class="muted">Expose service locally for inspection.</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- 9. Debugging & Troubleshooting -->
-<section id="9" class="card">
-  <div class="glass rounded-2xl p-6">
-    <div class="flex items-center justify-between mb-4">
-      <div>
-        <h2 class="text-xl font-semibold">9. Debugging & Troubleshooting</h2>
-        <div class="muted">Pod troubleshooting, events and exec</div>
-      </div>
-      <div class="muted">#9</div>
-    </div>
-
-    <div class="space-y-2">
-      <div class="command-row cmd" onclick="copyToClipboard('kubectl get events -n web --sort-by=.metadata.creationTimestamp', this)">
-        kubectl get events -n web --sort-by=.metadata.creationTimestamp
-        <span class="copy-tooltip">Copied!</span>
-        <div class="muted">Show recent cluster events (sorted).</div>
-      </div>
-
-      <div class="command-row cmd" onclick="copyToClipboard('kubectl exec -it pod/nginx-123 -n web -- /bin/sh', this)">
-        kubectl exec -it pod/nginx-123 -n web -- /bin/sh
-        <span class="copy-tooltip">Copied!</span>
-        <div class="muted">Execute shell inside container for inspection.</div>
-      </div>
-
-      <div class="command-row cmd" onclick="copyToClipboard('kubectl cp /local/file pod/nginx-123:/tmp -n web', this)">
-        kubectl cp /local/file pod/nginx-123:/tmp -n web
-        <span class="copy-tooltip">Copied!</span>
-        <div class="muted">Copy files to/from a pod.</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- 10. Maintenance & Security -->
-<section id="10" class="card">
-  <div class="glass rounded-2xl p-6">
-    <div class="flex items-center justify-between mb-4">
-      <div>
-        <h2 class="text-xl font-semibold">10. Maintenance & Security</h2>
-        <div class="muted">Node upgrades, RBAC and image policies</div>
-      </div>
-      <div class="muted">#10</div>
-    </div>
-
-    <div class="space-y-2">
-      <div class="command-row cmd" onclick="copyToClipboard('kubectl cordon node-1', this)">
-        kubectl cordon node-1
-        <span class="copy-tooltip">Copied!</span>
-        <div class="muted">Mark node unschedulable for maintenance.</div>
-      </div>
-
-      <div class="command-row cmd" onclick="copyToClipboard('kubectl drain node-1 --ignore-daemonsets --delete-local-data', this)">
-        kubectl drain node-1 --ignore-daemonsets --delete-local-data
-        <span class="copy-tooltip">Copied!</span>
-        <div class="muted">Evict pods and prepare node for maintenance.</div>
-      </div>
-
-      <div class="command-row cmd" onclick="copyToClipboard('kubectl create rolebinding read-pods --clusterrole=view --serviceaccount=web:deployer -n web', this)">
-        kubectl create rolebinding read-pods --clusterrole=view --serviceaccount=web:deployer -n web
-        <span class="copy-tooltip">Copied!</span>
-        <div class="muted">Quick RBAC binding example.</div>
-      </div>
-    </div>
-  </div>
-</section>
+</body>
+</html>
