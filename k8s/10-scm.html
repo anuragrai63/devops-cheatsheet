@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kubernetes Scheduling Cheat Sheet</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Plotly.js -->
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        k8s: {
+                            dark: '#0f172a',    // Slate 900
+                            primary: '#0284c7', // Sky 600
+                            light: '#e0f2fe',   // Sky 100
+                            accent: '#f43f5e',  // Rose 500
+                            success: '#10b981', // Emerald 500
+                            warning: '#f59e0b', // Amber 500
+                            code: '#1e1e1e',    // VS Code Dark
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Base Settings */
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f8fafc;
+            color: #334155;
+        }
+
+        /* Chart Container */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 250px;
+        }
+
+        /* Code Block Styling */
+        .code-container {
+            background-color: #1e1e1e;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            margin-top: 0.5rem;
+            border: 1px solid #334155;
+        }
+        
+        .code-header {
+            background-color: #2d2d2d;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.75rem;
+            color: #a1a1aa;
+            border-bottom: 1px solid #334155;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .code-block {
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            padding: 1rem;
+            overflow-x: auto;
+            font-size: 0.8rem;
+            line-height: 1.5;
+            color: #d4d4d4;
+            white-space: pre;
+        }
+
+        /* Syntax Highlighting */
+        .c-key { color: #9cdcfe; }      /* Blue for keys */
+        .c-str { color: #ce9178; }      /* Orange/Red for strings */
+        .c-kwd { color: #c586c0; }      /* Purple for keywords */
+        .c-cmd { color: #4ade80; }      /* Green for Terminal Commands */
+        .c-cmt { color: #6a9955; font-style: italic; } /* Green for comments */
+        .c-num { color: #b5cea8; }      /* Light Green for numbers */
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #1e293b; }
+        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #64748b; }
+
+    </style>
+</head>
+<body class="bg-slate-100">
+
+    <!-- HEADER -->
+    <header class="bg-k8s-dark text-white py-10 shadow-xl border-b-4 border-k8s-primary">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-5xl font-bold mb-2 tracking-tight">Kubernetes Scheduling Cheat Sheet</h1>
+            <p class="text-slate-400 text-lg">Imperative Commands, YAML Specifications, and Core Concepts</p>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-8 space-y-10">
+
+        <!-- 1. TAINTS & TOLERATIONS -->
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div class="bg-white rounded-xl shadow border-l-4 border-rose-500 overflow-hidden">
+                <div class="p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-2xl font-bold text-slate-800">1. Taints & Tolerations</h2>
+                        <span class="bg-rose-100 text-rose-700 text-xs font-bold px-2 py-1 rounded">Node Isolation</span>
+                    </div>
+                    
+                    <!-- Definitions -->
+                    <div class="mb-4">
+                        <h3 class="font-bold text-slate-700 text-sm mb-2">Taint Effects (Types):</h3>
+                        <ul class="text-sm space-y-2">
+                            <li class="flex items-start"><span class="bg-slate-200 px-2 rounded text-xs font-mono mr-2 min-w-[100px]">NoSchedule</span> <span class="text-slate-600">Strict. Pod won't schedule unless it tolerates.</span></li>
+                            <li class="flex items-start"><span class="bg-slate-200 px-2 rounded text-xs font-mono mr-2 min-w-[100px]">PreferNoSchedule</span> <span class="text-slate-600">Soft. Scheduler tries to avoid, but will use if necessary.</span></li>
+                            <li class="flex items-start"><span class="bg-slate-200 px-2 rounded text-xs font-mono mr-2 min-w-[100px]">NoExecute</span> <span class="text-slate-600">Eviction. Existing pods are evicted if they don't tolerate.</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-rose-50 p-3 rounded mb-4 text-sm text-rose-800 border border-rose-200">
+                        <strong>Use Cases:</strong> Dedicated Hardware (GPU nodes), Node Maintenance, Master/Control-plane Isolation.
+                    </div>
+
+                    <!-- Imperative Commands -->
+                    <div class="code-container">
+                        <div class="code-header"><span>BASH (Imperative)</span></div>
+                        <div class="code-block">
+<span class="c-cmt"># Syntax: key=value:effect</span>
+<span class="c-cmd">$ kubectl taint nodes node1 gpu=true:NoSchedule</span>
+
+<span class="c-cmt"># Soft taint (Avoid if possible)</span>
+<span class="c-cmd">$ kubectl taint nodes node1 type=spot:PreferNoSchedule</span>
+
+<span class="c-cmt"># Remove a taint (note the minus sign)</span>
+<span class="c-cmd">$ kubectl taint nodes node1 gpu=true:NoSchedule-</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow overflow-hidden">
+                <div class="p-6 h-full flex flex-col">
+                    <h3 class="font-bold text-slate-700 mb-2">YAML: Tolerating Taints</h3>
+                    <div class="code-container flex-grow">
+                        <div class="code-header"><span>pod-toleration.yaml</span></div>
+                        <div class="code-block">
+<span class="c-kwd">apiVersion</span>: v1
+<span class="c-kwd">kind</span>: Pod
+<span class="c-kwd">metadata</span>:
+  <span class="c-key">name</span>: <span class="c-str">gpu-workload</span>
+<span class="c-kwd">spec</span>:
+  <span class="c-kwd">containers</span>:
+  - <span class="c-key">name</span>: <span class="c-str">cuda-container</span>
+    <span class="c-key">image</span>: <span class="c-str">nvidia/cuda:11.0</span>
+  <span class="c-kwd">tolerations</span>:
+  <span class="c-cmt"># 1. Exact Match (Strict)</span>
+  - <span class="c-key">key</span>: <span class="c-str">"gpu"</span>
+    <span class="c-key">operator</span>: <span class="c-str">"Equal"</span>
+    <span class="c-key">value</span>: <span class="c-str">"true"</span>
+    <span class="c-key">effect</span>: <span class="c-str">"NoSchedule"</span>
+  
+  <span class="c-cmt"># 2. Wildcard (Tolerate everything with this key)</span>
+  - <span class="c-key">key</span>: <span class="c-str">"type"</span>
+    <span class="c-key">operator</span>: <span class="c-str">"Exists"</span>
+    <span class="c-key">effect</span>: <span class="c-str">"PreferNoSchedule"</span>
+
+  <span class="c-cmt"># 3. Eviction Time limit</span>
+  - <span class="c-key">key</span>: <span class="c-str">"maintenance"</span>
+    <span class="c-key">operator</span>: <span class="c-str">"Exists"</span>
+    <span class="c-key">effect</span>: <span class="c-str">"NoExecute"</span>
+    <span class="c-key">tolerationSeconds</span>: <span class="c-num">300</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. NODE AFFINITY & SELECTION -->
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div class="bg-white rounded-xl shadow border-l-4 border-emerald-500 overflow-hidden">
+                <div class="p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-2xl font-bold text-slate-800">2. Node Affinity</h2>
+                        <span class="bg-emerald-100 text-emerald-700 text-xs font-bold px-2 py-1 rounded">Placement</span>
+                    </div>
+
+                    <!-- Types -->
+                    <div class="mb-4">
+                        <h3 class="font-bold text-slate-700 text-sm mb-2">Affinity Types:</h3>
+                        <ul class="text-sm space-y-2">
+                            <li class="flex flex-col mb-2">
+                                <span class="font-bold text-xs text-emerald-700">requiredDuringSchedulingIgnoredDuringExecution (Hard)</span>
+                                <span class="text-slate-600 text-xs">Mandatory. Pod stays Pending if no match.</span>
+                            </li>
+                            <li class="flex flex-col">
+                                <span class="font-bold text-xs text-emerald-700">preferredDuringSchedulingIgnoredDuringExecution (Soft)</span>
+                                <span class="text-slate-600 text-xs">Best effort. Will schedule anyway if no match.</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="mb-4">
+                         <h3 class="font-bold text-slate-700 text-sm mb-1">Operators:</h3>
+                         <p class="text-xs font-mono text-slate-500">In, NotIn, Exists, DoesNotExist, Gt, Lt</p>
+                    </div>
+
+                    <div class="bg-emerald-50 p-3 rounded mb-4 text-sm text-emerald-800 border border-emerald-200">
+                        <strong>Use Cases:</strong> Compliance (Data residency), Hardware (SSD/AVX), Cost (Spot instances).
+                    </div>
+
+                    <!-- Imperative Commands -->
+                    <div class="code-container">
+                        <div class="code-header"><span>BASH</span></div>
+                        <div class="code-block">
+<span class="c-cmd">$ kubectl label nodes node1 zone=us-east</span>
+<span class="c-cmd">$ kubectl label nodes node1 disk=ssd</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow overflow-hidden">
+                <div class="p-6 h-full flex flex-col">
+                    <h3 class="font-bold text-slate-700 mb-2">YAML: Hard vs Soft Affinity</h3>
+                    <div class="code-container flex-grow">
+                        <div class="code-header"><span>node-affinity.yaml</span></div>
+                        <div class="code-block">
+<span class="c-kwd">apiVersion</span>: v1
+<span class="c-kwd">kind</span>: Pod
+<span class="c-kwd">metadata</span>:
+  <span class="c-key">name</span>: <span class="c-str">affinity-demo</span>
+<span class="c-kwd">spec</span>:
+  <span class="c-kwd">affinity</span>:
+    <span class="c-kwd">nodeAffinity</span>:
+      
+      <span class="c-cmt"># TYPE 1: HARD (Required)</span>
+      <span class="c-key">requiredDuringSchedulingIgnoredDuringExecution</span>:
+        <span class="c-key">nodeSelectorTerms</span>:
+        - <span class="c-key">matchExpressions</span>:
+          - <span class="c-key">key</span>: <span class="c-str">disktype</span>
+            <span class="c-key">operator</span>: <span class="c-str">In</span>
+            <span class="c-key">values</span>: [<span class="c-str">"ssd"</span>, <span class="c-str">"nvme"</span>]
+          - <span class="c-key">key</span>: <span class="c-str">region</span>
+            <span class="c-key">operator</span>: <span class="c-str">NotIn</span>
+            <span class="c-key">values</span>: [<span class="c-str">"mars-west"</span>]
+
+      <span class="c-cmt"># TYPE 2: SOFT (Preferred)</span>
+      <span class="c-key">preferredDuringSchedulingIgnoredDuringExecution</span>:
+      - <span class="c-key">weight</span>: <span class="c-num">100</span>
+        <span class="c-key">preference</span>:
+          <span class="c-key">matchExpressions</span>:
+          - <span class="c-key">key</span>: <span class="c-str">zone</span>
+            <span class="c-key">operator</span>: <span class="c-str">In</span>
+            <span class="c-key">values</span>: [<span class="c-str">"us-east-1a"</span>]
+  <span class="c-kwd">containers</span>: ...
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. POD AFFINITY & ANTI-AFFINITY -->
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div class="bg-white rounded-xl shadow border-l-4 border-indigo-500 overflow-hidden">
+                <div class="p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-2xl font-bold text-slate-800">3. Pod Affinity</h2>
+                        <span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2 py-1 rounded">Inter-Pod Relation</span>
+                    </div>
+
+                    <!-- Types -->
+                    <div class="mb-4">
+                        <h3 class="font-bold text-slate-700 text-sm mb-2">Types:</h3>
+                        <ul class="text-sm space-y-2">
+                            <li class="flex flex-col mb-2">
+                                <span class="font-bold text-xs text-indigo-700">podAffinity (Attraction)</span>
+                                <span class="text-slate-600 text-xs">Schedule THIS pod on the same node/zone as THAT pod.</span>
+                            </li>
+                            <li class="flex flex-col">
+                                <span class="font-bold text-xs text-indigo-700">podAntiAffinity (Repulsion)</span>
+                                <span class="text-slate-600 text-xs">Schedule THIS pod away from THAT pod.</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-indigo-50 p-3 rounded mb-4 text-sm text-indigo-800 border border-indigo-200">
+                        <strong>Use Cases:</strong> 
+                        <ul class="list-disc pl-4 mt-1">
+                            <li><strong>Affinity:</strong> Low latency (Web+Cache), Shared local storage.</li>
+                            <li><strong>Anti-Affinity:</strong> High Availability (Don't put all replicas on one node), Dedicated nodes per tenant.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Imperative Commands -->
+                    <div class="code-container">
+                        <div class="code-header"><span>BASH</span></div>
+                        <div class="code-block">
+<span class="c-cmt"># Labels are the key!</span>
+<span class="c-cmd">$ kubectl run redis --image=redis -l app=store</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow overflow-hidden">
+                <div class="p-6 h-full flex flex-col">
+                    <h3 class="font-bold text-slate-700 mb-2">YAML: Attraction & Repulsion</h3>
+                    <div class="code-container flex-grow">
+                        <div class="code-header"><span>pod-affinity-full.yaml</span></div>
+                        <div class="code-block">
+<span class="c-kwd">apiVersion</span>: v1
+<span class="c-kwd">kind</span>: Pod
+<span class="c-kwd">metadata</span>:
+  <span class="c-key">name</span>: <span class="c-str">web-app</span>
+<span class="c-kwd">spec</span>:
+  <span class="c-kwd">affinity</span>:
+    <span class="c-cmt"># 1. ATTRACTION (Co-location)</span>
+    <span class="c-kwd">podAffinity</span>:
+      <span class="c-key">requiredDuringSchedulingIgnoredDuringExecution</span>:
+      - <span class="c-key">labelSelector</span>:
+          <span class="c-key">matchExpressions</span>:
+          - <span class="c-key">key</span>: <span class="c-str">app</span>
+            <span class="c-key">operator</span>: <span class="c-str">In</span>
+            <span class="c-key">values</span>: [<span class="c-str">"cache"</span>]
+        <span class="c-key">topologyKey</span>: <span class="c-str">"kubernetes.io/hostname"</span>
+
+    <span class="c-cmt"># 2. REPULSION (High Availability)</span>
+    <span class="c-kwd">podAntiAffinity</span>:
+      <span class="c-key">preferredDuringSchedulingIgnoredDuringExecution</span>:
+      - <span class="c-key">weight</span>: <span class="c-num">100</span>
+        <span class="c-key">podAffinityTerm</span>:
+          <span class="c-key">labelSelector</span>:
+            <span class="c-key">matchExpressions</span>:
+            - <span class="c-key">key</span>: <span class="c-str">app</span>
+              <span class="c-key">operator</span>: <span class="c-str">In</span>
+              <span class="c-key">values</span>: [<span class="c-str">"web-app"</span>]
+          <span class="c-key">topologyKey</span>: <span class="c-str">"kubernetes.io/hostname"</span>
+  <span class="c-kwd">containers</span>: ...
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. PRIORITY & PREEMPTION -->
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div class="bg-white rounded-xl shadow border-l-4 border-amber-500 overflow-hidden">
+                <div class="p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-2xl font-bold text-slate-800">4. PriorityClass</h2>
+                        <span class="bg-amber-100 text-amber-700 text-xs font-bold px-2 py-1 rounded">Eviction Logic</span>
+                    </div>
+                    <p class="text-sm text-slate-600 mb-4">
+                        <strong>Preemption:</strong> If a high-priority pod is pending and nodes are full, scheduler evicts lower-priority pods.
+                    </p>
+
+                    <!-- Imperative Commands -->
+                    <div class="code-container">
+                        <div class="code-header"><span>BASH (Imperative)</span></div>
+                        <div class="code-block">
+<span class="c-cmt"># View existing classes</span>
+<span class="c-cmd">$ kubectl get priorityclasses</span>
+
+<span class="c-cmt"># Create a class imperatively (via simple cat/EOF)</span>
+<span class="c-cmd">$ cat <<EOF | kubectl apply -f -
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: high-priority
+value: 1000000
+globalDefault: false
+description: "Mission Critical Pods"
+EOF</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow overflow-hidden">
+                <div class="p-6 h-full flex flex-col">
+                    <h3 class="font-bold text-slate-700 mb-2">YAML Configuration</h3>
+                    <div class="code-container flex-grow">
+                        <div class="code-header"><span>pod-priority.yaml</span></div>
+                        <div class="code-block">
+<span class="c-kwd">apiVersion</span>: v1
+<span class="c-kwd">kind</span>: Pod
+<span class="c-kwd">metadata</span>:
+  <span class="c-key">name</span>: <span class="c-str">critical-pod</span>
+<span class="c-kwd">spec</span>:
+  <span class="c-kwd">containers</span>:
+  - <span class="c-key">name</span>: <span class="c-str">nginx</span>
+    <span class="c-key">image</span>: <span class="c-str">nginx</span>
+  <span class="c-cmt"># Must match an existing PriorityClass object</span>
+  <span class="c-key">priorityClassName</span>: <span class="c-str">high-priority</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. EVICTION & DRAINING -->
+        <section class="bg-white rounded-xl shadow p-6 border-t-4 border-slate-700">
+            <h2 class="text-2xl font-bold text-slate-800 mb-4">5. Node Eviction & Maintenance</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="font-bold text-slate-600 mb-2 text-sm uppercase">Maintenance (API-Initiated)</h3>
+                    <div class="code-container">
+                        <div class="code-header"><span>BASH</span></div>
+                        <div class="code-block">
+<span class="c-cmt"># 1. Mark node as unschedulable (No new pods)</span>
+<span class="c-cmd">$ kubectl cordon node-1</span>
+
+<span class="c-cmt"># 2. Evict all pods safely (respects PDBs)</span>
+<span class="c-cmd">$ kubectl drain node-1 --ignore-daemonsets</span>
+
+<span class="c-cmt"># 3. Bring node back online</span>
+<span class="c-cmd">$ kubectl uncordon node-1</span>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="font-bold text-slate-600 mb-2 text-sm uppercase">Node Pressure (System-Initiated)</h3>
+                    <div class="code-container">
+                        <div class="code-header"><span>kubelet-config.yaml (Snippet)</span></div>
+                        <div class="code-block">
+<span class="c-cmt"># Kubelet triggers eviction if thresholds met</span>
+<span class="c-kwd">evictionHard</span>:
+  <span class="c-key">memory.available</span>: <span class="c-str">"100Mi"</span>
+  <span class="c-key">nodefs.available</span>: <span class="c-str">"10%"</span>
+  <span class="c-key">nodefs.inodesFree</span>: <span class="c-str">"5%"</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+</body>
+</html>
