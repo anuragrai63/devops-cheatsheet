@@ -10,275 +10,115 @@
       --card:#071328;
       --muted:#9ca3af;
       --accent:#06b6d4;
-      --tf:#7b42f6;
-      --k8s-1:#326CE5;
       --glass: rgba(255,255,255,0.03);
-      --max-width:1100px;
+      --max-width:900px;
     }
 
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
       margin:0;
-      font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial;
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;
       min-height:100vh;
       background:linear-gradient(180deg,var(--bg) 0%, #071126 100%);
       color:#e6eef8;
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
       padding:36px 20px;
       display:flex;
       justify-content:center;
+      align-items:center; /* Vertically center the dashboard */
     }
 
-    .container{
-      max-width:var(--max-width);
-      width:100%;
-    }
+    .container{ max-width:var(--max-width); width:100%; }
 
     header{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:16px;
-      margin-bottom:22px;
-    }
-
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:14px;
+      display:flex; flex-direction: column; align-items:center;
+      gap:16px; margin-bottom:40px; text-align: center;
     }
 
     .logo{
-      width:54px;
-      height:54px;
-      border-radius:12px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
+      width:80px; height:80px; border-radius:20px;
+      display:flex; align-items:center; justify-content:center;
       background:linear-gradient(135deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
       border:1px solid rgba(255,255,255,0.03);
-      padding: 6px; /* Padding to ensure image doesn't touch edges */
+      padding: 10px;
+      margin-bottom: 10px;
     }
 
-    /* CSS to ensure PNGs fit perfectly */
-    .logo img, .icon img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain; /* Keeps aspect ratio */
-      display: block;
-    }
-
-    .brand h1{font-size:18px;margin:0}
-    .brand p{margin:0;color:var(--muted);font-size:13px}
-
-    .controls{
-      display:flex;
-      align-items:center;
-      gap:12px;
-      flex-wrap:wrap;
-    }
-
-    .search {
-      background:var(--card);
-      border:1px solid rgba(255,255,255,0.03);
-      padding:8px 12px;
-      border-radius:10px;
-      color:inherit;
-      min-width:220px;
-      outline:none;
-      transition:box-shadow .15s, border-color .15s;
-    }
-
-    .search:focus{
-      box-shadow:0 6px 18px rgba(6,182,212,0.12);
-      border-color:var(--accent);
-    }
+    .logo img { width: 100%; height: 100%; object-fit: contain; }
+    h1 { margin:0; font-size: 32px; font-weight: 700; }
+    .muted { color:var(--muted); margin-top: 8px; font-size: 16px; }
 
     .grid{
-      display:grid;
-      grid-template-columns:repeat(2,1fr);
-      gap:20px;
-      margin-top:18px;
+      display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr));
+      gap:30px; justify-content: center;
     }
 
+    /* Clickable Card Styling */
+    .card-link { text-decoration: none; color: inherit; display: block; }
+    
     .card{
       background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      border-radius:12px;
-      padding:20px;
+      border-radius:16px; padding:40px 30px;
       border:1px solid rgba(255,255,255,0.03);
-      transition:transform .12s ease, box-shadow .12s ease;
-      min-height:160px;
-      display:flex;
-      flex-direction:column;
+      transition:transform .2s ease, box-shadow .2s ease, border-color .2s;
+      display:flex; flex-direction:column; align-items:center; text-align: center;
+      cursor: pointer;
+      height: 100%;
     }
 
-    .card:focus-within,
-    .card:hover{transform:translateY(-4px);box-shadow:0 10px 30px rgba(2,6,23,0.6)}
-
-    .header{display:flex;align-items:center;gap:16px}
-    .title{font-size:18px;font-weight:600}
-    
-    .icon{
-      width:72px;
-      height:72px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      border-radius:12px;
-      background:var(--glass);
-      cursor:pointer;
-      flex-shrink:0;
-      border:1px solid rgba(255,255,255,0.03);
-      padding: 12px; /* Padding inside the icon box */
+    .card:hover{
+      transform:translateY(-6px);
+      box-shadow:0 20px 40px rgba(0,0,0,0.4);
+      border-color: var(--accent);
     }
 
-    .icon:focus{outline:3px solid rgba(6,182,212,0.14)}
-    .muted{color:var(--muted);font-size:13px;margin-top:6px}
-    .topics{margin-top:16px;display:flex;flex-direction:column;gap:8px;flex:1;overflow:auto;padding-right:4px}
-    .topic a{
-      color:#dbeafe;text-decoration:none;padding:10px 12px;border-radius:8px;display:block;background:transparent;
-      transition:background .12s, transform .08s;
-      font-size:14px;
+    .icon-box{
+      width:100px; height:100px; margin-bottom: 24px;
+      display:flex; align-items:center; justify-content:center;
+      border-radius:20px; background:var(--glass);
+      border:1px solid rgba(255,255,255,0.05);
+      padding: 15px;
     }
+    .icon-box img { width: 100%; height: 100%; object-fit: contain; }
 
-    .topic a:hover,.topic a:focus{background:rgba(255,255,255,0.02);transform:translateX(4px)}
-    .topic a:active{transform:translateX(2px)}
-    .topic .label{display:flex;align-items:center;gap:10px}
+    .card-title { font-size: 24px; font-weight: 600; margin-bottom: 8px; }
+    .card-desc { color: var(--muted); font-size: 14px; }
 
-    .empty{
-      color:var(--muted);
-      font-size:13px;
-      padding:10px 12px;
-    }
-
-    @media(max-width:960px){
-      :root{--max-width:900px}
-      .grid{grid-template-columns:1fr;}
-      header{flex-direction:column;align-items:stretch;gap:12px}
-      .controls{justify-content:space-between}
-    }
-
-    @media(prefers-reduced-motion:reduce){
-      .card,.topic a{transition:none}
-    }
-
-    .topics::-webkit-scrollbar{width:8px;height:8px}
-    .topics::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.03);border-radius:8px}
   </style>
 </head>
 <body>
-  <div class="container" id="app">
+  <div class="container">
     <header>
-      <div class="brand" aria-hidden="false">
-        <div class="logo" aria-hidden="true">
-          <img src="devops-logo.png" alt="DevOps Logo">
-        </div>
-        <div>
-          <h1>DevOps Cheatsheet</h1>
-          <p class="muted">Select a category to view topic-wise cheatsheets</p>
-        </div>
+      <div class="logo">
+        <img src="devops-logo.png" alt="DevOps Logo">
       </div>
-
-      <div class="controls" role="search" aria-label="Filter topics">
-        <input id="search" class="search" type="search" placeholder="Search topics (e.g. pods, terraform)..." aria-label="Search topics" />
+      <div>
+        <h1>DevOps Cheatsheet</h1>
+        <div class="muted">Select a technology to browse topics</div>
       </div>
     </header>
 
     <div class="grid">
-      <section class="card" aria-labelledby="terraform-title">
-        <div class="header">
-          <button class="icon" onclick="location.href='Terraform/'" title="Open Terraform folder" aria-label="Open Terraform folder">
-            <img src="terraform-icon.png" alt="Terraform Icon">
-          </button>
-
-          <div style="flex:1">
-            <div id="terraform-title" class="title">Terraform</div>
-            <div class="muted">Infrastructure as Code</div>
+      <a href="Terraform/index.html" class="card-link">
+        <div class="card">
+          <div class="icon-box">
+            <img src="terraform-icon.png" alt="Terraform">
           </div>
+          <div class="card-title">Terraform</div>
+          <div class="card-desc">Infrastructure as Code</div>
         </div>
+      </a>
 
-        <div class="topics" aria-label="Terraform topics" data-category="terraform">
-          <div class="topic"><a href="Terraform/1-TFCMD.html"><span class="label">1. Terraform Command Cheat Sheet</span></a></div>
-        </div>
-      </section>
-
-      <section class="card" aria-labelledby="k8s-title">
-        <div class="header">
-          <button class="icon" onclick="location.href='k8s/'" title="Open Kubernetes folder" aria-label="Open Kubernetes folder">
-            <img src="kubernetes-icon.png" alt="Kubernetes Icon">
-          </button>
-
-          <div style="flex:1">
-            <div id="k8s-title" class="title">Kubernetes</div>
-            <div class="muted">Container Orchestration</div>
+      <a href="k8s/index.html" class="card-link">
+        <div class="card">
+          <div class="icon-box">
+            <img src="kubernetes-icon.png" alt="Kubernetes">
           </div>
+          <div class="card-title">Kubernetes</div>
+          <div class="card-desc">Container Orchestration</div>
         </div>
-
-        <div class="topics" aria-label="Kubernetes topics" data-category="kubernetes">
-          <div class="topic"><a href="k8s/1-k8s-archt.html">1. K8s Architecture</a></div>
-          <div class="topic"><a href="k8s/2-obj.html">2. K8s Objects</a></div>
-          <div class="topic"><a href="k8s/3-pod.html">3. K8s Workloads</a></div>
-          <div class="topic"><a href="k8s/4-wlm.html">4. K8s Workload Management</a></div>
-          <div class="topic"><a href="k8s/5-svc.html">5. K8s Services</a></div>
-          <div class="topic"><a href="k8s/6-stg.html">6. K8s Storage</a></div>
-          <div class="topic"><a href="k8s/7-cfg.html">7. K8s Configurations</a></div>
-          <div class="topic"><a href="k8s/8-sec.html">8. K8s Security</a></div>
-          <div class="topic"><a href="k8s/9-pol.html">9. K8s Policies</a></div>
-          <div class="topic"><a href="k8s/10-scm.html">10. K8s Scheduling</a></div>
-        </div>
-      </section>
+      </a>
     </div>
-
   </div>
-
-  <script>
-    (function(){
-      const input = document.getElementById('search');
-      const topicContainers = Array.from(document.querySelectorAll('.topics'));
-      function normalize(s){ return (s||'').toLowerCase().trim(); }
-
-      input.addEventListener('input', () => {
-        const q = normalize(input.value);
-        let anyVisible = false;
-
-        topicContainers.forEach(container => {
-          const topics = Array.from(container.querySelectorAll('.topic'));
-          let visibleCount = 0;
-          topics.forEach(t => {
-            const text = normalize(t.textContent || t.innerText);
-            if (!q || text.indexOf(q) !== -1) {
-              t.style.display = '';
-              visibleCount++;
-            } else {
-              t.style.display = 'none';
-            }
-          });
-          let empty = container.querySelector('.empty');
-          if (visibleCount === 0) {
-            anyVisible = anyVisible || false;
-            if (!empty) {
-              empty = document.createElement('div');
-              empty.className = 'empty';
-              empty.textContent = 'No matching topics';
-              container.appendChild(empty);
-            }
-          } else {
-            anyVisible = true;
-            if (empty) empty.remove();
-          }
-        });
-      });
-
-      window.addEventListener('keydown', (e) => {
-        if (e.key === '/' && document.activeElement !== input) {
-          e.preventDefault();
-          input.focus();
-          input.select();
-        }
-      });
-    })();
-  </script>
 </body>
 </html>
