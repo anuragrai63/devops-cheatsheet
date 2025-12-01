@@ -10,8 +10,8 @@
       --card:#071328;
       --muted:#9ca3af;
       --accent:#06b6d4;
-      --tf:#7b42f6; /* Terraform Purple */
-      --k8s-1:#326CE5; /* K8s Blue */
+      --tf:#7b42f6;
+      --k8s-1:#326CE5;
       --glass: rgba(255,255,255,0.03);
       --max-width:1100px;
     }
@@ -59,6 +59,15 @@
       justify-content:center;
       background:linear-gradient(135deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
       border:1px solid rgba(255,255,255,0.03);
+      padding: 6px; /* Padding to ensure image doesn't touch edges */
+    }
+
+    /* CSS to ensure PNGs fit perfectly */
+    .logo img, .icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain; /* Keeps aspect ratio */
+      display: block;
     }
 
     .brand h1{font-size:18px;margin:0}
@@ -110,9 +119,19 @@
 
     .header{display:flex;align-items:center;gap:16px}
     .title{font-size:18px;font-weight:600}
+    
     .icon{
-      width:72px;height:72px;display:flex;align-items:center;justify-content:center;border-radius:12px;background:var(--glass);cursor:pointer;
-      flex-shrink:0;border:1px solid rgba(255,255,255,0.03)
+      width:72px;
+      height:72px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:12px;
+      background:var(--glass);
+      cursor:pointer;
+      flex-shrink:0;
+      border:1px solid rgba(255,255,255,0.03);
+      padding: 12px; /* Padding inside the icon box */
     }
 
     .icon:focus{outline:3px solid rgba(6,182,212,0.14)}
@@ -154,22 +173,7 @@
     <header>
       <div class="brand" aria-hidden="false">
         <div class="logo" aria-hidden="true">
-          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M18.5 6C15.5 6 13.5 8 12 10.5C10.5 13 8.5 15 5.5 15C3.5 15 2 13.5 2 11.5C2 9.5 3.5 8 5.5 8C7 8 8.5 8.5 9.5 9.5" stroke="url(#paint0_linear)" stroke-width="2" stroke-linecap="round"/>
-            <path d="M5.5 18C8.5 18 10.5 16 12 13.5C13.5 11 15.5 9 18.5 9C20.5 9 22 10.5 22 12.5C22 14.5 20.5 16 18.5 16C17 16 15.5 15.5 14.5 14.5" stroke="url(#paint1_linear)" stroke-width="2" stroke-linecap="round"/>
-            <path d="M19 6L22 9L19 12" stroke="url(#paint1_linear)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M5 18L2 15L5 12" stroke="url(#paint0_linear)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            <defs>
-              <linearGradient id="paint0_linear" x1="2" y1="11.5" x2="9.5" y2="11.5" gradientUnits="userSpaceOnUse">
-                <stop stop-color="#06b6d4"/>
-                <stop offset="1" stop-color="#3b82f6"/>
-              </linearGradient>
-              <linearGradient id="paint1_linear" x1="14.5" y1="12.5" x2="22" y2="12.5" gradientUnits="userSpaceOnUse">
-                <stop stop-color="#3b82f6"/>
-                <stop offset="1" stop-color="#7b42f6"/>
-              </linearGradient>
-            </defs>
-          </svg>
+          <img src="devops-logo.png" alt="DevOps Logo">
         </div>
         <div>
           <h1>DevOps Cheatsheet</h1>
@@ -186,13 +190,7 @@
       <section class="card" aria-labelledby="terraform-title">
         <div class="header">
           <button class="icon" onclick="location.href='Terraform/'" title="Open Terraform folder" aria-label="Open Terraform folder">
-            <svg width="44" height="44" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M32 6.3999L56 18.3999V42.3999L32 54.3999L8 42.3999V18.3999L32 6.3999Z" fill="#5C4EE5"/>
-              <path d="M32 6.3999L56 18.3999V42.3999L32 54.3999" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M32 6.3999L8 18.3999V42.3999L32 54.3999" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M32 18.3999V54.3999" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M8 18.3999L32 30.3999L56 18.3999" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
+            <img src="terraform-icon.png" alt="Terraform Icon">
           </button>
 
           <div style="flex:1">
@@ -209,17 +207,7 @@
       <section class="card" aria-labelledby="k8s-title">
         <div class="header">
           <button class="icon" onclick="location.href='k8s/'" title="Open Kubernetes folder" aria-label="Open Kubernetes folder">
-            <svg width="44" height="44" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-              <path d="M50 5 L93 28 V72 L50 95 L7 72 V28 Z" fill="#326CE5" />
-              <g transform="translate(50,50)" fill="white">
-                <circle cx="0" cy="0" r="8" />
-                <path d="M0 -28 V-12 M0 28 V12 M-28 0 H-12 M28 0 H12 
-                         M-20 -20 L-8.5 -8.5 M20 20 L8.5 8.5 
-                         M-20 20 L-8.5 8.5 M20 -20 L8.5 -8.5" 
-                      stroke="white" stroke-width="4" stroke-linecap="round" />
-                <circle cx="0" cy="0" r="18" stroke="white" stroke-width="4" fill="none" />
-              </g>
-            </svg>
+            <img src="kubernetes-icon.png" alt="Kubernetes Icon">
           </button>
 
           <div style="flex:1">
