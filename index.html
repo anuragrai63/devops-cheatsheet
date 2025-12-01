@@ -5,71 +5,237 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>DevOps Cheatsheet — Home</title>
   <style>
-    :root{--bg:#0f172a;--card:#0b1220;--muted:#9ca3af;--accent:#06b6d4}
-    body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial;min-height:100vh;background:linear-gradient(180deg,#071022 0%,#071126 100%);color:#e6eef8;display:flex;align-items:center;justify-content:center;padding:36px}
-    .container{max-width:1000px;width:100%;}
-    .grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-    .card{background:rgba(255,255,255,0.02);border-radius:12px;padding:24px;border:1px solid rgba(255,255,255,0.03)}
-    .header{display:flex;align-items:center;gap:16px}
-    .title{font-size:20px;font-weight:600}
-    .icon{width:72px;height:72px;display:flex;align-items:center;justify-content:center;border-radius:12px;background:rgba(255,255,255,0.03);cursor:pointer}
-    .muted{color:var(--muted);font-size:13px;margin-top:6px}
-    .topics{margin-top:16px;display:flex;flex-direction:column;gap:8px}
-    .topic a{color:#dbeafe;text-decoration:none;padding:8px 10px;border-radius:8px;display:block;background:transparent}
-    .topic a:hover{background:rgba(255,255,255,0.02)}
-    .center{display:flex;align-items:center;justify-content:center;margin-bottom:18px}
+    :root{
+      --bg:#071022;
+      --card:#071328;
+      --muted:#9ca3af;
+      --accent:#06b6d4;
+      --tf:#7b42f6;
+      --k8s-1:#2563eb;
+      --k8s-2:#1e40af;
+      --glass: rgba(255,255,255,0.03);
+      --max-width:1100px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial;
+      min-height:100vh;
+      background:linear-gradient(180deg,var(--bg) 0%, #071126 100%);
+      color:#e6eef8;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      padding:36px 20px;
+      display:flex;
+      justify-content:center;
+    }
+
+    .container{
+      max-width:var(--max-width);
+      width:100%;
+    }
+
+    header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      margin-bottom:22px;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:14px;
+    }
+
+    .logo{
+      width:54px;
+      height:54px;
+      border-radius:12px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:linear-gradient(135deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border:1px solid rgba(255,255,255,0.03);
+    }
+
+    .brand h1{font-size:18px;margin:0}
+    .brand p{margin:0;color:var(--muted);font-size:13px}
+
+    .controls{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+
+    .search {
+      background:var(--card);
+      border:1px solid rgba(255,255,255,0.03);
+      padding:8px 12px;
+      border-radius:10px;
+      color:inherit;
+      min-width:220px;
+      outline:none;
+      transition:box-shadow .15s, border-color .15s;
+    }
+
+    .search:focus{
+      box-shadow:0 6px 18px rgba(6,182,212,0.12);
+      border-color:var(--accent);
+    }
+
+    .center{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      margin-bottom:18px;
+      text-align:center;
+      flex-direction:column;
+    }
+
     .home-title{font-size:28px;font-weight:700;margin-bottom:6px}
-    .sub{color:var(--muted);font-size:14px}
-    @media(max-width:800px){.grid{grid-template-columns:1fr;}}
+    .sub{color:var(--muted);font-size:14px;margin-top:0}
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:20px;
+      margin-top:18px;
+    }
+
+    .card{
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius:12px;
+      padding:20px;
+      border:1px solid rgba(255,255,255,0.03);
+      transition:transform .12s ease, box-shadow .12s ease;
+      min-height:160px;
+      display:flex;
+      flex-direction:column;
+    }
+
+    .card:focus-within,
+    .card:hover{transform:translateY(-4px);box-shadow:0 10px 30px rgba(2,6,23,0.6)}
+
+    .header{display:flex;align-items:center;gap:16px}
+    .title{font-size:18px;font-weight:600}
+    .icon{
+      width:72px;height:72px;display:flex;align-items:center;justify-content:center;border-radius:12px;background:var(--glass);cursor:pointer;
+      flex-shrink:0;border:1px solid rgba(255,255,255,0.03)
+    }
+
+    .icon:focus{outline:3px solid rgba(6,182,212,0.14)}
+    .muted{color:var(--muted);font-size:13px;margin-top:6px}
+    .topics{margin-top:16px;display:flex;flex-direction:column;gap:8px;flex:1;overflow:auto;padding-right:4px}
+    .topic a{
+      color:#dbeafe;text-decoration:none;padding:10px 12px;border-radius:8px;display:block;background:transparent;
+      transition:background .12s, transform .08s;
+      font-size:14px;
+    }
+
+    .topic a:hover,.topic a:focus{background:rgba(255,255,255,0.02);transform:translateX(4px)}
+    .topic a:active{transform:translateX(2px)}
+    .topic .label{display:flex;align-items:center;gap:10px}
+
+    .empty{
+      color:var(--muted);
+      font-size:13px;
+      padding:10px 12px;
+    }
+
+    @media(max-width:960px){
+      :root{--max-width:900px}
+      .grid{grid-template-columns:1fr;}
+      header{flex-direction:column;align-items:stretch;gap:12px}
+      .controls{justify-content:space-between}
+    }
+
+    @media(prefers-reduced-motion:reduce){
+      .card,.topic a{transition:none}
+    }
+
+    /* small scrollbar for topics */
+    .topics::-webkit-scrollbar{width:8px;height:8px}
+    .topics::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.03);border-radius:8px}
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="center">
-      <div>
-        <div class="home-title">DevOps Cheatsheet</div>
-        <div class="sub">Select a category to view topic-wise cheatsheets</div>
+  <div class="container" id="app">
+    <header>
+      <div class="brand" aria-hidden="false">
+        <div class="logo" aria-hidden="true">
+          <!-- Small combined logo -->
+          <svg width="36" height="36" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="DevOps">
+            <rect width="48" height="48" rx="10" fill="url(#g)"/>
+            <defs>
+              <linearGradient id="g" x1="0" x2="1">
+                <stop offset="0" stop-color="#06b6d4"/>
+                <stop offset="1" stop-color="#7b42f6"/>
+              </linearGradient>
+            </defs>
+            <path d="M14 28 L34 20 L34 28 L14 36 Z" fill="white" opacity="0.06"></path>
+            <circle cx="24" cy="24" r="8" fill="white" opacity="0.05"></circle>
+          </svg>
+        </div>
+        <div>
+          <h1>DevOps Cheatsheet</h1>
+          <p class="muted">Select a category to view topic-wise cheatsheets</p>
+        </div>
       </div>
-    </div>
+
+      <div class="controls" role="search" aria-label="Filter topics">
+        <input id="search" class="search" type="search" placeholder="Search topics (e.g. pods, terraform, storage)..." aria-label="Search topics" />
+      </div>
+    </header>
 
     <div class="grid">
       <!-- Terraform Card -->
-      <section class="card">
+      <section class="card" aria-labelledby="terraform-title">
         <div class="header">
-          <div class="icon" onclick="location.href='Terraform/'" title="Open Terraform folder" aria-hidden="false">
-            <!-- Simple Terraform 'T' mark using SVG -->
-            <svg width="40" height="40" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect width="256" height="256" rx="32" fill="#7b42f6"/>
-              <path d="M128 40v176" stroke="#fff" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M64 96h128" stroke="#fff" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/>
+          <button class="icon" onclick="location.href='Terraform/'" title="Open Terraform folder" aria-label="Open Terraform folder">
+            <!-- Enhanced Terraform-like SVG mark -->
+            <svg width="44" height="44" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Terraform">
+              <rect width="256" height="256" rx="36" fill="#7b42f6"/>
+              <!-- stylized stacked 'T' strokes inspired by Terraform mark -->
+              <g transform="translate(44,44) scale(0.6)" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="18">
+                <path d="M64 32 L128 32 L128 64" opacity="0.98"/>
+                <path d="M64 64 L128 64 L128 96" opacity="0.98"/>
+                <path d="M64 96 L128 96 L128 160" opacity="0.98"/>
+              </g>
             </svg>
-          </div>
+          </button>
+
           <div style="flex:1">
-            <div class="title">Terraform</div>
-            <div class="muted">Infrastructure as Code </div>
+            <div id="terraform-title" class="title">Terraform</div>
+            <div class="muted">Infrastructure as Code</div>
           </div>
         </div>
 
-        <div class="topics" aria-label="Terraform topics">
-          <div class="topic"><a href="Terraform/1-TFCMD.html">1. Terraform Command Cheat Sheet</a></div>
-          
+        <div class="topics" aria-label="Terraform topics" data-category="terraform">
+          <div class="topic"><a href="Terraform/1-TFCMD.html"><span class="label">1. Terraform Command Cheat Sheet</span></a></div>
+          <div class="topic"><a href="Terraform/2-terraform-state.html"><span class="label">2. Terraform State</span></a></div>
+          <div class="topic"><a href="Terraform/3-modules.html"><span class="label">3. Modules & Outputs</span></a></div>
         </div>
       </section>
 
       <!-- Kubernetes Card -->
-      <section class="card">
+      <section class="card" aria-labelledby="k8s-title">
         <div class="header">
-          <div class="icon" onclick="location.href='K8s/'" title="Open K8s folder">
-            <!-- Simple Kubernetes logo (hexagon + ship wheel) -->
-            <svg width="40" height="40" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <button class="icon" onclick="location.href='k8s/'" title="Open Kubernetes folder" aria-label="Open Kubernetes folder">
+            <!-- Improved Kubernetes SVG: hexagon + ship wheel -->
+            <svg width="44" height="44" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Kubernetes">
               <defs>
-                <linearGradient id="g" x1="0" x2="1">
+                <linearGradient id="kg" x1="0" x2="1">
                   <stop offset="0" stop-color="#2563eb"/>
                   <stop offset="1" stop-color="#1e40af"/>
                 </linearGradient>
               </defs>
-              <rect width="100" height="100" rx="18" fill="url(#g)" />
-              <g transform="translate(20,20) scale(0.6)" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+              <rect width="100" height="100" rx="16" fill="url(#kg)" />
+              <g transform="translate(18,15) scale(0.65)" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M50 8 L61 18 L54 31 L38 31 L31 18 Z" fill="#fff" opacity="0.06"/>
                 <circle cx="50" cy="40" r="6" fill="#fff"/>
                 <path d="M50 6 L50 16"/>
@@ -82,19 +248,20 @@
                 <path d="M64 21 L58 27"/>
               </g>
             </svg>
-          </div>
+          </button>
+
           <div style="flex:1">
-            <div class="title">Kubernetes</div>
-            <div class="muted">K8s cheatsheet </div>
+            <div id="k8s-title" class="title">Kubernetes</div>
+            <div class="muted">K8s cheatsheet</div>
           </div>
         </div>
 
-        <div class="topics" aria-label="Kubernetes topics">
+        <div class="topics" aria-label="Kubernetes topics" data-category="kubernetes">
           <div class="topic"><a href="k8s/1-k8s-archt.html">1. K8s Architecture</a></div>
           <div class="topic"><a href="k8s/2-obj.html">2. K8s Objects</a></div>
           <div class="topic"><a href="k8s/3-pod.html">3. K8s Workloads</a></div>
           <div class="topic"><a href="k8s/4-wlm.html">4. K8s Workload Management</a></div>
-          <div class="topic"><a href="k8s/5-svc.html">5. K8s Services </a></div>
+          <div class="topic"><a href="k8s/5-svc.html">5. K8s Services</a></div>
           <div class="topic"><a href="k8s/6-stg.html">6. K8s Storage</a></div>
           <div class="topic"><a href="k8s/7-cfg.html">7. K8s Configurations</a></div>
           <div class="topic"><a href="k8s/8-sec.html">8. K8s Security</a></div>
@@ -104,7 +271,57 @@
       </section>
     </div>
 
-   
   </div>
+
+  <script>
+    // Simple client-side search/filter
+    (function(){
+      const input = document.getElementById('search');
+      const topicContainers = Array.from(document.querySelectorAll('.topics'));
+      function normalize(s){ return (s||'').toLowerCase().trim(); }
+
+      input.addEventListener('input', () => {
+        const q = normalize(input.value);
+        let anyVisible = false;
+
+        topicContainers.forEach(container => {
+          const topics = Array.from(container.querySelectorAll('.topic'));
+          let visibleCount = 0;
+          topics.forEach(t => {
+            const text = normalize(t.textContent || t.innerText);
+            if (!q || text.indexOf(q) !== -1) {
+              t.style.display = '';
+              visibleCount++;
+            } else {
+              t.style.display = 'none';
+            }
+          });
+          // show empty placeholder when none found
+          let empty = container.querySelector('.empty');
+          if (visibleCount === 0) {
+            anyVisible = anyVisible || false;
+            if (!empty) {
+              empty = document.createElement('div');
+              empty.className = 'empty';
+              empty.textContent = 'No matching topics';
+              container.appendChild(empty);
+            }
+          } else {
+            anyVisible = true;
+            if (empty) empty.remove();
+          }
+        });
+      });
+
+      // Allow pressing "/" to focus search (like many sites)
+      window.addEventListener('keydown', (e) => {
+        if (e.key === '/' && document.activeElement !== input) {
+          e.preventDefault();
+          input.focus();
+          input.select();
+        }
+      });
+    })();
+  </script>
 </body>
 </html>
