@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kubernetes Resource Governance Cheat Sheet</title>
+    <style>
+        :root {
+            --bg-color: #f0f4f8;
+            --card-bg: #ffffff;
+            --primary: #326ce5; /* K8s Blue */
+            --primary-dark: #244f99;
+            --secondary: #3970e4;
+            --accent: #f59e0b;
+            --danger: #ef4444;
+            --text-main: #1f2937;
+            --text-light: #6b7280;
+            --code-bg: #1e293b;
+            --code-text: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 { margin: 0; font-size: 2.5rem; }
+        .subtitle { opacity: 0.9; font-size: 1.1rem; margin-top: 10px; }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+            border-top: 5px solid var(--primary);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            padding: 20px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .icon-box {
+            width: 50px;
+            height: 50px;
+            background: #eff6ff;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: var(--primary);
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin: 0;
+            color: var(--primary-dark);
+        }
+
+        .card-body {
+            padding: 20px;
+            flex-grow: 1;
+        }
+
+        .visual-diagram {
+            background: #f8fafc;
+            border: 1px dashed #cbd5e1;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            text-align: center;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Diagrams CSS Art */
+        .pod-box {
+            width: 30px;
+            height: 30px;
+            background: var(--primary);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 10px;
+            margin: 5px;
+            position: relative;
+        }
+        
+        /* Limit Range Diagram */
+        .lr-container { display: flex; align-items: center; justify-content: space-around; width: 100%; }
+        .lr-arrow { color: var(--danger); font-weight: bold; font-size: 20px; }
+        .lr-box { border: 2px solid var(--danger); padding: 5px; border-radius: 6px; }
+
+        /* Quota Diagram */
+        .quota-box { 
+            width: 120px; 
+            height: 60px; 
+            border: 3px solid var(--primary-dark); 
+            border-radius: 8px;
+            display: flex; 
+            flex-wrap: wrap; 
+            align-items: center; 
+            justify-content: center;
+            background: rgba(50, 108, 229, 0.1);
+        }
+
+        /* Network Policy Diagram */
+        .np-container { display: flex; align-items: center; gap: 20px; }
+        .np-wall { width: 5px; height: 60px; background: var(--danger); border-radius: 5px; }
+        .np-check { color: green; font-weight: bold; font-size: 20px; }
+
+        .definition {
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+        }
+
+        .use-case-title {
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--text-main);
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .use-case-list {
+            margin: 0 0 15px 0;
+            padding-left: 20px;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .code-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .code-block {
+            background: var(--code-bg);
+            color: var(--code-text);
+            padding: 15px;
+            padding-top: 35px; /* Space for label */
+            border-radius: 8px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.8rem;
+            overflow-x: auto;
+            position: relative;
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre; /* Critical for YAML formatting */
+            tab-size: 2;
+        }
+
+        .code-label {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: rgba(255,255,255,0.15);
+            padding: 4px 10px;
+            font-size: 0.7rem;
+            border-bottom-left-radius: 8px;
+            font-weight: bold;
+            text-transform: uppercase;
+            z-index: 10;
+        }
+
+        .code-title {
+            color: #93c5fd;
+            font-size: 0.85rem;
+            margin-bottom: 10px;
+            font-weight: bold;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 4px;
+            display: block;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            margin-right: 5px;
+        }
+        .badge-ns { background: #dbeafe; color: #1e40af; }
+        .badge-node { background: #fef3c7; color: #92400e; }
+
+        .keyword { color: #f472b6; }
+        .string { color: #a5b4fc; }
+        .value { color: #6ee7b7; }
+        .comment { color: #6b7280; font-style: italic; }
+        .attr { color: #93c5fd; }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Kubernetes Governance Cheat Sheet</h1>
+        <div class="subtitle">Detailed Guide with YAML Examples & Pod Specifications</div>
+    </header>
+
+    <div class="grid">
+
+        <!-- Card 1: Limit Range -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-box">⚖️</div>
+                <div>
+                    <div class="card-title">Limit Range</div>
+                    <span class="badge badge-ns">Namespace Level</span>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="visual-diagram">
+                    <div class="lr-container">
+                        <div style="text-align:center">
+                            <div class="pod-box" style="width:20px; height:20px; background:#cbd5e1;">?</div>
+                            <small>No Request</small>
+                        </div>
+                        <div class="lr-arrow">➔</div>
+                        <div class="lr-box">
+                            <div class="pod-box">Default</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="definition">
+                    Injects default resource requests/limits if missing, and enforces min/max constraints per container.
+                </div>
+                
+                <div class="code-container">
+                    <div class="code-block"><div class="code-label">1. Policy YAML</div><span class="code-title">limit-range.yaml</span><span class="keyword">apiVersion:</span> v1
+<span class="keyword">kind:</span> LimitRange
+<span class="keyword">metadata:</span>
+  <span class="keyword">name:</span> cpu-mem-limit-range
+<span class="keyword">spec:</span>
+  <span class="keyword">limits:</span>
+  - <span class="keyword">default:</span> <span class="comment"># Default Limit (if not set)</span>
+      <span class="keyword">cpu:</span> <span class="value">500m</span>
+      <span class="keyword">memory:</span> <span class="value">512Mi</span>
+    <span class="keyword">defaultRequest:</span> <span class="comment"># Default Request (if not set)</span>
+      <span class="keyword">cpu:</span> <span class="value">200m</span>
+      <span class="keyword">memory:</span> <span class="value">256Mi</span>
+    <span class="keyword">max:</span> <span class="comment"># Strict Max allowed per container</span>
+      <span class="keyword">cpu:</span> <span class="value">1</span>
+      <span class="keyword">memory:</span> <span class="value">1Gi</span>
+    <span class="keyword">min:</span> <span class="comment"># Strict Min required</span>
+      <span class="keyword">cpu:</span> <span class="value">100m</span>
+      <span class="keyword">memory:</span> <span class="value">100Mi</span>
+    <span class="keyword">type:</span> <span class="string">Container</span></div>
+
+                    <div class="code-block"><div class="code-label">2. Pod Example</div><span class="code-title">affected-pod.yaml</span><span class="keyword">apiVersion:</span> v1
+<span class="keyword">kind:</span> Pod
+<span class="keyword">metadata:</span>
+  <span class="keyword">name:</span> default-nginx
+<span class="keyword">spec:</span>
+  <span class="keyword">containers:</span>
+  - <span class="keyword">name:</span> nginx
+    <span class="keyword">image:</span> nginx:latest
+    <span class="comment"># NO resources defined here!</span>
+    <span class="comment"># The LimitRange will automatically inject:</span>
+    <span class="comment"># requests: cpu=200m, mem=256Mi</span>
+    <span class="comment"># limits: cpu=500m, mem=512Mi</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 2: Resource Quota -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-box">💰</div>
+                <div>
+                    <div class="card-title">Resource Quota</div>
+                    <span class="badge badge-ns">Namespace Level</span>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="visual-diagram">
+                    <div class="quota-box">
+                        <div class="pod-box"></div>
+                        <div class="pod-box"></div>
+                        <div class="pod-box" style="background:#cbd5e1; opacity:0.5;">🚫</div>
+                    </div>
+                </div>
+                <div class="definition">
+                    Limits the <strong>aggregate</strong> resource usage (CPU, Memory, Count) of the entire Namespace.
+                </div>
+                
+                <div class="code-container">
+                    <div class="code-block"><div class="code-label">1. Policy YAML</div><span class="code-title">quota.yaml</span><span class="keyword">apiVersion:</span> v1
+<span class="keyword">kind:</span> ResourceQuota
+<span class="keyword">metadata:</span>
+  <span class="keyword">name:</span> team-compute-quota
+<span class="keyword">spec:</span>
+  <span class="keyword">hard:</span>
+    <span class="keyword">pods:</span> <span class="string">"4"</span>
+    <span class="keyword">requests.cpu:</span> <span class="string">"2"</span>
+    <span class="keyword">requests.memory:</span> <span class="value">4Gi</span>
+    <span class="keyword">limits.cpu:</span> <span class="string">"4"</span>
+    <span class="keyword">limits.memory:</span> <span class="value">8Gi</span>
+    <span class="keyword">count/services.loadbalancers:</span> <span class="string">"1"</span></div>
+
+                    <div class="code-block"><div class="code-label">2. Pod Example</div><span class="code-title">heavy-pod.yaml</span><span class="keyword">apiVersion:</span> v1
+<span class="keyword">kind:</span> Pod
+<span class="keyword">metadata:</span>
+  <span class="keyword">name:</span> heavy-job
+<span class="keyword">spec:</span>
+  <span class="keyword">containers:</span>
+  - <span class="keyword">name:</span> worker
+    <span class="keyword">image:</span> python:3.9
+    <span class="keyword">resources:</span>
+      <span class="keyword">requests:</span>
+        <span class="keyword">cpu:</span> <span class="string">"1"</span> <span class="comment"># Consumes 1/2 of quota</span>
+        <span class="keyword">memory:</span> <span class="value">2Gi</span> <span class="comment"># Consumes 2/4Gi of quota</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 3: Network Policy -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-box">🛡️</div>
+                <div>
+                    <div class="card-title">Network Policy</div>
+                    <span class="badge badge-ns">Namespace Level</span>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="visual-diagram">
+                    <div class="np-container">
+                        <div class="pod-box" style="background:var(--danger)">Bad</div>
+                        <div class="np-wall"></div>
+                        <div class="pod-box" style="background:#10b981">DB</div>
+                        <div class="np-check">←</div>
+                        <div class="pod-box" style="background:var(--primary)">API</div>
+                    </div>
+                </div>
+                <div class="definition">
+                    Firewall rules that control traffic between Pods based on labels.
+                </div>
+
+                <div class="code-container">
+                    <div class="code-block"><div class="code-label">1. Policy YAML</div><span class="code-title">allow-db-access.yaml</span><span class="keyword">apiVersion:</span> networking.k8s.io/v1
+<span class="keyword">kind:</span> NetworkPolicy
+<span class="keyword">metadata:</span>
+  <span class="keyword">name:</span> db-access-policy
+<span class="keyword">spec:</span>
+  <span class="keyword">podSelector:</span>
+    <span class="keyword">matchLabels:</span>
+      <span class="keyword">role:</span> <span class="string">db</span> <span class="comment"># Protects DB pods</span>
+  <span class="keyword">policyTypes:</span>
+  - <span class="string">Ingress</span>
+  <span class="keyword">ingress:</span>
+  - <span class="keyword">from:</span>
+    - <span class="keyword">podSelector:</span>
+        <span class="keyword">matchLabels:</span>
+          <span class="keyword">role:</span> <span class="string">frontend</span> <span class="comment"># Only Frontend can talk</span>
+    <span class="keyword">ports:</span>
+    - <span class="keyword">protocol:</span> TCP
+      <span class="keyword">port:</span> <span class="value">5432</span></div>
+
+                    <div class="code-block"><div class="code-label">2. Pod Examples</div><span class="code-title">pods.yaml</span><span class="comment"># 1. Database (Protected)</span>
+<span class="keyword">kind:</span> Pod
+<span class="keyword">metadata:</span>
+  <span class="keyword">name:</span> postgres
+  <span class="keyword">labels:</span>
+    <span class="keyword">role:</span> <span class="string">db</span> <span class="comment"># Matches Policy Target</span>
+<span class="keyword">spec:</span> ...
+
+<span class="comment"># 2. Frontend (Allowed Source)</span>
+<span class="keyword">kind:</span> Pod
+<span class="keyword">metadata:</span>
+  <span class="keyword">name:</span> web-app
+  <span class="keyword">labels:</span>
+    <span class="keyword">role:</span> <span class="string">frontend</span> <span class="comment"># Matches Ingress Rule</span>
+<span class="keyword">spec:</span> ...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 4: PID Limits -->
+        <div class="card" style="border-top-color: var(--accent);">
+            <div class="card-header">
+                <div class="icon-box" style="color:var(--accent)">⚙️</div>
+                <div>
+                    <div class="card-title">PID Limits</div>
+                    <span class="badge badge-node">Node / Kubelet Level</span>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="visual-diagram">
+                    <div style="font-size:30px;">🖥️</div>
+                    <div style="display:flex; flex-direction:column; align-items:center; margin-left:10px;">
+                        <div style="width:2px; height:20px; background:#cbd5e1;"></div>
+                        <div style="display:flex; gap:5px;">
+                            <div class="pod-box" style="width:15px; height:15px; font-size:8px;">P</div>
+                            <div class="pod-box" style="width:15px; height:15px; font-size:8px;">P</div>
+                            <div style="color:red; font-size:12px;">STOP</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="definition">
+                    Prevents process exhaustion (fork bombs) by limiting PIDs per pod at the Node level.
+                </div>
+
+                <div class="code-container">
+                    <div class="code-block"><div class="code-label">1. Node Config</div><span class="code-title">/var/lib/kubelet/config.yaml</span><span class="keyword">apiVersion:</span> kubelet.config.k8s.io/v1beta1
+<span class="keyword">kind:</span> KubeletConfiguration
+<span class="comment"># Max PIDs a single Pod can spawn</span>
+<span class="keyword">podPidsLimit:</span> <span class="value">1024</span> 
+<span class="comment"># Reserve PIDs for OS daemons</span>
+<span class="keyword">systemReserved:</span>
+  <span class="keyword">pid:</span> <span class="string">"500"</span>
+<span class="comment"># Reserve PIDs for K8s components</span>
+<span class="keyword">kubeReserved:</span>
+  <span class="keyword">pid:</span> <span class="string">"200"</span></div>
+
+                    <div class="code-block"><div class="code-label">2. Test Pod</div><span class="code-title">stress-test.yaml</span><span class="keyword">apiVersion:</span> v1
+<span class="keyword">kind:</span> Pod
+<span class="keyword">metadata:</span>
+  <span class="keyword">name:</span> fork-bomb-test
+<span class="keyword">spec:</span>
+  <span class="keyword">containers:</span>
+  - <span class="keyword">name:</span> stress
+    <span class="keyword">image:</span> polinux/stress
+    <span class="comment"># If this tries to spawn > 1024 procs</span>
+    <span class="comment"># the Node will throttle/kill it.</span>
+    <span class="keyword">command:</span> [<span class="string">"stress"</span>]
+    <span class="keyword">args:</span> [<span class="string">"--vm"</span>, <span class="string">"10"</span>, <span class="string">"--vm-bytes"</span>, <span class="string">"128M"</span>]</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 5: Node Managers -->
+        <div class="card" style="border-top-color: var(--accent);">
+            <div class="card-header">
+                <div class="icon-box" style="color:var(--accent)">🧠</div>
+                <div>
+                    <div class="card-title">Node Managers</div>
+                    <span class="badge badge-node">Node / Kubelet Level</span>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="visual-diagram">
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; width:80%;">
+                        <div style="border:1px solid #cbd5e1; padding:5px; border-radius:4px;">
+                            <small>NUMA 0</small>
+                            <div class="pod-box" style="width:100%; height:20px; background:#10b981;">CPU+RAM</div>
+                        </div>
+                        <div style="border:1px solid #cbd5e1; padding:5px; border-radius:4px;">
+                            <small>NUMA 1</small>
+                            <div style="width:100%; height:20px; background:#cbd5e1;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="definition">
+                    Aligns CPU pinning and NUMA topology. <strong>Requires 'Guaranteed' QoS Pods.</strong>
+                </div>
+
+                <div class="code-container">
+                    <div class="code-block"><div class="code-label">1. Node Config</div><span class="code-title">/var/lib/kubelet/config.yaml</span><span class="keyword">cpuManagerPolicy:</span> <span class="string">static</span>
+<span class="keyword">topologyManagerPolicy:</span> <span class="string">single-numa-node</span>
+<span class="keyword">reservedSystemCPUs:</span> <span class="string">"0,1"</span></div>
+
+                    <div class="code-block"><div class="code-label">2. Pod Example (Guaranteed)</div><span class="code-title">pinned-pod.yaml</span><span class="keyword">apiVersion:</span> v1
+<span class="keyword">kind:</span> Pod
+<span class="keyword">metadata:</span>
+  <span class="keyword">name:</span> high-perf-ai
+<span class="keyword">spec:</span>
+  <span class="keyword">containers:</span>
+  - <span class="keyword">name:</span> ai-model
+    <span class="keyword">image:</span> pytorch/pytorch
+    <span class="keyword">resources:</span>
+      <span class="comment"># MUST match Limits == Requests</span>
+      <span class="comment"># MUST be integer (no "500m")</span>
+      <span class="keyword">limits:</span>
+        <span class="keyword">cpu:</span> <span class="string">"2"</span> 
+        <span class="keyword">memory:</span> <span class="value">4Gi</span>
+      <span class="keyword">requests:</span>
+        <span class="keyword">cpu:</span> <span class="string">"2"</span> 
+        <span class="keyword">memory:</span> <span class="value">4Gi</span></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>
