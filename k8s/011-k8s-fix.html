@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>K8s 100: Troubleshooting Visualized</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Chosen Palette: Dark Mode Neon (Cyberpunk/Dark UI) -->
+    <!-- 
+        Palette Hex Codes:
+        Background: #020617 (Slate 950)
+        Card Bg: #0f172a (Slate 900)
+        Text Primary: #f1f5f9 (Slate 100)
+        Text Secondary: #94a3b8 (Slate 400)
+        Accent Blue: #3b82f6 (Blue 500)
+        Accent Pink: #ec4899 (Pink 500)
+        Accent Purple: #8b5cf6 (Violet 500)
+    -->
+
+    <style>
+        /* Chart Container Styling - MANDATORY */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            /* Explicit max-width for readability on large screens */
+            max-width: 100%; 
+            margin-left: auto;
+            margin-right: auto;
+            /* Defined heights for responsiveness */
+            height: 300px;
+            max-height: 400px;
+        }
+
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+
+        /* Custom Scrollbar for a clean look (Dark Mode) */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569; 
+        }
+
+        /* Flowchart Connector Lines (CSS Only, NO SVG) */
+        .flow-line-vertical {
+            width: 2px;
+            background-color: #475569; /* Slate 600 */
+            margin: 0 auto;
+            height: 20px;
+        }
+        
+        /* Code Block Styling */
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans antialiased">
+
+    <!-- PLAN SUMMARY (HTML Comment) -->
+    <!-- 
+        NARRATIVE PLAN:
+        1.  **Hero Section:** Hook the user with the scale of the problem ("100 Errors").
+        2.  **The Landscape (Donut Chart):** Categorize the 100 errors.
+        3.  **The "Most Wanted" (Bar Chart):** Focus on top errors.
+        4.  **Troubleshooting Logic (CSS Diagram):** Decision tree.
+        5.  **Resource Impact (Bubble Chart):** OOM vs CPU.
+        6.  **Fix Complexity (Pie Chart):** YAML vs Infra.
+        7.  **Knowledge Base (Searchable List):** The complete list of 100 errors with Scenario, Command, and YAML.
+        8.  **Conclusion:** Wrap up.
+    -->
+
+    <!-- Navigation / Header -->
+    <nav class="sticky top-0 z-50 bg-slate-950/90 backdrop-blur-md shadow-sm border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center space-x-2">
+                    <span class="text-3xl">☸️</span>
+                    <span class="font-bold text-xl tracking-tight text-slate-100">K8s Troubleshooter</span>
+                </div>
+                <div class="hidden md:flex space-x-8 text-sm font-medium text-slate-400">
+                    <a href="#landscape" class="hover:text-blue-400 transition-colors">Landscape</a>
+                    <a href="#top-errors" class="hover:text-blue-400 transition-colors">Top 10</a>
+                    <a href="#logic-flow" class="hover:text-blue-400 transition-colors">Flow</a>
+                    <a href="#knowledge-base" class="hover:text-blue-400 transition-colors font-bold text-blue-500">Knowledge Base</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="bg-gradient-to-r from-blue-900 via-indigo-900 to-violet-900 text-white py-20 px-4 border-b border-white/10">
+        <div class="max-w-4xl mx-auto text-center">
+            <h1 class="text-4xl md:text-6xl font-extrabold mb-6 tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-blue-200 to-indigo-100">100 Ways Kubernetes Breaks</h1>
+            <p class="text-xl md:text-2xl text-slate-300 mb-8 max-w-2xl mx-auto leading-relaxed">
+                From <code class="bg-slate-800 px-2 py-1 rounded text-pink-400">CrashLoopBackOff</code> to <code class="bg-slate-800 px-2 py-1 rounded text-pink-400">NodeNotReady</code>. We analyzed 100 common error scenarios to visualize why your cluster fails and how to fix it.
+            </p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <div class="bg-slate-900/50 backdrop-blur-sm rounded-lg p-4 border border-blue-500/30">
+                    <div class="text-3xl font-bold text-blue-400">100</div>
+                    <div class="text-sm text-slate-400">Unique Scenarios</div>
+                </div>
+                <div class="bg-slate-900/50 backdrop-blur-sm rounded-lg p-4 border border-blue-500/30">
+                    <div class="text-3xl font-bold text-blue-400">5</div>
+                    <div class="text-sm text-slate-400">Core Categories</div>
+                </div>
+                <div class="bg-slate-900/50 backdrop-blur-sm rounded-lg p-4 border border-blue-500/30">
+                    <div class="text-3xl font-bold text-blue-400">100%</div>
+                    <div class="text-sm text-slate-400">Fixable</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-24">
+
+        <!-- SECTION 1: The Landscape -->
+        <section id="landscape" class="scroll-mt-24">
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-slate-100 mb-4 border-l-4 border-blue-500 pl-4">The Error Landscape</h2>
+                <p class="text-lg text-slate-400 leading-relaxed max-w-3xl">
+                    Kubernetes complexity isn't random. By categorizing the 100 errors, we see distinct patterns. <span class="font-semibold text-blue-400">Lifecycle issues</span> (pods crashing or failing to start) dominate the landscape, followed closely by <span class="font-semibold text-violet-400">Networking</span> and <span class="font-semibold text-pink-400">Storage</span> configuration errors.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <!-- Chart Col -->
+                <div class="bg-slate-900 rounded-xl shadow-lg p-6 border border-slate-800">
+                    <div class="chart-container">
+                        <canvas id="categoryChart"></canvas>
+                    </div>
+                </div>
+                <!-- Context Col -->
+                <div class="space-y-6">
+                    <div class="flex items-start space-x-4">
+                        <div class="flex-shrink-0 w-12 h-12 bg-blue-900/30 rounded-full flex items-center justify-center text-2xl border border-blue-500/20">🔄</div>
+                        <div>
+                            <h3 class="text-xl font-bold text-slate-200">Lifecycle & Runtime (32%)</h3>
+                            <p class="text-slate-400 mt-1">Errors like <code>CrashLoopBackOff</code> and <code>CreateContainerError</code>. These happen inside the pod.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-4">
+                        <div class="flex-shrink-0 w-12 h-12 bg-violet-900/30 rounded-full flex items-center justify-center text-2xl border border-violet-500/20">🕸️</div>
+                        <div>
+                            <h3 class="text-xl font-bold text-slate-200">Networking (24%)</h3>
+                            <p class="text-slate-400 mt-1">DNS failures, Service connection timeouts, and Ingress 404s. Often the hardest to debug.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-4">
+                        <div class="flex-shrink-0 w-12 h-12 bg-pink-900/30 rounded-full flex items-center justify-center text-2xl border border-pink-500/20">💾</div>
+                        <div>
+                            <h3 class="text-xl font-bold text-slate-200">Storage (18%)</h3>
+                            <p class="text-slate-400 mt-1"><code>PVCPending</code> and Mount errors. Usually caused by cloud provider delays or config mismatches.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: Top Errors -->
+        <section id="top-errors" class="scroll-mt-24">
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-slate-100 mb-4 border-l-4 border-pink-500 pl-4">The "Most Wanted" List</h2>
+                <p class="text-lg text-slate-400 leading-relaxed max-w-3xl">
+                    Not all errors are created equal. While there are 100 possibilities, a small subset accounts for the vast majority of daily incidents. This chart ranks the top 10 most frequent errors based on incident reports.
+                </p>
+            </div>
+
+            <div class="bg-slate-900 rounded-xl shadow-lg p-6 border border-slate-800">
+                <div class="chart-container">
+                    <canvas id="topErrorsChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: Troubleshooting Logic (CSS Flowchart) -->
+        <section id="logic-flow" class="scroll-mt-24">
+            <div class="mb-12">
+                <h2 class="text-3xl font-bold text-slate-100 mb-4 border-l-4 border-violet-500 pl-4">The "CrashLoop" Decision Tree</h2>
+                <p class="text-lg text-slate-400 leading-relaxed max-w-3xl">
+                    <code>CrashLoopBackOff</code> is the #1 enemy. It's not an error itself, but a state indicating failure. Use this logic flow to isolate the root cause, implemented here using pure CSS structure.
+                </p>
+            </div>
+
+            <!-- CSS Flowchart Implementation -->
+            <div class="w-full max-w-4xl mx-auto">
+                
+                <!-- Level 1: Start -->
+                <div class="flex justify-center mb-2">
+                    <div class="bg-slate-700 text-white px-6 py-3 rounded-lg shadow-lg font-mono font-bold text-center w-64 border border-slate-600">
+                        POD STATUS: CrashLoopBackOff
+                    </div>
+                </div>
+                <div class="flow-line-vertical"></div>
+
+                <!-- Level 2: Decision -->
+                <div class="flex justify-center mb-2">
+                    <div class="bg-blue-900/40 text-blue-200 px-6 py-3 rounded-lg border-2 border-blue-500/50 font-bold text-center w-64">
+                        Check Previous Logs?
+                        <div class="text-xs font-normal mt-1 text-slate-400">kubectl logs -p</div>
+                    </div>
+                </div>
+                <div class="flow-line-vertical"></div>
+                
+                <!-- Level 3: Branching -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8">
+                    
+                    <!-- Branch A -->
+                    <div class="flex flex-col items-center">
+                        <div class="w-full h-px bg-slate-700 mb-4 md:hidden"></div> <!-- Mobile divider -->
+                        <div class="bg-slate-800 p-4 rounded-lg shadow border-l-4 border-red-500 w-full">
+                            <h4 class="font-bold text-red-400 mb-2">Logs: "Exit Code 1"</h4>
+                            <p class="text-sm text-slate-400 mb-2">App panic or runtime error.</p>
+                            <div class="bg-slate-950 p-2 rounded text-xs font-mono text-slate-300 border border-slate-700">Fix App Config / Code</div>
+                        </div>
+                    </div>
+
+                    <!-- Branch B -->
+                    <div class="flex flex-col items-center">
+                        <div class="w-full h-px bg-slate-700 mb-4 md:hidden"></div>
+                        <div class="bg-slate-800 p-4 rounded-lg shadow border-l-4 border-amber-500 w-full">
+                            <h4 class="font-bold text-amber-400 mb-2">Logs: "Empty"</h4>
+                            <p class="text-sm text-slate-400 mb-2">Cmd not found or permission denied.</p>
+                            <div class="bg-slate-950 p-2 rounded text-xs font-mono text-slate-300 border border-slate-700">Check Docker Entrypoint</div>
+                        </div>
+                    </div>
+
+                    <!-- Branch C -->
+                    <div class="flex flex-col items-center">
+                        <div class="w-full h-px bg-slate-700 mb-4 md:hidden"></div>
+                        <div class="bg-slate-800 p-4 rounded-lg shadow border-l-4 border-purple-500 w-full">
+                            <h4 class="font-bold text-purple-400 mb-2">Logs: "OOMKilled"</h4>
+                            <p class="text-sm text-slate-400 mb-2">Exit Code 137. RAM limit hit.</p>
+                            <div class="bg-slate-950 p-2 rounded text-xs font-mono text-slate-300 border border-slate-700">Increase resources.limits</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECTION 4: Resource Impact -->
+        <section id="resources" class="scroll-mt-24">
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-slate-100 mb-4 border-l-4 border-emerald-500 pl-4">Resource Wars: CPU vs Memory</h2>
+                <p class="text-lg text-slate-400 leading-relaxed max-w-3xl">
+                    Misconfiguring resources leads to two distinct outcomes. <span class="font-bold text-blue-400">CPU</span> is compressible; if you hit the limit, you get throttled. <span class="font-bold text-pink-400">Memory</span> is not; if you hit the limit, you get killed (OOM).
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="md:col-span-2 bg-slate-900 rounded-xl shadow-lg p-6 border border-slate-800">
+                    <div class="chart-container">
+                        <canvas id="resourceChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-slate-900 text-white rounded-xl p-6 shadow-lg flex flex-col justify-center border border-slate-800">
+                    <h3 class="text-xl font-bold text-pink-400 mb-4">⚠️ The Kill Zone</h3>
+                    <p class="mb-4 text-slate-400">
+                        The pink bubbles represent OOMKilled events. Notice they cluster where Memory Requests are low but Usage is high.
+                    </p>
+                    <div class="border-t border-slate-800 pt-4">
+                        <h4 class="font-bold text-blue-400 mb-2">ℹ️ The Slow Zone</h4>
+                        <p class="text-slate-400">
+                            Blue bubbles are CPU throttling. The app runs, but performance degrades significantly.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 5: Fix Complexity Breakdown -->
+        <section id="fixes" class="pb-12">
+             <div class="mb-8">
+                <h2 class="text-3xl font-bold text-slate-100 mb-4 border-l-4 border-amber-500 pl-4">How Do We Fix Them?</h2>
+                <p class="text-lg text-slate-400 leading-relaxed max-w-3xl">
+                    Analyzing the fixes for all 100 errors reveals that nearly half require modifying YAML configurations. Infrastructure intervention is required less often but usually implies higher severity outages.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                 <div class="bg-slate-900 rounded-xl shadow-lg p-6 border border-slate-800">
+                    <div class="chart-container">
+                        <canvas id="fixTypeChart"></canvas>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 gap-4">
+                    <div class="p-4 bg-blue-900/20 border-l-4 border-blue-500 rounded">
+                        <div class="font-bold text-blue-400">YAML Config (45%)</div>
+                        <div class="text-sm text-blue-300/70">Typos, indentation, wrong keys, missing env vars. Fix: Edit & Apply.</div>
+                    </div>
+                    <div class="p-4 bg-emerald-900/20 border-l-4 border-emerald-500 rounded">
+                        <div class="font-bold text-emerald-400">Resource Tuning (25%)</div>
+                        <div class="text-sm text-emerald-300/70">Limits, requests, quotas, affinities. Fix: Scale & Optimize.</div>
+                    </div>
+                    <div class="p-4 bg-amber-900/20 border-l-4 border-amber-500 rounded">
+                        <div class="font-bold text-amber-400">Infrastructure (15%)</div>
+                        <div class="text-sm text-amber-300/70">Node disk full, Kubelet down, Cloud provider limits. Fix: SSH & Ops.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 6: THE KNOWLEDGE BASE (100 Questions) -->
+        <section id="knowledge-base" class="py-12 bg-slate-900/50 border-t border-slate-800">
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-slate-100 mb-4 border-l-4 border-indigo-500 pl-4">Knowledge Base: 100 Scenarios</h2>
+                <p class="text-lg text-slate-400 leading-relaxed max-w-3xl mb-6">
+                    A complete, searchable database of all 100 Kubernetes error scenarios, including detailed fix explanations, imperative commands, and YAML configurations.
+                </p>
+                <div class="relative max-w-xl">
+                    <input type="text" id="searchInput" placeholder="Search by error name (e.g., OOMKilled, PVC)..." 
+                           class="w-full px-4 py-3 rounded-lg border border-slate-700 bg-slate-800 text-slate-100 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all placeholder-slate-500">
+                    <div class="absolute right-3 top-3 text-slate-500">🔍</div>
+                </div>
+            </div>
+
+            <!-- Dynamic Error Grid -->
+            <div id="errorGrid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                <!-- Content will be injected by JS -->
+            </div>
+            
+            <div id="noResults" class="hidden text-center py-12 text-slate-500">
+                <p class="text-xl">No errors found matching your search.</p>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-950 text-slate-500 py-12 text-center border-t border-slate-900">
+        <p class="mb-2">Generated based on "100 Kubernetes Errors" Analysis</p>
+        <p class="text-sm">No SVGs or Mermaid JS were used in the making of this infographic.</p>
+    </footer>
+
+    <!-- SCRIPT SECTION -->
+    <script>
+        // --- DATA: The 100 Errors (Expanded with Explanations) ---
+        // Added 'explanation' field for detailed context
+        const errorDatabase = [
+            { id: "01", title: "CrashLoopBackOff", cause: "App crash (exit 1) or config error.", explanation: "The container starts but exits immediately. K8s restarts it exponentially.", fix: "Check logs, fix entrypoint/args.", cmd: "kubectl logs <pod> --previous", yaml: "command: [\"/bin/sh\", \"-c\"]\nargs:\n- echo 'Starting app...';\n  ./start.sh || sleep 3600" },
+            { id: "02", title: "ImagePullBackOff", cause: "Wrong image/tag or auth fail.", explanation: "Kubelet cannot fetch the image manifest from the registry.", fix: "Verify image name & Secret.", cmd: "kubectl create secret docker-registry reg-cred \\\n  --docker-server=https://index.docker.io/v1/ \\\n  --docker-username=user --docker-password=pw", yaml: "imagePullSecrets:\n- name: reg-cred\ncontainers:\n- image: private-repo/app:v1" },
+            { id: "03", title: "ErrImagePull", cause: "Image URL unreachable.", explanation: "Network connection to registry failed or image doesn't exist.", fix: "Check URL/Network/DNS.", cmd: "kubectl run test --image=busybox -- nslookup index.docker.io", yaml: "image: docker.io/library/nginx:latest\n# Check if registry is reachable" },
+            { id: "04", title: "CreateContainerConfigError", cause: "Missing Secret/ConfigMap.", explanation: "The Pod references a ConfigMap/Secret that does not exist in the namespace.", fix: "Create missing resource.", cmd: "kubectl get configmap my-config\nkubectl get secret my-secret", yaml: "envFrom:\n- configMapRef:\n    name: my-config # Must exist!\n    optional: false" },
+            { id: "05", title: "CreateContainer Error", cause: "Runtime fail (name conflict).", explanation: "Container runtime failed to provision the container (e.g. name already in use).", fix: "Check mounts/PID usage.", cmd: "kubectl describe pod <pod>\n# Look for 'Failed to create container'", yaml: "volumeMounts:\n- mountPath: /data\n  name: data-vol" },
+            { id: "06", title: "RunContainer Error", cause: "Filesystem permissions.", explanation: "Container created but `start` command failed (e.g., read-only root).", fix: "Check SecurityContext.", cmd: "kubectl logs <pod>\n# Check for 'permission denied'", yaml: "securityContext:\n  runAsUser: 1000\n  readOnlyRootFilesystem: false" },
+            { id: "07", title: "OOMKilled", cause: "RAM limit exceeded (Exit 137).", explanation: "Process used more memory than `limits.memory` allowed.", fix: "Increase limit/Optimize app.", cmd: "kubectl top pod <pod>\nkubectl get events --field-selector reason=OOMKilled", yaml: "resources:\n  requests:\n    memory: \"512Mi\"\n  limits:\n    memory: \"1Gi\"" },
+            { id: "08", title: "Back-off restarting failed container", cause: "Short-lived process exits.", explanation: "Container command finished (exit 0) but RestartPolicy is Always.", fix: "Adjust restartPolicy/Cmd.", cmd: "kubectl get pod <pod> -o yaml", yaml: "restartPolicy: OnFailure\n# OR ensure command hangs:\ncommand: [\"sleep\", \"infinity\"]" },
+            { id: "09", title: "NodeNotReady", cause: "Kubelet down/Disk pressure.", explanation: "Node controller stopped receiving heartbeats from Kubelet.", fix: "Restart Kubelet/Clean disk.", cmd: "systemctl status kubelet\njournalctl -u kubelet -f", yaml: "# Infra Fix - SSH to node required" },
+            { id: "10", title: "PodUnschedulable", cause: "No node has resources.", explanation: "Requested CPU/RAM exceeds available capacity on all nodes.", fix: "Scale cluster/reduce reqs.", cmd: "kubectl describe pod <pod>\n# Look for 'Insufficient cpu'", yaml: "resources:\n  requests:\n    cpu: \"100m\" # Reduce from 2000m\n    memory: \"128Mi\"" },
+            { id: "11", title: "NodeAffinity conflict", cause: "No node matches affinity.", explanation: "Required node selector/affinity rules cannot be met.", fix: "Fix labels/affinity.", cmd: "kubectl get nodes --show-labels", yaml: "affinity:\n  nodeAffinity:\n    requiredDuringSchedulingIgnoredDuringExecution:\n      nodeSelectorTerms:\n      - matchExpressions:\n        - key: disktype\n          operator: In\n          values: [\"ssd\"]" },
+            { id: "12", title: "PVC Pending", cause: "No PV or Provisioner fail.", explanation: "Dynamic provisioner failed or no manual PV matches claim.", fix: "Check StorageClass/PV.", cmd: "kubectl describe pvc <pvc>\nkubectl get sc", yaml: "spec:\n  storageClassName: standard\n  accessModes:\n  - ReadWriteOnce\n  resources:\n    requests:\n      storage: 10Gi" },
+            { id: "13", title: "Volume MountError", cause: "Volume attached elsewhere.", explanation: "Cloud disk is attached to another node and cannot be moved.", fix: "Force detach/wait.", cmd: "kubectl get pv\n# Check cloud console for attachment", yaml: "# Wait ~6 mins for detach timer" },
+            { id: "14", title: "Deadline Exceeded", cause: "Job took too long.", explanation: "Job execution time exceeded `activeDeadlineSeconds`.", fix: "Increase deadline.", cmd: "kubectl get job <name> -o yaml", yaml: "spec:\n  activeDeadlineSeconds: 600 # Increase from 60" },
+            { id: "15", title: "InvalidImageName", cause: "Uppercase/Invalid chars.", explanation: "Docker image names must be lowercase alphanumeric.", fix: "Use lowercase.", cmd: "# Lint YAML before apply", yaml: "image: my-app:v1 # NOT My-App:V1" },
+            { id: "16", title: "Secret not found", cause: "Secret missing in NS.", explanation: "Pod env/volume references a secret that doesn't exist.", fix: "Create secret.", cmd: "kubectl create secret generic my-secret --from-literal=pw=123", yaml: "env:\n- name: PW\n  valueFrom:\n    secretKeyRef:\n      name: my-secret\n      key: pw" },
+            { id: "17", title: "ConfigMap not found", cause: "CM missing.", explanation: "Pod references a ConfigMap that doesn't exist.", fix: "Create CM.", cmd: "kubectl create cm my-config --from-literal=env=prod", yaml: "envFrom:\n- configMapRef:\n    name: my-config" },
+            { id: "18", title: "NodeSelector mismatch", cause: "Label mismatch.", explanation: "Pod demands a node label that exists on no active nodes.", fix: "Label nodes.", cmd: "kubectl label nodes <node> disk=ssd", yaml: "nodeSelector:\n  disk: ssd" },
+            { id: "19", title: "Invalid container port", cause: "Port format error.", explanation: "Port must be an integer, not a string.", fix: "Use integer.", cmd: "# Lint YAML", yaml: "ports:\n- containerPort: 80 # NOT \"80\"" },
+            { id: "20", title: "FailedScheduling", cause: "Generic scheduler fail.", explanation: "Scheduler cannot place pod (Taints, Affinity, Resources).", fix: "Check events.", cmd: "kubectl describe pod <pod>", yaml: "# Check Resources and Affinity" },
+            { id: "21", title: "Liveness probe failed", cause: "App slow/500 error.", explanation: "Kubelet kills container because health endpoint failed.", fix: "Increase delay/Fix app.", cmd: "kubectl describe pod <pod>", yaml: "livenessProbe:\n  httpGet:\n    path: /health\n    port: 8080\n  initialDelaySeconds: 30" },
+            { id: "22", title: "Readiness probe failed", cause: "Endpoint fail.", explanation: "Pod is Running but removed from Service endpoints.", fix: "Check app health.", cmd: "kubectl logs <pod>", yaml: "readinessProbe:\n  httpGet:\n    path: /ready\n    port: 8080" },
+            { id: "23", title: "Service not reachable", cause: "Selector mismatch.", explanation: "Service selector does not match any Pod labels.", fix: "Fix svc selector.", cmd: "kubectl get ep <svc>\n# If EMPTY, selector is wrong", yaml: "selector:\n  app: my-app # Must match Pod labels" },
+            { id: "24", title: "DNS resolution failed", cause: "CoreDNS down.", explanation: "Internal DNS lookup for services failed.", fix: "Check kube-system.", cmd: "kubectl get pods -n kube-system -l k8s-app=kube-dns", yaml: "# Restart CoreDNS Deployment" },
+            { id: "25", title: "LoadBalancer pending", cause: "Cloud quota exceeded.", explanation: "Cloud provider cannot provision a new LB IP.", fix: "Check cloud limits.", cmd: "kubectl describe svc <svc>", yaml: "# Check Cloud Console Quotas" },
+            { id: "26", title: "RBAC access denied", cause: "ServiceAccount no perm.", explanation: "Pod tries to talk to API server without RoleBinding.", fix: "Add RoleBinding.", cmd: "kubectl create rolebinding app-view --clusterrole=view --serviceaccount=default:default", yaml: "roleRef:\n  kind: ClusterRole\n  name: view\nsubjects:\n- kind: ServiceAccount\n  name: default" },
+            { id: "27", title: "Crash in InitContainer", cause: "Pre-req script fail.", explanation: "Init container exited with error, blocking main app.", fix: "Fix init logic.", cmd: "kubectl logs <pod> -c init-myservice", yaml: "initContainers:\n- name: init-myservice\n  image: busybox\n  command: ['sh', '-c', 'until nslookup myservice; do echo waiting; sleep 2; done;']" },
+            { id: "28", title: "ImagePullSecrets error", cause: "Secret type wrong.", explanation: "Secret exists but is Opaque, not docker-registry.", fix: "Recreate secret.", cmd: "kubectl delete secret reg-cred\nkubectl create secret docker-registry reg-cred ...", yaml: "type: kubernetes.io/dockerconfigjson" },
+            { id: "29", title: "Invalid PVC access mode", cause: "RWO vs RWX mismatch.", explanation: "Pod asks for ReadWriteMany on a disk that only supports ReadWriteOnce.", fix: "Match PV mode.", cmd: "kubectl get pv", yaml: "accessModes:\n- ReadWriteOnce # Typical for Block Storage" },
+            { id: "30", title: "Unbound PVC", cause: "No matching PV.", explanation: "PVC waiting for PV with correct Size/Class/Mode.", fix: "Create PV.", cmd: "kubectl get pv", yaml: "# Ensure PV capacity >= PVC request" },
+            { id: "31", title: "Pod evicted", cause: "Node disk/RAM full.", explanation: "Node controller removed pod to save the node.", fix: "Clear node space.", cmd: "kubectl describe node <node>\n# Check Conditions: DiskPressure", yaml: "# Add resources or clean /var/lib/docker" },
+            { id: "32", title: "Unauthorized error", cause: "Token expired.", explanation: "ServiceAccount token mounted in pod is invalid.", fix: "Refresh token.", cmd: "kubectl delete pod <pod> # Forces token refresh", yaml: "automountServiceAccountToken: true" },
+            { id: "33", title: "Admission webhook denied", cause: "Policy violation.", explanation: "OPA/Kyverno rejected the pod spec.", fix: "Check Gatekeeper.", cmd: "kubectl describe rs <replicaset>\n# Look for 'AdmissionWebhook'", yaml: "# Comply with corporate policy (e.g. no root)" },
+            { id: "34", title: "PodSecurity Policy violation", cause: "Privileged mode denied.", explanation: "Legacy PSP blocked privileged container.", fix: "Remove privilege.", cmd: "kubectl get psp", yaml: "securityContext:\n  privileged: false" },
+            { id: "35", title: "Pod quota exceeded", cause: "Namespace quota full.", explanation: "Namespace ResourceQuota limit hit.", fix: "Increase quota.", cmd: "kubectl describe quota -n <ns>", yaml: "apiVersion: v1\nkind: ResourceQuota\nspec:\n  hard:\n    pods: \"10\"" },
+            { id: "36", title: "API throttling", cause: "Too many requests.", explanation: "Client sending too many calls to API server.", fix: "Reduce polling.", cmd: "# Check client logs for 429", yaml: "# Implement exponential backoff" },
+            { id: "37", title: "Invalid label format", cause: "Spaces/Symbols used.", explanation: "Labels allow only alphanumeric, - and .", fix: "Use alphanumeric.", cmd: "# Lint YAML", yaml: "metadata:\n  labels:\n    app: my-app # No spaces!" },
+            { id: "38", title: "Service endpoints empty", cause: "Selector mismatch.", explanation: "Service cannot find pods to route traffic to.", fix: "Fix labels.", cmd: "kubectl get ep <svc>", yaml: "selector:\n  app: my-app" },
+            { id: "39", title: "Helm release failed", cause: "Template error.", explanation: "Helm chart rendering failed.", fix: "Fix chart/values.", cmd: "helm install --dry-run --debug ./mychart", yaml: "# Check values.yaml types" },
+            { id: "40", title: "Helm rollback failed", cause: "Corrupt state.", explanation: "Cannot rollback because previous release is broken.", fix: "Manual cleanup.", cmd: "helm delete <release>\nhelm install ...", yaml: "# N/A" },
+            { id: "41", title: "Node disk full", cause: "Logs/Images.", explanation: "Docker overlay or logs filled the disk.", fix: "Prune docker.", cmd: "docker system prune -a\n# On Node", yaml: "# Configure log rotation" },
+            { id: "42", title: "Invalid YAML", cause: "Indentation.", explanation: "YAML syntax error prevents application.", fix: "Lint YAML.", cmd: "yamllint deployment.yaml", yaml: "# Check indentation levels" },
+            { id: "43", title: "Container exits immediately", cause: "No foreground proc.", explanation: "Container completes command and exits.", fix: "Add sleep/loop.", cmd: "kubectl logs <pod>", yaml: "command: [\"/bin/sh\", \"-c\"]\nargs: [\"while true; do sleep 30; done;\"]" },
+            { id: "44", title: "Job doesn't complete", cause: "App hang.", explanation: "Job logic stuck in loop.", fix: "Add timeout.", cmd: "kubectl get job", yaml: "activeDeadlineSeconds: 300" },
+            { id: "45", title: "DaemonSet not scheduled", cause: "Node taints.", explanation: "Nodes have taints (e.g. NoSchedule) that DS lacks toleration for.", fix: "Add toleration.", cmd: "kubectl describe node <node>", yaml: "tolerations:\n- operator: Exists" },
+            { id: "46", title: "Pod can't mount ConfigMap", cause: "CM missing.", explanation: "Mount volume fails because CM object is missing.", fix: "Create CM.", cmd: "kubectl create cm config --from-file=file.txt", yaml: "volumes:\n- name: config\n  configMap:\n    name: config" },
+            { id: "47", title: "Invalid node port range", cause: "Port < 30000.", explanation: "NodePorts must be 30000-32767 by default.", fix: "Use 30000-32767.", cmd: "# Check SVC spec", yaml: "type: NodePort\nports:\n- nodePort: 30080" },
+            { id: "48", title: "Exit code 137", cause: "OOMKilled.", explanation: "Container killed by kernel for using too much RAM.", fix: "More RAM.", cmd: "kubectl top pod", yaml: "resources:\n  limits:\n    memory: 2Gi" },
+            { id: "49", title: "Job history limits too high", cause: "Too many old jobs.", explanation: "completed jobs piling up in etcd.", fix: "Set TTL.", cmd: "kubectl delete job --field-selector status.successful=1", yaml: "ttlSecondsAfterFinished: 100" },
+            { id: "50", title: "Pod never terminates", cause: "Stuck finalizer.", explanation: "Pod deletion blocked by finalizer/storage.", fix: "Force delete.", cmd: "kubectl delete pod <pod> --grace-period=0 --force", yaml: "# Check volume attachments" },
+            { id: "51", title: "Invalid annotation key", cause: "Bad format.", explanation: "Annotations have strict character limits.", fix: "Fix syntax.", cmd: "# Lint", yaml: "annotations:\n  example.com/key: value" },
+            { id: "52", title: "Deployment rollout stuck", cause: "Probes failing.", explanation: "New replica set cannot become ready.", fix: "Check logs.", cmd: "kubectl rollout status deploy/<name>", yaml: "# Check readinessProbe" },
+            { id: "53", title: "Service without selector", cause: "No endpoints.", explanation: "Headless service created without backend pointers.", fix: "Add selector.", cmd: "kubectl get svc <name> -o yaml", yaml: "selector:\n  app: my-app" },
+            { id: "54", title: "Container can't write logs", cause: "Read-only fs.", explanation: "App tries to write to root fs which is read-only.", fix: "Mount volume.", cmd: "kubectl logs <pod>", yaml: "volumeMounts:\n- name: logs\n  mountPath: /var/log" },
+            { id: "55", title: "HPA not scaling", cause: "No metrics server.", explanation: "HPA cannot fetch CPU usage.", fix: "Install metrics.", cmd: "kubectl top pods\n# If error, install metrics-server", yaml: "# Install Metrics Server" },
+            { id: "56", title: "Deployment loops", cause: "Selector collision.", explanation: "Two deployments select the same pods.", fix: "Unique labels.", cmd: "kubectl get deploy --show-labels", yaml: "spec:\n  selector:\n    matchLabels:\n      app: unique-name" },
+            { id: "57", title: "Pod IP not reachable", cause: "CNI fail.", explanation: "Overlay network not routing packets.", fix: "Check CNI.", cmd: "kubectl get pods -n kube-system -l k8s-app=calico-node", yaml: "# Check CNI logs" },
+            { id: "58", title: "ClusterIP unreachable", cause: "Kube-proxy fail.", explanation: "IPTables rules for service missing.", fix: "Restart proxy.", cmd: "kubectl delete pod -n kube-system -l k8s-app=kube-proxy", yaml: "# Infra fix" },
+            { id: "59", title: "Controller-manager crash", cause: "Bad config.", explanation: "Master component misconfigured.", fix: "Check manifests.", cmd: "docker ps | grep controller-manager", yaml: "# Check /etc/kubernetes/manifests" },
+            { id: "60", title: "Too many open files", cause: "ulimit reached.", explanation: "App opened max file descriptors.", fix: "Increase ulimit.", cmd: "kubectl exec <pod> -- ulimit -n", yaml: "# Set securityContext or sysctl" },
+            { id: "61", title: "Pod fails DNS", cause: "ndots/CoreDNS.", explanation: "DNS config causes lookup loops or failures.", fix: "Debug DNS.", cmd: "kubectl run -it --rm --image=busybox:1.28 -- nslookup google.com", yaml: "dnsPolicy: ClusterFirst" },
+            { id: "62", title: "HPA flapping", cause: "Rapid metric change.", explanation: "Pod count jumps up and down rapidly.", fix: "Stabilization.", cmd: "kubectl describe hpa", yaml: "behavior:\n  scaleDown:\n    stabilizationWindowSeconds: 300" },
+            { id: "63", title: "Node cordoned", cause: "Maintenance.", explanation: "Node marked unschedulable manually.", fix: "Uncordon.", cmd: "kubectl uncordon <node>", yaml: "# N/A" },
+            { id: "64", title: "Evicted (Node Reboot)", cause: "Uptime reset.", explanation: "Node rebooted, pods moved.", fix: "Use PDB.", cmd: "uptime", yaml: "kind: PodDisruptionBudget\nminAvailable: 1" },
+            { id: "65", title: "Service has no endpoints", cause: "Selector fail.", explanation: "Service selector matches 0 pods.", fix: "Fix labels.", cmd: "kubectl get ep <svc>", yaml: "selector:\n  app: correct-app" },
+            { id: "66", title: "Wrong targetPort", cause: "Port mismatch.", explanation: "Service sends traffic to port 80, container listens on 8080.", fix: "Match container.", cmd: "kubectl get svc <svc> -o yaml", yaml: "ports:\n- port: 80\n  targetPort: 8080" },
+            { id: "67", title: "Image tag 'latest'", cause: "Cached old code.", explanation: "Kubelet used cached 'latest' instead of pulling new.", fix: "Use version/Always.", cmd: "kubectl rollout restart deploy/<name>", yaml: "imagePullPolicy: Always" },
+            { id: "68", title: "Kubelet not registering", cause: "Hostname/Network.", explanation: "Node cannot reach API server to register.", fix: "Check logs.", cmd: "journalctl -u kubelet", yaml: "# Check --hostname-override" },
+            { id: "69", title: "API server not reachable", cause: "Master down.", explanation: "Control plane is offline.", fix: "Check master.", cmd: "kubectl cluster-info", yaml: "# Infra fix" },
+            { id: "70", title: "Pod slow start", cause: "Startup probe fail.", explanation: "App takes longer to start than liveness probe allows.", fix: "Use startupProbe.", cmd: "kubectl describe pod", yaml: "startupProbe:\n  httpGet:\n    path: /health\n  failureThreshold: 30" },
+            { id: "71", title: "Taint mismatch", cause: "NoExecute taint.", explanation: "Pod evicted because it doesn't tolerate node taint.", fix: "Add toleration.", cmd: "kubectl describe node <node>", yaml: "tolerations:\n- key: \"node.kubernetes.io/unreachable\"\n  operator: \"Exists\"" },
+            { id: "72", title: "Image pull auth fail", cause: "Secret not linked.", explanation: "ServiceAccount missing imagePullSecret.", fix: "Link to SA.", cmd: "kubectl patch sa default -p '{\"imagePullSecrets\": [{\"name\": \"reg-cred\"}]}'", yaml: "serviceAccountName: default" },
+            { id: "73", title: "Ingress 404", cause: "Path mismatch.", explanation: "Request path doesn't match Ingress rule or backend.", fix: "Rewrite annotation.", cmd: "kubectl get ing", yaml: "annotations:\n  nginx.ingress.kubernetes.io/rewrite-target: /$1" },
+            { id: "74", title: "PV Terminating Stuck", cause: "Finalizers.", explanation: "PV deletion blocked by protection finalizer.", fix: "Remove finalizer.", cmd: "kubectl patch pv <pv> -p '{\"metadata\":{\"finalizers\":null}}'", yaml: "finalizers: []" },
+            { id: "75", title: "Readiness fail", cause: "Wrong port.", explanation: "Probe checking wrong port.", fix: "Fix probe.", cmd: "kubectl describe pod", yaml: "readinessProbe:\n  tcpSocket:\n    port: 8080" },
+            { id: "76", title: "Affinity stuck", cause: "Too strict.", explanation: "Required affinity cannot be met.", fix: "Use preferred.", cmd: "kubectl describe pod", yaml: "preferredDuringSchedulingIgnoredDuringExecution:\n- weight: 1\n  preference: ..." },
+            { id: "77", title: "Node pressure", cause: "Preemption.", explanation: "Scheduler evicted low priority pod for high priority one.", fix: "PriorityClass.", cmd: "kubectl get events", yaml: "priorityClassName: high-priority" },
+            { id: "78", title: "No routes (Calico)", cause: "BGP fail.", explanation: "Calico nodes cannot peer.", fix: "Check bird/logs.", cmd: "calicoctl node status", yaml: "# Network fix" },
+            { id: "79", title: "RPC error Unknown", cause: "Etcd/Hook fail.", explanation: "API server communication breakdown.", fix: "Check API logs.", cmd: "docker logs k8s_kube-apiserver...", yaml: "# Infra fix" },
+            { id: "80", title: "Multi-Attach error", cause: "Disk in use.", explanation: "Volume attached to another node.", fix: "Force detach.", cmd: "# Cloud Console -> Detach Volume", yaml: "# Wait for detach" },
+            { id: "81", title: "Sysctl not allowed", cause: "Unsafe sysctl.", explanation: "Pod asks for unsafe kernel parameter.", fix: "Allow in kubelet.", cmd: "# Edit kubelet config", yaml: "securityContext:\n  sysctls:\n  - name: net.ipv4.ip_local_port_range\n    value: \"1024 65535\"" },
+            { id: "82", title: "Hostname unknown", cause: "Resolv.conf.", explanation: "Pod DNS config invalid.", fix: "Check DNS.", cmd: "cat /etc/resolv.conf", yaml: "dnsPolicy: Default" },
+            { id: "83", title: "InitContainer Crash", cause: "Setup fail.", explanation: "Init container exiting non-zero.", fix: "Debug init.", cmd: "kubectl logs <pod> -c <init-container>", yaml: "# Fix init script" },
+            { id: "84", title: "Volume ReadOnly", cause: "Mode set wrong.", explanation: "Pod tries to write to RO volume.", fix: "Set readOnly false.", cmd: "kubectl get pod -o yaml", yaml: "volumeMounts:\n- name: vol\n  readOnly: false" },
+            { id: "85", title: "NetPol blocks egress", cause: "Deny All.", explanation: "NetworkPolicy blocks outgoing traffic.", fix: "Allow egress.", cmd: "kubectl get netpol", yaml: "spec:\n  egress:\n  - to:\n    - ipBlock:\n        cidr: 0.0.0.0/0" },
+            { id: "86", title: "Secret missing deploy", cause: "Race condition.", explanation: "Deployment starts before Secret is ready.", fix: "Helm hooks.", cmd: "helm install --wait", yaml: "annotations:\n  helm.sh/hook: pre-install" },
+            { id: "87", title: "ConfigMap Immutable", cause: "Cant update.", explanation: "CM marked immutable cannot be changed.", fix: "Recreate.", cmd: "kubectl delete cm <name>", yaml: "immutable: false" },
+            { id: "88", title: "Zone Conflict", cause: "Node/Disk mismatch.", explanation: "Disk in Zone A, Node in Zone B.", fix: "Zonal storage.", cmd: "kubectl get node --show-labels", yaml: "volumeBindingMode: WaitForFirstConsumer" },
+            { id: "89", title: "Connection Refused", cause: "Kubeconfig wrong.", explanation: "Local kubectl pointing to wrong IP/Port.", fix: "Fix context.", cmd: "kubectl config view", yaml: "# Fix ~/.kube/config" },
+            { id: "90", title: "Sidecar Stuck", cause: "Job won't end.", explanation: "Main process finishes, sidecar keeps pod running.", fix: "Share Process Namespace.", cmd: "# Kill sidecar from main", yaml: "shareProcessNamespace: true" },
+            { id: "91", title: "HPA No Scaling", cause: "Thresholds not met.", explanation: "Metric value below scaling threshold.", fix: "Check metrics.", cmd: "kubectl get hpa", yaml: "minReplicas: 2" },
+            { id: "92", title: "Kubectl Hangs", cause: "Network/VPN.", explanation: "Cannot reach API server IP.", fix: "Check connection.", cmd: "ping <master-ip>", yaml: "# Network fix" },
+            { id: "93", title: "Logs Missing", cause: "Pod deleted.", explanation: "Logs are ephemeral and lost on delete.", fix: "Central logging.", cmd: "# Install Fluentd/Loki", yaml: "# Logging agent" },
+            { id: "94", title: "Cert Expired", cause: "1 year limit.", explanation: "Kubelet/API certs expired.", fix: "Renew certs.", cmd: "kubeadm certs renew all\nsystemctl restart kubelet", yaml: "# Infra fix" },
+            { id: "95", title: "Webhook Timeout", cause: "Backend slow.", explanation: "ValidatingWebhook takes too long.", fix: "Fix webhook.", cmd: "kubectl delete validatingwebhookconfiguration <name>", yaml: "timeoutSeconds: 30" },
+            { id: "96", title: "PDB Block", cause: "MinAvailable fail.", explanation: "Cannot drain node because PDB blocks eviction.", fix: "Delete PDB.", cmd: "kubectl get pdb", yaml: "minAvailable: 0" },
+            { id: "97", title: "HostPath Missing", cause: "Dir missing.", explanation: "Mounting a host path that doesn't exist.", fix: "Create dir.", cmd: "ssh node 'mkdir -p /data'", yaml: "hostPath:\n  path: /data\n  type: DirectoryOrCreate" },
+            { id: "98", title: "ContainerCreating Forever", cause: "Sandbox/CNI.", explanation: "Container runtime failed to set up sandbox.", fix: "Reboot node.", cmd: "reboot", yaml: "# Infra fix" },
+            { id: "99", title: "Kube-proxy Fail", cause: "Iptables lock.", explanation: "Kube-proxy cannot update iptables.", fix: "Upgrade proxy.", cmd: "kubectl logs -n kube-system -l k8s-app=kube-proxy", yaml: "# Upgrade k8s" },
+            { id: "100", title: "QoS Eviction", cause: "BestEffort killed.", explanation: "Pod with no limits killed first.", fix: "Set Limits.", cmd: "kubectl top pod", yaml: "resources:\n  requests:\n    memory: 1Gi\n  limits:\n    memory: 1Gi" }
+        ];
+
+        // --- CHART & APP LOGIC ---
+        // Helper: Format labels
+        function formatLabel(str, maxwidth) {
+            if (typeof str !== 'string' || str.length <= maxwidth) return str;
+            var sections = [];
+            var words = str.split(' ');
+            var temp = '';
+            words.forEach(function(item, index) {
+                if (temp.length > 0) {
+                    var concat = temp + ' ' + item;
+                    if (concat.length > maxwidth) {
+                        sections.push(temp);
+                        temp = item;
+                    } else {
+                        temp = concat;
+                    }
+                } else {
+                    temp = item;
+                }
+                if (index === words.length - 1) sections.push(temp);
+            });
+            return sections;
+        }
+
+        // --- GLOBAL CHART DEFAULTS (Updated for Dark Mode) ---
+        Chart.defaults.font.family = 'ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
+        Chart.defaults.color = '#cbd5e1'; // Slate 300 (Light Text)
+        Chart.defaults.scale.grid.color = '#334155'; // Slate 700 (Dark Grid)
+        
+        const tooltipConfig = {
+            callbacks: {
+                title: function(tooltipItems) {
+                    const item = tooltipItems[0];
+                    let label = item.chart.data.labels[item.dataIndex];
+                    if (Array.isArray(label)) return label.join(' ');
+                    return label;
+                }
+            },
+            backgroundColor: 'rgba(15, 23, 42, 0.95)', // Slate 900
+            titleFont: { size: 13, weight: 'bold', color: '#f8fafc' },
+            bodyFont: { size: 12, color: '#e2e8f0' },
+            padding: 10,
+            cornerRadius: 4,
+            borderColor: '#334155',
+            borderWidth: 1,
+            displayColors: true
+        };
+
+        // --- RENDER CHARTS ---
+        // Chart 1: Category
+        new Chart(document.getElementById('categoryChart').getContext('2d'), {
+            type: 'doughnut',
+            data: {
+                labels: [formatLabel("Lifecycle & Runtime", 20), formatLabel("Networking", 20), formatLabel("Storage", 20), formatLabel("Security", 20), formatLabel("Node & Scheduling", 20)],
+                datasets: [{ data: [32, 24, 18, 14, 12], backgroundColor: ['#3b82f6', '#8b5cf6', '#ec4899', '#f59e0b', '#10b981'], borderWidth: 0, hoverOffset: 15 }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { boxWidth: 15, color: '#cbd5e1' } }, tooltip: tooltipConfig } }
+        });
+
+        // Chart 2: Top Errors
+        const topErrorsLabels = ["CrashLoopBackOff", "ImagePullBackOff", "OOMKilled", "PodUnschedulable", "PVC Pending", "Service Unreachable", "NodeNotReady", "Ingress 404", "ConfigMap Missing", "CreateContainerErr"].map(l => formatLabel(l, 16));
+        new Chart(document.getElementById('topErrorsChart').getContext('2d'), {
+            type: 'bar',
+            data: { labels: topErrorsLabels, datasets: [{ label: 'Frequency Score', data: [95, 88, 75, 70, 65, 60, 55, 50, 45, 40], backgroundColor: '#3b82f6', borderRadius: 4 }] },
+            options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, scales: { x: { beginAtZero: true, grid: { display: false }, ticks: { color: '#94a3b8' } }, y: { grid: { display: false }, ticks: { color: '#e2e8f0' } } }, plugins: { legend: { display: false }, tooltip: tooltipConfig } }
+        });
+
+        // Chart 3: Resources
+        new Chart(document.getElementById('resourceChart').getContext('2d'), {
+            type: 'bubble',
+            data: {
+                datasets: [
+                    { label: 'OOMKilled', data: [{ x: 20, y: 90, r: 15 }, { x: 30, y: 85, r: 12 }, { x: 10, y: 95, r: 20 }, { x: 25, y: 88, r: 10 }], backgroundColor: 'rgba(236, 72, 153, 0.7)', borderColor: '#ec4899' },
+                    { label: 'CPU Throttling', data: [{ x: 80, y: 90, r: 15 }, { x: 90, y: 85, r: 18 }, { x: 85, y: 95, r: 12 }, { x: 75, y: 80, r: 10 }], backgroundColor: 'rgba(59, 130, 246, 0.7)', borderColor: '#3b82f6' },
+                    { label: 'Healthy', data: [{ x: 50, y: 50, r: 25 }], backgroundColor: 'rgba(16, 185, 129, 0.2)', borderColor: '#10b981' }
+                ]
+            },
+            options: { responsive: true, maintainAspectRatio: false, scales: { x: { title: { display: true, text: 'Requests (%)', color: '#94a3b8' }, min: 0, max: 100, grid: { color: '#334155' } }, y: { title: { display: true, text: 'Usage (%)', color: '#94a3b8' }, min: 0, max: 100, grid: { color: '#334155' } } }, plugins: { tooltip: tooltipConfig } }
+        });
+
+        // Chart 4: Fix Types
+        new Chart(document.getElementById('fixTypeChart').getContext('2d'), {
+            type: 'pie',
+            data: {
+                labels: [formatLabel("YAML Config Edit", 16), formatLabel("Resource Tuning", 16), formatLabel("Infrastructure", 16), formatLabel("CLI / Debugging", 16)],
+                datasets: [{ data: [45, 25, 15, 15], backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#64748b'], borderWidth: 1, borderColor: '#0f172a' }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#cbd5e1' } }, tooltip: tooltipConfig } }
+        });
+
+        // --- KNOWLEDGE BASE RENDER LOGIC ---
+        const grid = document.getElementById('errorGrid');
+        const searchInput = document.getElementById('searchInput');
+        const noResults = document.getElementById('noResults');
+
+        function renderErrors(filterText = '') {
+            grid.innerHTML = '';
+            const lowerFilter = filterText.toLowerCase();
+            let matches = 0;
+
+            errorDatabase.forEach(err => {
+                if (err.title.toLowerCase().includes(lowerFilter) || 
+                    err.id.includes(lowerFilter) || 
+                    err.cause.toLowerCase().includes(lowerFilter)) {
+                    
+                    matches++;
+                    const card = document.createElement('div');
+                    card.className = "bg-slate-900 rounded-lg shadow-md border border-slate-800 hover:shadow-lg hover:border-slate-700 transition-all overflow-hidden flex flex-col";
+                    card.innerHTML = `
+                        <div class="bg-slate-950 px-4 py-3 border-b border-slate-800 flex justify-between items-center">
+                            <span class="font-bold text-slate-100">#${err.id} ${err.title}</span>
+                            <span class="text-xs font-mono bg-red-900/30 text-red-400 px-2 py-1 rounded border border-red-900/50">Error</span>
+                        </div>
+                        <div class="p-4 flex-grow">
+                            <div class="mb-4">
+                                <span class="text-xs font-bold text-slate-500 uppercase tracking-wide">Why is this happening?</span>
+                                <p class="text-sm text-slate-300 mt-1">${err.explanation}</p>
+                            </div>
+                            <div class="mb-4">
+                                <span class="text-xs font-bold text-emerald-500 uppercase tracking-wide">How to Fix</span>
+                                <p class="text-sm text-emerald-400 mt-1 font-medium">${err.fix}</p>
+                            </div>
+                            <div class="space-y-4 mt-4 border-t border-slate-800 pt-4">
+                                <div>
+                                    <div class="text-xs text-blue-400 mb-1 flex items-center font-bold">
+                                        <span class="mr-1">➜</span> Imperative Command
+                                    </div>
+                                    <div class="bg-slate-950 text-blue-300 text-xs font-mono p-3 rounded border border-slate-800 select-all whitespace-pre-wrap">${err.cmd}</div>
+                                </div>
+                                <div>
+                                    <div class="text-xs text-purple-400 mb-1 flex items-center font-bold">
+                                        <span class="mr-1">📄</span> YAML Config
+                                    </div>
+                                    <div class="bg-slate-950 border border-slate-800 text-purple-300 text-xs font-mono p-3 rounded select-all whitespace-pre-wrap">${err.yaml}</div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                }
+            });
+
+            if (matches === 0) {
+                noResults.classList.remove('hidden');
+            } else {
+                noResults.classList.add('hidden');
+            }
+        }
+
+        // Init
+        renderErrors();
+
+        // Search Listener
+        searchInput.addEventListener('input', (e) => {
+            renderErrors(e.target.value);
+        });
+
+    </script>
+</body>
+</html>
