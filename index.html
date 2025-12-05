@@ -43,9 +43,10 @@
       padding: 10px;
       margin-bottom: 10px;
       color: var(--accent);
+      overflow: hidden; /* Ensure images don't overflow border radius */
     }
     
-    .logo svg { width: 100%; height: 100%; }
+    .logo svg, .logo img { width: 100%; height: 100%; object-fit: contain; }
 
     h1 { margin:0; font-size: 32px; font-weight: 700; letter-spacing: -0.02em; }
     .muted { color:var(--muted); margin-top: 8px; font-size: 16px; }
@@ -110,7 +111,8 @@
   <div class="container">
     <header>
       <div class="logo">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        <!-- Replace 'devops.png' with your uploaded file. Falls back to SVG if missing. -->
+        <img src="devops.png" alt="DevOps Logo" onerror="this.style.display='none'; this.parentNode.innerHTML='<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'><path d=\'M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5\'/></svg>'">
       </div>
       <div>
         <h1>DevOps Cheatsheet</h1>
@@ -124,8 +126,8 @@
       <a href="Terraform/index.html" class="card-link">
         <div class="card">
           <div class="icon-box">
-            <!-- Replace 'terraform-icon.png' with your uploaded file -->
-            <img src="terraform-icon.png" alt="Terraform Logo" onerror="this.style.display='none'; this.parentNode.innerHTML='<span style=\'font-size:30px\'>TF</span>'">
+            <!-- Replace 'terraform.png' with your uploaded file -->
+            <img src="terraform.png" alt="Terraform Logo" onerror="this.style.display='none'; this.parentNode.innerHTML='<span style=\'font-size:30px\'>TF</span>'">
           </div>
           <div class="card-title">Terraform</div>
           <div class="card-desc">Infrastructure as Code </div>
@@ -136,11 +138,23 @@
       <a href="k8s/index.html" class="card-link">
         <div class="card">
           <div class="icon-box">
-             <!-- Replace 'kubernetes-icon.png' with your uploaded file -->
-             <img src="kubernetes-icon.png" alt="Kubernetes Logo" onerror="this.style.display='none'; this.parentNode.innerHTML='<span style=\'font-size:30px\'>K8s</span>'">
+             <!-- Replace 'kubernetes.png' with your uploaded file -->
+             <img src="kubernetes.png" alt="Kubernetes Logo" onerror="this.style.display='none'; this.parentNode.innerHTML='<span style=\'font-size:30px\'>K8s</span>'">
           </div>
           <div class="card-title">Kubernetes</div>
           <div class="card-desc">Container Orchestration </div>
+        </div>
+      </a>
+      
+      <!-- Docker -->
+      <a href="docker/index.html" class="card-link">
+        <div class="card">
+          <div class="icon-box">
+             <!-- Replace 'docker.png' with your uploaded file -->
+             <img src="docker.png" alt="Docker Logo" onerror="this.style.display='none'; this.parentNode.innerHTML='<span style=\'font-size:30px\'>Docker</span>'">
+          </div>
+          <div class="card-title">Docker</div>
+          <div class="card-desc">Containerization Platform</div>
         </div>
       </a>
 
