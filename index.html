@@ -94,7 +94,8 @@
         border-color: rgba(255,255,255,0.2);
     }
     
-    .icon-box svg { 
+    /* Updated selector to handle images */
+    .icon-box img { 
         width: 100%; 
         height: 100%; 
         object-fit: contain; 
@@ -123,10 +124,8 @@
       <a href="Terraform/index.html" class="card-link">
         <div class="card">
           <div class="icon-box">
-            <!-- Inline SVG: Official Purple Color -->
-            <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-              <path fill="#7B42BC" d="M1.44 0v7.575l6.561 3.79V3.787zm21.12 4.227l-6.561 3.791v7.574l6.56 3.787zM8.72 4.23v7.575l6.561 3.787V8.018zm0 8.405v7.575L15.28 24v-7.578z" transform="scale(2.66)"/>
-            </svg>
+            <!-- Replace 'terraform.png' with your uploaded file -->
+            <img src="terraform.png" alt="Terraform Logo" onerror="this.style.display='none'; this.parentNode.innerHTML='<span style=\'font-size:30px\'>TF</span>'">
           </div>
           <div class="card-title">Terraform</div>
           <div class="card-desc">Infrastructure as Code </div>
@@ -137,10 +136,8 @@
       <a href="k8s/index.html" class="card-link">
         <div class="card">
           <div class="icon-box">
-             <!-- Inline SVG: Official Blue Color -->
-             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-               <path fill="#326CE5" d="M12 0L2.1 5.6v12.8L12 24l9.9-5.6V5.6L12 0zm7.1 16.9L12 21l-7.1-4.1v-3.7l6-3.4v2.7l-3.2 1.8v1.9l4.3-2.5 4.3 2.5v-1.9l-3.2-1.8v-2.7l6 3.4v3.7zM12 2.6l4.7 2.7-1.5.8-3.2-1.8-3.2 1.8-1.5-.8L12 2.6z"/>
-             </svg>
+             <!-- Replace 'kubernetes.png' with your uploaded file -->
+             <img src="kubernetes.png" alt="Kubernetes Logo" onerror="this.style.display='none'; this.parentNode.innerHTML='<span style=\'font-size:30px\'>K8s</span>'">
           </div>
           <div class="card-title">Kubernetes</div>
           <div class="card-desc">Container Orchestration </div>
@@ -151,11 +148,8 @@
       <a href="aws/index.html" class="card-link">
         <div class="card">
           <div class="icon-box">
-            <!-- Inline SVG: Official AWS Orange/Dark colors -->
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path fill="#FF9900" d="M12 16.5c-3.3 0-6.1-1.7-7.8-4.3l1.5-1.1c1.3 2 3.5 3.3 6.3 3.3 2.6 0 4.7-1.3 5.9-3.1l1.6 1C17.7 15 15 16.5 12 16.5z"/>
-              <path fill="#ffffff" d="M17.6 13.9c-.3-.4-.5-.9-.5-1.4 0-1.6 1.3-2.9 2.9-2.9.3 0 .5.1.8.2v-1.1c0-1.8-1.5-3.3-3.3-3.3-1.6 0-3 1.2-3.3 2.7l-1.6-.4c.4-2.3 2.4-4.1 4.9-4.1 2.7 0 5 2.2 5 5v5.1h-1.6v-1c-.6.8-1.6 1.3-2.6 1.3-1.7 0-3.1-1.4-3.1-3.1 0-1.1.6-2 1.5-2.6.8-.5 1.7-.7 2.6-.7.6 0 1.2.2 1.7.5zm.3 2.1v-.8c-.4-.3-.8-.4-1.3-.4-.7 0-1.3.6-1.3 1.3 0 .7.6 1.3 1.3 1.3.7 0 1.3-.5 1.3-1.4zM4 15.5H2.3l2.8-9.9h1.9l2.7 9.9H8l-2-8.3-2 8.3zM13 15.5h-1.8l-1.9-7-1.9 7H5.6L8 5.6h2L13 15.5z"/>
-            </svg>
+            <!-- Replace 'aws.png' with your uploaded file -->
+            <img src="aws.png" alt="AWS Logo" onerror="this.style.display='none'; this.parentNode.innerHTML='<span style=\'font-size:30px\'>AWS</span>'">
           </div>
           <div class="card-title">AWS</div>
           <div class="card-desc">Amazon Web Services</div>
@@ -166,10 +160,8 @@
       <a href="azure/index.html" class="card-link">
         <div class="card">
           <div class="icon-box">
-             <!-- Inline SVG: Official Azure Blue -->
-             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-               <path fill="#0078D4" d="M5.9 21L.6 4.9l6.7 4.9 4.8-3.5 4.3 11.7L5.9 21zm12.3-2.1L13.7 3.5l-4.8 3.5 7.8 12.8 1.5-5.3z"/>
-             </svg>
+             <!-- Replace 'azure.png' with your uploaded file -->
+             <img src="azure.png" alt="Azure Logo" onerror="this.style.display='none'; this.parentNode.innerHTML='<span style=\'font-size:30px\'>Azure</span>'">
           </div>
           <div class="card-title">Azure</div>
           <div class="card-desc">Microsoft Cloud Platform </div>
@@ -180,10 +172,8 @@
       <a href="github/index.html" class="card-link">
         <div class="card">
           <div class="icon-box">
-            <!-- Inline SVG: Official White -->
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path fill="#ffffff" d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
-            </svg>
+            <!-- Replace 'github.png' with your uploaded file -->
+            <img src="github.png" alt="GitHub Logo" style="filter: invert(1);" onerror="this.style.display='none'; this.parentNode.innerHTML='<span style=\'font-size:30px\'>Git</span>'">
           </div>
           <div class="card-title">GitHub</div>
           <div class="card-desc">Version Control & CI/CD Pipelines</div>
