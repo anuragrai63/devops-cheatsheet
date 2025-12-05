@@ -100,20 +100,6 @@
         object-fit: contain; 
     }
 
-    /* Upload Overlay (Hidden by default) */
-    .upload-hint {
-        position: absolute;
-        bottom: 0; left: 0; right: 0;
-        background: rgba(0,0,0,0.7);
-        color: white;
-        font-size: 10px;
-        padding: 4px;
-        opacity: 0;
-        transition: opacity 0.2s;
-        pointer-events: none;
-    }
-    .card:hover .upload-hint { opacity: 1; }
-
     .card-title { font-size: 22px; font-weight: 600; margin-bottom: 8px; }
     .card-desc { color: var(--muted); font-size: 14px; line-height: 1.5; }
 
@@ -131,29 +117,24 @@
       </div>
     </header>
 
-    <!-- Hidden file input for uploading icons -->
-    <input type="file" id="iconUploader" accept="image/*" style="display: none;" />
-
     <div class="grid">
       
       <!-- Terraform -->
-      <a href="Terraform/index.html" class="card-link" onclick="preventNavIfUpload(event)">
+      <a href="Terraform/index.html" class="card-link">
         <div class="card">
-          <div class="icon-box" >
+          <div class="icon-box">
             <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Terraform_Logo.svg" alt="Terraform Logo">
-            
           </div>
           <div class="card-title">Terraform</div>
-          <div class="card-desc">Infrastructure as Code </div>
+          <div class="card-desc">Infrastructure as Code & Provisioning</div>
         </div>
       </a>
 
       <!-- Kubernetes -->
-      <a href="k8s/index.html" class="card-link" onclick="preventNavIfUpload(event)">
+      <a href="k8s/index.html" class="card-link">
         <div class="card">
-          <div class="icon-box" >
+          <div class="icon-box">
              <img src="https://upload.wikimedia.org/wikipedia/commons/3/39/Kubernetes_logo_without_workmark.svg" alt="Kubernetes Logo">
-             
           </div>
           <div class="card-title">Kubernetes</div>
           <div class="card-desc">Container Orchestration & Management</div>
@@ -161,35 +142,32 @@
       </a>
 
       <!-- AWS -->
-      <a href="aws/index.html" class="card-link" onclick="preventNavIfUpload(event)">
+      <a href="aws/index.html" class="card-link">
         <div class="card">
-          <div class="icon-box" >
+          <div class="icon-box">
             <img src="https://upload.wikimedia.org/wikipedia/commons/9/93/Amazon_Web_Services_Logo.svg" alt="AWS Logo">
-           
           </div>
           <div class="card-title">AWS</div>
-          <div class="card-desc">Amazon Web Services </div>
+          <div class="card-desc">Amazon Web Services & Cloud Computing</div>
         </div>
       </a>
 
       <!-- Azure -->
-      <a href="azure/index.html" class="card-link" onclick="preventNavIfUpload(event)">
+      <a href="azure/index.html" class="card-link">
         <div class="card">
-          <div class="icon-box" >
+          <div class="icon-box">
              <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Microsoft_Azure.svg" alt="Azure Logo">
-             
           </div>
           <div class="card-title">Azure</div>
-          <div class="card-desc">Microsoft Cloud Platform </div>
+          <div class="card-desc">Microsoft Cloud Platform & Services</div>
         </div>
       </a>
 
       <!-- GitHub -->
-      <a href="github/index.html" class="card-link" onclick="preventNavIfUpload(event)">
+      <a href="github/index.html" class="card-link">
         <div class="card">
-          <div class="icon-box" >
+          <div class="icon-box">
             <img src="https://upload.wikimedia.org/wikipedia/commons/c/c2/GitHub_Invertocat_Logo.svg" alt="GitHub Logo" style="filter: invert(1);">
-            
           </div>
           <div class="card-title">GitHub</div>
           <div class="card-desc">Version Control & CI/CD Pipelines</div>
@@ -198,43 +176,5 @@
 
     </div>
   </div>
-
-  <script>
-    let currentImgElement = null;
-    const fileInput = document.getElementById('iconUploader');
-
-    // Function to trigger file selection
-    function triggerUpload(event, imgEl) {
-        event.preventDefault(); // Stop link navigation
-        event.stopPropagation();
-        currentImgElement = imgEl;
-        fileInput.click();
-    }
-
-    // Function to prevent link navigation if clicking the icon
-    function preventNavIfUpload(event) {
-        // If the click target was inside icon-box, we already handled it
-        // This is a backup check
-    }
-
-    // Handle file selection
-    fileInput.addEventListener('change', function() {
-        if (this.files && this.files[0]) {
-            const reader = new FileReader();
-            
-            reader.onload = function(e) {
-                if (currentImgElement) {
-                    currentImgElement.src = e.target.result;
-                    // Remove filter if we had one (like for GitHub) to show original colors
-                    currentImgElement.style.filter = 'none'; 
-                }
-            }
-            
-            reader.readAsDataURL(this.files[0]);
-        }
-        // Reset input so same file can be selected again if needed
-        this.value = '';
-    });
-  </script>
 </body>
 </html>
