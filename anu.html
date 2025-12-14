@@ -1,0 +1,623 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2685.2">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Menlo; color: #6d6d6d; -webkit-text-stroke: #6d6d6d}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Menlo; color: #6b0001; -webkit-text-stroke: #6b0001}
+    p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Menlo; color: #fb0007; -webkit-text-stroke: #fb0007}
+    p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Menlo; color: #0000ff; -webkit-text-stroke: #0000ff}
+    p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Menlo; -webkit-text-stroke: #000000}
+    p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Menlo; color: #093c94; -webkit-text-stroke: #093c94}
+    p.p7 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Menlo; color: #4d5055; -webkit-text-stroke: #4d5055}
+    p.p8 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Menlo; -webkit-text-stroke: #000000; min-height: 16.0px}
+    p.p9 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Menlo; color: #0e6e6d; -webkit-text-stroke: #0e6e6d}
+    p.p10 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Menlo; color: #18702b; -webkit-text-stroke: #18702b}
+    span.s1 {font-kerning: none; background-color: #ecf1f7}
+    span.s2 {font-kerning: none; color: #fb0007; background-color: #ecf1f7; -webkit-text-stroke: 0px #fb0007}
+    span.s3 {font-kerning: none; color: #2a2a2a; background-color: #ecf1f7; -webkit-text-stroke: 0px #2a2a2a}
+    span.s4 {font-kerning: none; color: #000000; background-color: #ecf1f7; -webkit-text-stroke: 0px #000000}
+    span.s5 {font-kerning: none; color: #0000ff; background-color: #ecf1f7; -webkit-text-stroke: 0px #0000ff}
+    span.s6 {font-kerning: none; color: #6b0001; background-color: #ecf1f7; -webkit-text-stroke: 0px #6b0001}
+    span.s7 {font-kerning: none; color: #137646; background-color: #ecf1f7; -webkit-text-stroke: 0px #137646}
+    span.s8 {font-kerning: none; color: #093c94; background-color: #ecf1f7; -webkit-text-stroke: 0px #093c94}
+    span.s9 {font-kerning: none; color: #18702b; background-color: #ecf1f7; -webkit-text-stroke: 0px #18702b}
+    span.s10 {font-kerning: none}
+    span.s11 {font-kerning: none; color: #6f0ec3; background-color: #ecf1f7; -webkit-text-stroke: 0px #6f0ec3}
+    span.s12 {font-kerning: none; color: #a4450b; background-color: #ecf1f7; -webkit-text-stroke: 0px #a4450b}
+    span.s13 {font-kerning: none; color: #0e6e6d; background-color: #ecf1f7; -webkit-text-stroke: 0px #0e6e6d}
+    span.s14 {font-kerning: none; color: #4d5055; background-color: #ecf1f7; -webkit-text-stroke: 0px #4d5055}
+    span.s15 {font-kerning: none; color: #2316b2; background-color: #ecf1f7; -webkit-text-stroke: 0px #2316b2}
+  </style>
+</head>
+<body>
+<p class="p1"><span class="s1">&lt;!DOCTYPE</span><span class="s2"> html</span><span class="s1">&gt;</span></p>
+<p class="p2"><span class="s3">&lt;</span><span class="s1">html</span><span class="s4"> </span><span class="s2">lang</span><span class="s3">=</span><span class="s5">"en"</span><span class="s3">&gt;</span></p>
+<p class="p2"><span class="s3">&lt;</span><span class="s1">head</span><span class="s3">&gt;</span></p>
+<p class="p3"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s6">meta</span><span class="s4"> </span><span class="s1">charset</span><span class="s3">=</span><span class="s5">"UTF-8"</span><span class="s3">&gt;</span></p>
+<p class="p4"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s6">meta</span><span class="s4"> </span><span class="s2">name</span><span class="s3">=</span><span class="s1">"viewport"</span><span class="s4"> </span><span class="s2">content</span><span class="s3">=</span><span class="s1">"width=device-width, initial-scale=1.0"</span><span class="s3">&gt;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s6">title</span><span class="s3">&gt;</span><span class="s1">Gesture Controlled 3D Particles</span><span class="s3">&lt;/</span><span class="s6">title</span><span class="s3">&gt;</span></p>
+<p class="p4"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s6">script</span><span class="s4"> </span><span class="s2">src</span><span class="s3">=</span><span class="s1">"https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"</span><span class="s3">&gt;&lt;/</span><span class="s6">script</span><span class="s3">&gt;</span></p>
+<p class="p4"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s6">script</span><span class="s4"> </span><span class="s2">src</span><span class="s3">=</span><span class="s1">"https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"</span><span class="s4"> </span><span class="s2">crossorigin</span><span class="s3">=</span><span class="s1">"anonymous"</span><span class="s3">&gt;&lt;/</span><span class="s6">script</span><span class="s3">&gt;</span></p>
+<p class="p4"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s6">script</span><span class="s4"> </span><span class="s2">src</span><span class="s3">=</span><span class="s1">"https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js"</span><span class="s4"> </span><span class="s2">crossorigin</span><span class="s3">=</span><span class="s1">"anonymous"</span><span class="s3">&gt;&lt;/</span><span class="s6">script</span><span class="s3">&gt;</span></p>
+<p class="p4"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s6">script</span><span class="s4"> </span><span class="s2">src</span><span class="s3">=</span><span class="s1">"https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"</span><span class="s4"> </span><span class="s2">crossorigin</span><span class="s3">=</span><span class="s1">"anonymous"</span><span class="s3">&gt;&lt;/</span><span class="s6">script</span><span class="s3">&gt;</span></p>
+<p class="p4"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s6">script</span><span class="s4"> </span><span class="s2">src</span><span class="s3">=</span><span class="s1">"https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"</span><span class="s4"> </span><span class="s2">crossorigin</span><span class="s3">=</span><span class="s1">"anonymous"</span><span class="s3">&gt;&lt;/</span><span class="s6">script</span><span class="s3">&gt;</span></p>
+<p class="p2"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s1">style</span><span class="s3">&gt;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s6">body</span><span class="s1"> {</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">margin:</span><span class="s1"> </span><span class="s7">0</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">overflow:</span><span class="s1"> </span><span class="s8">hidden</span><span class="s1">;</span></p>
+<p class="p3"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s1">background-color:</span><span class="s4"> </span><span class="s8">#000</span><span class="s4">;</span></p>
+<p class="p6"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s2">font-family:</span><span class="s4"> </span><span class="s9">'Segoe UI'</span><span class="s4">, </span><span class="s1">Tahoma</span><span class="s4">, </span><span class="s1">Geneva</span><span class="s4">, </span><span class="s1">Verdana</span><span class="s4">, </span><span class="s1">sans-serif</span><span class="s4">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s6">#container</span><span class="s1"> {</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">position:</span><span class="s1"> </span><span class="s8">absolute</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">top:</span><span class="s1"> </span><span class="s7">0</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">left:</span><span class="s1"> </span><span class="s7">0</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">width:</span><span class="s1"> </span><span class="s7">100vw</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">height:</span><span class="s1"> </span><span class="s7">100vh</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">z-index:</span><span class="s1"> </span><span class="s7">1</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p2"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">#video-container</span><span class="s4"> {</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">position:</span><span class="s1"> </span><span class="s8">absolute</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">bottom:</span><span class="s1"> </span><span class="s7">20px</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">right:</span><span class="s1"> </span><span class="s7">20px</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">width:</span><span class="s1"> </span><span class="s7">320px</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">height:</span><span class="s1"> </span><span class="s7">240px</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">z-index:</span><span class="s1"> </span><span class="s7">2</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">border:</span><span class="s1"> </span><span class="s7">2px</span><span class="s1"> </span><span class="s8">solid</span><span class="s1"> </span><span class="s8">rgba(</span><span class="s7">255</span><span class="s1">, </span><span class="s7">255</span><span class="s1">, </span><span class="s7">255</span><span class="s1">, </span><span class="s7">0.3</span><span class="s8">)</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">border-radius:</span><span class="s1"> </span><span class="s7">12px</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">overflow:</span><span class="s1"> </span><span class="s8">hidden</span><span class="s1">;</span></p>
+<p class="p7"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s2">transform:</span><span class="s4"> </span><span class="s8">scaleX(</span><span class="s7">-1</span><span class="s8">)</span><span class="s4">; </span><span class="s1">/* Mirror the preview */</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">box-shadow:</span><span class="s1"> </span><span class="s7">0</span><span class="s1"> </span><span class="s7">4px</span><span class="s1"> </span><span class="s7">20px</span><span class="s1"> </span><span class="s8">rgba(</span><span class="s7">0</span><span class="s1">,</span><span class="s7">0</span><span class="s1">,</span><span class="s7">0</span><span class="s1">,</span><span class="s7">0.5</span><span class="s8">)</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p2"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">#input_video</span><span class="s4"> {</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">width:</span><span class="s1"> </span><span class="s7">100%</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">height:</span><span class="s1"> </span><span class="s7">100%</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">object-fit:</span><span class="s1"> </span><span class="s8">cover</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s6">#ui-layer</span><span class="s1"> {</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">position:</span><span class="s1"> </span><span class="s8">absolute</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">top:</span><span class="s1"> </span><span class="s7">20px</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">left:</span><span class="s1"> </span><span class="s7">20px</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">z-index:</span><span class="s1"> </span><span class="s7">3</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">color:</span><span class="s1"> </span><span class="s8">white</span><span class="s1">;</span></p>
+<p class="p3"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s1">pointer-events:</span><span class="s4"> </span><span class="s8">none</span><span class="s4">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s6">h1</span><span class="s1"> {</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">font-size:</span><span class="s1"> </span><span class="s7">2rem</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">margin:</span><span class="s1"> </span><span class="s7">0</span><span class="s1"> </span><span class="s7">0</span><span class="s1"> </span><span class="s7">10px</span><span class="s1"> </span><span class="s7">0</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">text-shadow:</span><span class="s1"> </span><span class="s7">0</span><span class="s1"> </span><span class="s7">0</span><span class="s1"> </span><span class="s7">10px</span><span class="s1"> </span><span class="s8">rgba(</span><span class="s7">0</span><span class="s1">, </span><span class="s7">255</span><span class="s1">, </span><span class="s7">255</span><span class="s1">, </span><span class="s7">0.8</span><span class="s8">)</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p2"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">.instruction</span><span class="s4"> {</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">background:</span><span class="s1"> </span><span class="s8">rgba(</span><span class="s7">0</span><span class="s1">, </span><span class="s7">0</span><span class="s1">, </span><span class="s7">0</span><span class="s1">, </span><span class="s7">0.6</span><span class="s8">)</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">padding:</span><span class="s1"> </span><span class="s7">15px</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">border-radius:</span><span class="s1"> </span><span class="s7">8px</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">border-left:</span><span class="s1"> </span><span class="s7">4px</span><span class="s1"> </span><span class="s8">solid</span><span class="s1"> </span><span class="s8">#00d2ff</span><span class="s1">;</span></p>
+<p class="p3"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s1">backdrop-filter:</span><span class="s4"> </span><span class="s8">blur(</span><span class="s7">5px</span><span class="s8">)</span><span class="s4">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s6">.status</span><span class="s1"> {</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">margin-top:</span><span class="s1"> </span><span class="s7">10px</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">font-weight:</span><span class="s1"> </span><span class="s8">bold</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">color:</span><span class="s1"> </span><span class="s8">#00ff88</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p2"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">.gesture-list</span><span class="s4"> {</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">margin-top:</span><span class="s1"> </span><span class="s7">10px</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">font-size:</span><span class="s1"> </span><span class="s7">0.9rem</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">line-height:</span><span class="s1"> </span><span class="s7">1.6</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">color:</span><span class="s1"> </span><span class="s8">#ccc</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p2"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">.gesture-item</span><span class="s4"> </span><span class="s1">span</span><span class="s4"> {</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">color:</span><span class="s1"> </span><span class="s8">#fff</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">font-weight:</span><span class="s1"> </span><span class="s8">bold</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s6">#loading</span><span class="s1"> {</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">position:</span><span class="s1"> </span><span class="s8">absolute</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">top:</span><span class="s1"> </span><span class="s7">50%</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">left:</span><span class="s1"> </span><span class="s7">50%</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">transform:</span><span class="s1"> </span><span class="s8">translate(</span><span class="s7">-50%</span><span class="s1">, </span><span class="s7">-50%</span><span class="s8">)</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">color:</span><span class="s1"> </span><span class="s8">white</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">font-size:</span><span class="s1"> </span><span class="s7">24px</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">z-index:</span><span class="s1"> </span><span class="s7">10</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p2"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;/</span><span class="s1">style</span><span class="s3">&gt;</span></p>
+<p class="p2"><span class="s3">&lt;/</span><span class="s1">head</span><span class="s3">&gt;</span></p>
+<p class="p2"><span class="s3">&lt;</span><span class="s1">body</span><span class="s3">&gt;</span></p>
+<p class="p8"><span class="s10"></span><br></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s1"> </span><span class="s2">id</span><span class="s3">=</span><span class="s5">"loading"</span><span class="s3">&gt;</span><span class="s1">Initializing Camera &amp; AI...</span><span class="s3">&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
+<p class="p8"><span class="s10"></span><br></p>
+<p class="p4"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s4"> </span><span class="s2">id</span><span class="s3">=</span><span class="s1">"ui-layer"</span><span class="s3">&gt;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s3">&lt;</span><span class="s6">h1</span><span class="s3">&gt;</span><span class="s1">Kinetic Particles</span><span class="s3">&lt;/</span><span class="s6">h1</span><span class="s3">&gt;</span></p>
+<p class="p4"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"instruction"</span><span class="s3">&gt;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s3">&gt;</span><span class="s1">Show your hand to control.</span><span class="s3">&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
+<p class="p4"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"gesture-list"</span><span class="s3">&gt;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s1"> </span><span class="s2">class</span><span class="s3">=</span><span class="s5">"gesture-item"</span><span class="s3">&gt;</span><span class="s1">✊ </span><span class="s3">&lt;</span><span class="s6">span</span><span class="s3">&gt;</span><span class="s1">Fist:</span><span class="s3">&lt;/</span><span class="s6">span</span><span class="s3">&gt;</span><span class="s1"> Collapse / Black Hole</span><span class="s3">&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s1"> </span><span class="s2">class</span><span class="s3">=</span><span class="s5">"gesture-item"</span><span class="s3">&gt;</span><span class="s1">☝️ </span><span class="s3">&lt;</span><span class="s6">span</span><span class="s3">&gt;</span><span class="s1">1 Finger:</span><span class="s3">&lt;/</span><span class="s6">span</span><span class="s3">&gt;</span><span class="s1"> Sphere</span><span class="s3">&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s1"> </span><span class="s2">class</span><span class="s3">=</span><span class="s5">"gesture-item"</span><span class="s3">&gt;</span><span class="s1">✌️ </span><span class="s3">&lt;</span><span class="s6">span</span><span class="s3">&gt;</span><span class="s1">2 Fingers:</span><span class="s3">&lt;/</span><span class="s6">span</span><span class="s3">&gt;</span><span class="s1"> Heart</span><span class="s3">&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s1"> </span><span class="s2">class</span><span class="s3">=</span><span class="s5">"gesture-item"</span><span class="s3">&gt;</span><span class="s1">🤟 </span><span class="s3">&lt;</span><span class="s6">span</span><span class="s3">&gt;</span><span class="s1">3 Fingers:</span><span class="s3">&lt;/</span><span class="s6">span</span><span class="s3">&gt;</span><span class="s1"> Flower</span><span class="s3">&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s1"> </span><span class="s2">class</span><span class="s3">=</span><span class="s5">"gesture-item"</span><span class="s3">&gt;</span><span class="s1">🖖 </span><span class="s3">&lt;</span><span class="s6">span</span><span class="s3">&gt;</span><span class="s1">4 Fingers:</span><span class="s3">&lt;/</span><span class="s6">span</span><span class="s3">&gt;</span><span class="s1"> Saturn</span><span class="s3">&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s1"> </span><span class="s2">class</span><span class="s3">=</span><span class="s5">"gesture-item"</span><span class="s3">&gt;</span><span class="s1">🖐 </span><span class="s3">&lt;</span><span class="s6">span</span><span class="s3">&gt;</span><span class="s1">Open Hand:</span><span class="s3">&lt;/</span><span class="s6">span</span><span class="s3">&gt;</span><span class="s1"> Fireworks</span><span class="s3">&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s3">&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s1"> </span><span class="s2">id</span><span class="s3">=</span><span class="s5">"current-gesture"</span><span class="s1"> </span><span class="s2">class</span><span class="s3">=</span><span class="s5">"status"</span><span class="s3">&gt;</span><span class="s1">Waiting for hand...</span><span class="s3">&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s3">&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
+<p class="p8"><span class="s10"></span><br></p>
+<p class="p4"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s4"> </span><span class="s2">id</span><span class="s3">=</span><span class="s1">"video-container"</span><span class="s3">&gt;</span></p>
+<p class="p4"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s3">&lt;</span><span class="s6">video</span><span class="s4"> </span><span class="s2">id</span><span class="s3">=</span><span class="s1">"input_video"</span><span class="s3">&gt;&lt;/</span><span class="s6">video</span><span class="s3">&gt;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
+<p class="p4"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s4"> </span><span class="s2">id</span><span class="s3">=</span><span class="s1">"container"</span><span class="s3">&gt;&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
+<p class="p8"><span class="s10"></span><br></p>
+<p class="p2"><span class="s3">&lt;</span><span class="s1">script</span><span class="s3">&gt;</span></p>
+<p class="p7"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s1">// --- Configuration ---</span></p>
+<p class="p9"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s11">const</span><span class="s4"> </span><span class="s1">PARTICLE_COUNT</span><span class="s4"> = </span><span class="s12">4000</span><span class="s4">;</span></p>
+<p class="p7"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s11">const</span><span class="s4"> </span><span class="s13">PARTICLE_SIZE</span><span class="s4"> = </span><span class="s12">0.15</span><span class="s4">; </span><span class="s1">// increased for visibility</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">    </span></span><span class="s11">const</span><span class="s1"> </span><span class="s13">CANVAS_WIDTH</span><span class="s1"> = window.innerWidth;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">    </span></span><span class="s11">const</span><span class="s1"> </span><span class="s13">CANVAS_HEIGHT</span><span class="s1"> = window.innerHeight;</span></p>
+<p class="p8"><span class="s1"><span class="Apple-converted-space">    </span></span></p>
+<p class="p7"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s1">// --- Global Variables ---</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">    </span></span><span class="s11">let</span><span class="s1"> scene, camera, renderer, particles;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">    </span></span><span class="s11">let</span><span class="s1"> particlePositions, particleTargetPositions;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">    </span></span><span class="s11">let</span><span class="s1"> particleColors;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">    </span></span><span class="s11">let</span><span class="s1"> interactionTarget = </span><span class="s11">new</span><span class="s1"> </span><span class="s13">THREE</span><span class="s1">.</span><span class="s13">Vector3</span><span class="s1">(</span><span class="s12">0</span><span class="s1">, </span><span class="s12">0</span><span class="s1">, </span><span class="s12">0</span><span class="s1">);</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">    </span></span><span class="s11">let</span><span class="s1"> isHandDetected = </span><span class="s11">false</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">    </span></span><span class="s11">let</span><span class="s1"> currentShape = </span><span class="s9">'sphere'</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">    </span></span><span class="s11">let</span><span class="s1"> fingerCount = </span><span class="s12">0</span><span class="s1">;</span></p>
+<p class="p8"><span class="s1"><span class="Apple-converted-space">    </span></span></p>
+<p class="p7"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s1">// --- Shape Generators ---</span></p>
+<p class="p7"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s1">// Returns array of Vector3</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">    </span></span><span class="s11">const</span><span class="s1"> </span><span class="s13">Shapes</span><span class="s1"> = {</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>sphere: (count) =&gt; {</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">const</span><span class="s1"> points = [];</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">for</span><span class="s1">(</span><span class="s11">let</span><span class="s1"> i=</span><span class="s12">0</span><span class="s1">; i&lt;count; i++) {</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s11">const</span><span class="s1"> theta = </span><span class="s13">Math</span><span class="s1">.random() * </span><span class="s13">Math</span><span class="s1">.</span><span class="s13">PI</span><span class="s1"> * </span><span class="s12">2</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s11">const</span><span class="s1"> phi = </span><span class="s13">Math</span><span class="s1">.acos((</span><span class="s13">Math</span><span class="s1">.random() * </span><span class="s12">2</span><span class="s1">) - </span><span class="s12">1</span><span class="s1">);</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s11">const</span><span class="s1"> r = </span><span class="s12">4</span><span class="s1"> + </span><span class="s13">Math</span><span class="s1">.random() * </span><span class="s12">0.5</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>points.push(</span><span class="s11">new</span><span class="s1"> </span><span class="s13">THREE</span><span class="s1">.</span><span class="s13">Vector3</span><span class="s1">(</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span>r * </span><span class="s13">Math</span><span class="s1">.sin(phi) * </span><span class="s13">Math</span><span class="s1">.cos(theta),</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span>r * </span><span class="s13">Math</span><span class="s1">.sin(phi) * </span><span class="s13">Math</span><span class="s1">.sin(theta),</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span>r * </span><span class="s13">Math</span><span class="s1">.cos(phi)</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>));</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">return</span><span class="s1"> points;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>},</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>heart: (count) =&gt; {</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">const</span><span class="s1"> points = [];</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">for</span><span class="s1">(</span><span class="s11">let</span><span class="s1"> i=</span><span class="s12">0</span><span class="s1">; i&lt;count; i++) {</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s14">// Heart formula</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s11">let</span><span class="s1"> t = </span><span class="s13">Math</span><span class="s1">.random() * </span><span class="s13">Math</span><span class="s1">.</span><span class="s13">PI</span><span class="s1"> * </span><span class="s12">2</span><span class="s1">;</span></p>
+<p class="p7"><span class="s4"><span class="Apple-converted-space">                </span></span><span class="s1">// Distribute points somewhat evenly</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s11">let</span><span class="s1"> u = </span><span class="s13">Math</span><span class="s1">.random();</span></p>
+<p class="p7"><span class="s4"><span class="Apple-converted-space">                </span></span><span class="s1">// A spread factor</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s11">let</span><span class="s1"> r = </span><span class="s12">10</span><span class="s1"> * </span><span class="s13">Math</span><span class="s1">.sqrt(u); </span><span class="s14">// Scale</span></p>
+<p class="p8"><span class="s1"><span class="Apple-converted-space">                </span></span></p>
+<p class="p7"><span class="s4"><span class="Apple-converted-space">                </span></span><span class="s1">// Using a 3D heart approximation</span></p>
+<p class="p7"><span class="s4"><span class="Apple-converted-space">                </span></span><span class="s1">// x = 16sin^3(t)</span></p>
+<p class="p7"><span class="s4"><span class="Apple-converted-space">                </span></span><span class="s1">// y = 13cos(t) - 5cos(2t) - 2cos(3t) - cos(4t)</span></p>
+<p class="p7"><span class="s4"><span class="Apple-converted-space">                </span></span><span class="s1">// z = random depth</span></p>
+<p class="p8"><span class="s1"><span class="Apple-converted-space">                </span></span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s11">const</span><span class="s1"> x = </span><span class="s12">16</span><span class="s1"> * </span><span class="s13">Math</span><span class="s1">.pow(</span><span class="s13">Math</span><span class="s1">.sin(t), </span><span class="s12">3</span><span class="s1">);</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s11">const</span><span class="s1"> y = </span><span class="s12">13</span><span class="s1"> * </span><span class="s13">Math</span><span class="s1">.cos(t) - </span><span class="s12">5</span><span class="s1"> * </span><span class="s13">Math</span><span class="s1">.cos(</span><span class="s12">2</span><span class="s1">*t) - </span><span class="s12">2</span><span class="s1"> * </span><span class="s13">Math</span><span class="s1">.cos(</span><span class="s12">3</span><span class="s1">*t) - </span><span class="s13">Math</span><span class="s1">.cos(</span><span class="s12">4</span><span class="s1">*t);</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s11">const</span><span class="s1"> z = (</span><span class="s13">Math</span><span class="s1">.random() - </span><span class="s12">0.5</span><span class="s1">) * </span><span class="s12">4</span><span class="s1">;<span class="Apple-converted-space"> </span></span></p>
+<p class="p8"><span class="s10"></span><br></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s11">const</span><span class="s1"> scale = </span><span class="s12">0.35</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>points.push(</span><span class="s11">new</span><span class="s1"> </span><span class="s13">THREE</span><span class="s1">.</span><span class="s13">Vector3</span><span class="s1">(x * scale, y * scale, z));</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">return</span><span class="s1"> points;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>},</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>flower: (count) =&gt; {</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">const</span><span class="s1"> points = [];</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">for</span><span class="s1">(</span><span class="s11">let</span><span class="s1"> i=</span><span class="s12">0</span><span class="s1">; i&lt;count; i++) {</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s11">const</span><span class="s1"> u = </span><span class="s13">Math</span><span class="s1">.random() * </span><span class="s13">Math</span><span class="s1">.</span><span class="s13">PI</span><span class="s1"> * </span><span class="s12">2</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s11">const</span><span class="s1"> v = </span><span class="s13">Math</span><span class="s1">.random() * </span><span class="s13">Math</span><span class="s1">.</span><span class="s13">PI</span><span class="s1">;</span></p>
+<p class="p7"><span class="s4"><span class="Apple-converted-space">                </span></span><span class="s1">// Rose/Flower parametric</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s11">const</span><span class="s1"> k = </span><span class="s12">4</span><span class="s1">; </span><span class="s14">// petals</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s11">const</span><span class="s1"> r = </span><span class="s12">3</span><span class="s1"> + </span><span class="s13">Math</span><span class="s1">.cos(k * u) * </span><span class="s13">Math</span><span class="s1">.sin(v) * </span><span class="s12">2</span><span class="s1">;</span></p>
+<p class="p8"><span class="s1"><span class="Apple-converted-space">                </span></span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>points.push(</span><span class="s11">new</span><span class="s1"> </span><span class="s13">THREE</span><span class="s1">.</span><span class="s13">Vector3</span><span class="s1">(</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span>r * </span><span class="s13">Math</span><span class="s1">.sin(v) * </span><span class="s13">Math</span><span class="s1">.cos(u),</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span>r * </span><span class="s13">Math</span><span class="s1">.sin(v) * </span><span class="s13">Math</span><span class="s1">.sin(u),</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span>r * </span><span class="s13">Math</span><span class="s1">.cos(v) * </span><span class="s12">0.5</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>));</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">return</span><span class="s1"> points;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>},</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>saturn: (count) =&gt; {</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">const</span><span class="s1"> points = [];</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">const</span><span class="s1"> planetRatio = </span><span class="s12">0.6</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">const</span><span class="s1"> ringCount = </span><span class="s13">Math</span><span class="s1">.floor(count * (</span><span class="s12">1</span><span class="s1"> - planetRatio));</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">const</span><span class="s1"> planetCount = count - ringCount;</span></p>
+<p class="p8"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s14">// Planet</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">for</span><span class="s1">(</span><span class="s11">let</span><span class="s1"> i=</span><span class="s12">0</span><span class="s1">; i&lt;planetCount; i++) {</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s11">const</span><span class="s1"> theta = </span><span class="s13">Math</span><span class="s1">.random() * </span><span class="s13">Math</span><span class="s1">.</span><span class="s13">PI</span><span class="s1"> * </span><span class="s12">2</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s11">const</span><span class="s1"> phi = </span><span class="s13">Math</span><span class="s1">.acos((</span><span class="s13">Math</span><span class="s1">.random() * </span><span class="s12">2</span><span class="s1">) - </span><span class="s12">1</span><span class="s1">);</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s11">const</span><span class="s1"> r = </span><span class="s12">2.5</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>points.push(</span><span class="s11">new</span><span class="s1"> </span><span class="s13">THREE</span><span class="s1">.</span><span class="s13">Vector3</span><span class="s1">(</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span>r * </span><span class="s13">Math</span><span class="s1">.sin(phi) * </span><span class="s13">Math</span><span class="s1">.cos(theta),</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span>r * </span><span class="s13">Math</span><span class="s1">.sin(phi) * </span><span class="s13">Math</span><span class="s1">.sin(theta),</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span>r * </span><span class="s13">Math</span><span class="s1">.cos(phi)</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>));</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s14">// Rings</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">for</span><span class="s1">(</span><span class="s11">let</span><span class="s1"> i=</span><span class="s12">0</span><span class="s1">; i&lt;ringCount; i++) {</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s11">const</span><span class="s1"> theta = </span><span class="s13">Math</span><span class="s1">.random() * </span><span class="s13">Math</span><span class="s1">.</span><span class="s13">PI</span><span class="s1"> * </span><span class="s12">2</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s11">const</span><span class="s1"> r = </span><span class="s12">4</span><span class="s1"> + </span><span class="s13">Math</span><span class="s1">.random() * </span><span class="s12">3</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>points.push(</span><span class="s11">new</span><span class="s1"> </span><span class="s13">THREE</span><span class="s1">.</span><span class="s13">Vector3</span><span class="s1">(</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span>r * </span><span class="s13">Math</span><span class="s1">.cos(theta),</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span>(</span><span class="s13">Math</span><span class="s1">.random() - </span><span class="s12">0.5</span><span class="s1">) * </span><span class="s12">0.2</span><span class="s1">, </span><span class="s14">// flat</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span>r * </span><span class="s13">Math</span><span class="s1">.sin(theta)</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>).applyAxisAngle(</span><span class="s11">new</span><span class="s1"> </span><span class="s13">THREE</span><span class="s1">.</span><span class="s13">Vector3</span><span class="s1">(</span><span class="s12">1</span><span class="s1">,</span><span class="s12">0</span><span class="s1">,</span><span class="s12">1</span><span class="s1">).normalize(), </span><span class="s13">Math</span><span class="s1">.</span><span class="s13">PI</span><span class="s1">/</span><span class="s12">6</span><span class="s1">)); </span><span class="s14">// Tilt</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">return</span><span class="s1"> points;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>},</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>fireworks: (count) =&gt; {</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">const</span><span class="s1"> points = [];</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">for</span><span class="s1">(</span><span class="s11">let</span><span class="s1"> i=</span><span class="s12">0</span><span class="s1">; i&lt;count; i++) {</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s11">const</span><span class="s1"> r = </span><span class="s13">Math</span><span class="s1">.random() * </span><span class="s12">12</span><span class="s1">; </span><span class="s14">// Large spread</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s11">const</span><span class="s1"> theta = </span><span class="s13">Math</span><span class="s1">.random() * </span><span class="s13">Math</span><span class="s1">.</span><span class="s13">PI</span><span class="s1"> * </span><span class="s12">2</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s11">const</span><span class="s1"> phi = </span><span class="s13">Math</span><span class="s1">.acos((</span><span class="s13">Math</span><span class="s1">.random() * </span><span class="s12">2</span><span class="s1">) - </span><span class="s12">1</span><span class="s1">);</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>points.push(</span><span class="s11">new</span><span class="s1"> </span><span class="s13">THREE</span><span class="s1">.</span><span class="s13">Vector3</span><span class="s1">(</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span>r * </span><span class="s13">Math</span><span class="s1">.sin(phi) * </span><span class="s13">Math</span><span class="s1">.cos(theta),</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span>r * </span><span class="s13">Math</span><span class="s1">.sin(phi) * </span><span class="s13">Math</span><span class="s1">.sin(theta),</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span>r * </span><span class="s13">Math</span><span class="s1">.cos(phi)</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>));</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">return</span><span class="s1"> points;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>},</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>collapse: (count) =&gt; {</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">const</span><span class="s1"> points = [];</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">for</span><span class="s1">(</span><span class="s11">let</span><span class="s1"> i=</span><span class="s12">0</span><span class="s1">; i&lt;count; i++) {</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s11">const</span><span class="s1"> r = </span><span class="s13">Math</span><span class="s1">.random() * </span><span class="s12">1</span><span class="s1">; </span><span class="s14">// Tiny dense ball</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s11">const</span><span class="s1"> theta = </span><span class="s13">Math</span><span class="s1">.random() * </span><span class="s13">Math</span><span class="s1">.</span><span class="s13">PI</span><span class="s1"> * </span><span class="s12">2</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s11">const</span><span class="s1"> phi = </span><span class="s13">Math</span><span class="s1">.acos((</span><span class="s13">Math</span><span class="s1">.random() * </span><span class="s12">2</span><span class="s1">) - </span><span class="s12">1</span><span class="s1">);</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>points.push(</span><span class="s11">new</span><span class="s1"> </span><span class="s13">THREE</span><span class="s1">.</span><span class="s13">Vector3</span><span class="s1">(</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span>r * </span><span class="s13">Math</span><span class="s1">.sin(phi) * </span><span class="s13">Math</span><span class="s1">.cos(theta),</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span>r * </span><span class="s13">Math</span><span class="s1">.sin(phi) * </span><span class="s13">Math</span><span class="s1">.sin(theta),</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span>r * </span><span class="s13">Math</span><span class="s1">.cos(phi)</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>));</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">return</span><span class="s1"> points;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">    </span>};</span></p>
+<p class="p8"><span class="s10"></span><br></p>
+<p class="p7"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s1">// --- Three.js Setup ---</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">    </span></span><span class="s11">function</span><span class="s1"> initThree() {</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s11">const</span><span class="s1"> container = document.getElementById(</span><span class="s9">'container'</span><span class="s1">);</span></p>
+<p class="p8"><span class="s1"><span class="Apple-converted-space">        </span></span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>scene = </span><span class="s11">new</span><span class="s1"> </span><span class="s13">THREE</span><span class="s1">.</span><span class="s13">Scene</span><span class="s1">();</span></p>
+<p class="p7"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">// Add subtle fog for depth</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>scene.fog = </span><span class="s11">new</span><span class="s1"> </span><span class="s13">THREE</span><span class="s1">.</span><span class="s13">FogExp2</span><span class="s1">(</span><span class="s15">0x000000</span><span class="s1">, </span><span class="s12">0.03</span><span class="s1">);</span></p>
+<p class="p8"><span class="s10"></span><br></p>
+<p class="p9"><span class="s4"><span class="Apple-converted-space">        </span>camera = </span><span class="s11">new</span><span class="s4"> </span><span class="s1">THREE</span><span class="s4">.</span><span class="s1">PerspectiveCamera</span><span class="s4">(</span><span class="s12">75</span><span class="s4">, </span><span class="s1">CANVAS_WIDTH</span><span class="s4"> / </span><span class="s1">CANVAS_HEIGHT</span><span class="s4">, </span><span class="s12">0.1</span><span class="s4">, </span><span class="s12">1000</span><span class="s4">);</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>camera.position.z = </span><span class="s12">15</span><span class="s1">;</span></p>
+<p class="p8"><span class="s10"></span><br></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>renderer = </span><span class="s11">new</span><span class="s1"> </span><span class="s13">THREE</span><span class="s1">.</span><span class="s13">WebGLRenderer</span><span class="s1">({ antialias: </span><span class="s11">true</span><span class="s1">, alpha: </span><span class="s11">true</span><span class="s1"> });</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>renderer.setSize(</span><span class="s13">CANVAS_WIDTH</span><span class="s1">, </span><span class="s13">CANVAS_HEIGHT</span><span class="s1">);</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>renderer.setPixelRatio(window.devicePixelRatio);</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>container.appendChild(renderer.domElement);</span></p>
+<p class="p8"><span class="s10"></span><br></p>
+<p class="p7"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">// Particle System</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s11">const</span><span class="s1"> geometry = </span><span class="s11">new</span><span class="s1"> </span><span class="s13">THREE</span><span class="s1">.</span><span class="s13">BufferGeometry</span><span class="s1">();</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>particlePositions = </span><span class="s11">new</span><span class="s1"> </span><span class="s13">Float32Array</span><span class="s1">(</span><span class="s13">PARTICLE_COUNT</span><span class="s1"> * </span><span class="s12">3</span><span class="s1">);</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>particleColors = </span><span class="s11">new</span><span class="s1"> </span><span class="s13">Float32Array</span><span class="s1">(</span><span class="s13">PARTICLE_COUNT</span><span class="s1"> * </span><span class="s12">3</span><span class="s1">);</span></p>
+<p class="p8"><span class="s1"><span class="Apple-converted-space">        </span></span></p>
+<p class="p7"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">// Initial positions (random)</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s11">for</span><span class="s1"> (</span><span class="s11">let</span><span class="s1"> i = </span><span class="s12">0</span><span class="s1">; i &lt; </span><span class="s13">PARTICLE_COUNT</span><span class="s1"> * </span><span class="s12">3</span><span class="s1">; i++) {</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>particlePositions[i] = (</span><span class="s13">Math</span><span class="s1">.random() - </span><span class="s12">0.5</span><span class="s1">) * </span><span class="s12">20</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>particleColors[i] = </span><span class="s12">1.0</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p8"><span class="s10"></span><br></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>geometry.setAttribute(</span><span class="s9">'position'</span><span class="s1">, </span><span class="s11">new</span><span class="s1"> </span><span class="s13">THREE</span><span class="s1">.</span><span class="s13">BufferAttribute</span><span class="s1">(particlePositions, </span><span class="s12">3</span><span class="s1">));</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>geometry.setAttribute(</span><span class="s9">'color'</span><span class="s1">, </span><span class="s11">new</span><span class="s1"> </span><span class="s13">THREE</span><span class="s1">.</span><span class="s13">BufferAttribute</span><span class="s1">(particleColors, </span><span class="s12">3</span><span class="s1">));</span></p>
+<p class="p8"><span class="s10"></span><br></p>
+<p class="p7"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">// Create texture for particles to look nice</span></p>
+<p class="p10"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s11">const</span><span class="s4"> sprite = </span><span class="s11">new</span><span class="s4"> </span><span class="s13">THREE</span><span class="s4">.</span><span class="s13">TextureLoader</span><span class="s4">().load(</span><span class="s1">'https://threejs.org/examples/textures/sprites/disc.png'</span><span class="s4">);</span></p>
+<p class="p8"><span class="s10"></span><br></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s11">const</span><span class="s1"> material = </span><span class="s11">new</span><span class="s1"> </span><span class="s13">THREE</span><span class="s1">.</span><span class="s13">PointsMaterial</span><span class="s1">({<span class="Apple-converted-space"> </span></span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>size: </span><span class="s13">PARTICLE_SIZE</span><span class="s1">,<span class="Apple-converted-space"> </span></span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>map: sprite,<span class="Apple-converted-space"> </span></span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>vertexColors: </span><span class="s11">true</span><span class="s1">,<span class="Apple-converted-space"> </span></span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>alphaTest: </span><span class="s12">0.5</span><span class="s1">,</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>transparent: </span><span class="s11">true</span><span class="s1">,</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>opacity: </span><span class="s12">0.8</span><span class="s1">,</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>blending: </span><span class="s13">THREE</span><span class="s1">.</span><span class="s13">AdditiveBlending</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>});</span></p>
+<p class="p8"><span class="s10"></span><br></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>particles = </span><span class="s11">new</span><span class="s1"> </span><span class="s13">THREE</span><span class="s1">.</span><span class="s13">Points</span><span class="s1">(geometry, material);</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>scene.add(particles);</span></p>
+<p class="p8"><span class="s10"></span><br></p>
+<p class="p7"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">// Initialize targets (start with Sphere)</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>setTargetShape(</span><span class="s9">'sphere'</span><span class="s1">);</span></p>
+<p class="p8"><span class="s1"><span class="Apple-converted-space">        </span></span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>window.addEventListener(</span><span class="s9">'resize'</span><span class="s1">, onWindowResize, </span><span class="s11">false</span><span class="s1">);</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
+<p class="p8"><span class="s10"></span><br></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">    </span></span><span class="s11">function</span><span class="s1"> onWindowResize() {</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>camera.aspect = window.innerWidth / window.innerHeight;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>camera.updateProjectionMatrix();</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>renderer.setSize(window.innerWidth, window.innerHeight);</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
+<p class="p8"><span class="s10"></span><br></p>
+<p class="p7"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s1">// --- Logic &amp; Animation ---</span></p>
+<p class="p8"><span class="s10"></span><br></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">    </span></span><span class="s11">function</span><span class="s1"> setTargetShape(type) {</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s11">if</span><span class="s1"> (!</span><span class="s13">Shapes</span><span class="s1">[type]) </span><span class="s11">return</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>currentShape = type;</span></p>
+<p class="p8"><span class="s1"><span class="Apple-converted-space">        </span></span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s11">const</span><span class="s1"> targetVectors = </span><span class="s13">Shapes</span><span class="s1">[type](</span><span class="s13">PARTICLE_COUNT</span><span class="s1">);</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>particleTargetPositions = </span><span class="s11">new</span><span class="s1"> </span><span class="s13">Float32Array</span><span class="s1">(</span><span class="s13">PARTICLE_COUNT</span><span class="s1"> * </span><span class="s12">3</span><span class="s1">);</span></p>
+<p class="p8"><span class="s1"><span class="Apple-converted-space">        </span></span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s11">for</span><span class="s1"> (</span><span class="s11">let</span><span class="s1"> i = </span><span class="s12">0</span><span class="s1">; i &lt; </span><span class="s13">PARTICLE_COUNT</span><span class="s1">; i++) {</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>particleTargetPositions[i*</span><span class="s12">3</span><span class="s1">] = targetVectors[i].x;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>particleTargetPositions[i*</span><span class="s12">3</span><span class="s1">+</span><span class="s12">1</span><span class="s1">] = targetVectors[i].y;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>particleTargetPositions[i*</span><span class="s12">3</span><span class="s1">+</span><span class="s12">2</span><span class="s1">] = targetVectors[i].z;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p8"><span class="s10"></span><br></p>
+<p class="p7"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">// Update colors based on shape</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>updateColors(type);</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
+<p class="p8"><span class="s10"></span><br></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">    </span></span><span class="s11">function</span><span class="s1"> updateColors(type) {</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s11">const</span><span class="s1"> colors = particles.geometry.attributes.color.array;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s11">let</span><span class="s1"> color1, color2;</span></p>
+<p class="p8"><span class="s10"></span><br></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s11">switch</span><span class="s1">(type) {</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">case</span><span class="s1"> </span><span class="s9">'heart'</span><span class="s1">:<span class="Apple-converted-space"> </span></span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>color1 = </span><span class="s11">new</span><span class="s1"> </span><span class="s13">THREE</span><span class="s1">.</span><span class="s13">Color</span><span class="s1">(</span><span class="s15">0xff0055</span><span class="s1">);<span class="Apple-converted-space"> </span></span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>color2 = </span><span class="s11">new</span><span class="s1"> </span><span class="s13">THREE</span><span class="s1">.</span><span class="s13">Color</span><span class="s1">(</span><span class="s15">0xff88aa</span><span class="s1">);<span class="Apple-converted-space"> </span></span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s11">break</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">case</span><span class="s1"> </span><span class="s9">'flower'</span><span class="s1">:<span class="Apple-converted-space"> </span></span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>color1 = </span><span class="s11">new</span><span class="s1"> </span><span class="s13">THREE</span><span class="s1">.</span><span class="s13">Color</span><span class="s1">(</span><span class="s15">0xffaa00</span><span class="s1">);<span class="Apple-converted-space"> </span></span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>color2 = </span><span class="s11">new</span><span class="s1"> </span><span class="s13">THREE</span><span class="s1">.</span><span class="s13">Color</span><span class="s1">(</span><span class="s15">0xff00ff</span><span class="s1">);<span class="Apple-converted-space"> </span></span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s11">break</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">case</span><span class="s1"> </span><span class="s9">'saturn'</span><span class="s1">:<span class="Apple-converted-space"> </span></span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>color1 = </span><span class="s11">new</span><span class="s1"> </span><span class="s13">THREE</span><span class="s1">.</span><span class="s13">Color</span><span class="s1">(</span><span class="s15">0xddccaa</span><span class="s1">);<span class="Apple-converted-space"> </span></span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>color2 = </span><span class="s11">new</span><span class="s1"> </span><span class="s13">THREE</span><span class="s1">.</span><span class="s13">Color</span><span class="s1">(</span><span class="s15">0x44aadd</span><span class="s1">);<span class="Apple-converted-space"> </span></span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s11">break</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">case</span><span class="s1"> </span><span class="s9">'fireworks'</span><span class="s1">:<span class="Apple-converted-space"> </span></span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>color1 = </span><span class="s11">new</span><span class="s1"> </span><span class="s13">THREE</span><span class="s1">.</span><span class="s13">Color</span><span class="s1">(</span><span class="s15">0x00ffff</span><span class="s1">);<span class="Apple-converted-space"> </span></span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>color2 = </span><span class="s11">new</span><span class="s1"> </span><span class="s13">THREE</span><span class="s1">.</span><span class="s13">Color</span><span class="s1">(</span><span class="s15">0xff0000</span><span class="s1">);<span class="Apple-converted-space"> </span></span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s11">break</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">case</span><span class="s1"> </span><span class="s9">'collapse'</span><span class="s1">:</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>color1 = </span><span class="s11">new</span><span class="s1"> </span><span class="s13">THREE</span><span class="s1">.</span><span class="s13">Color</span><span class="s1">(</span><span class="s15">0x220055</span><span class="s1">);</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>color2 = </span><span class="s11">new</span><span class="s1"> </span><span class="s13">THREE</span><span class="s1">.</span><span class="s13">Color</span><span class="s1">(</span><span class="s15">0x000000</span><span class="s1">);</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s11">break</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">default</span><span class="s1">: </span><span class="s14">// sphere</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>color1 = </span><span class="s11">new</span><span class="s1"> </span><span class="s13">THREE</span><span class="s1">.</span><span class="s13">Color</span><span class="s1">(</span><span class="s15">0x00d2ff</span><span class="s1">);<span class="Apple-converted-space"> </span></span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>color2 = </span><span class="s11">new</span><span class="s1"> </span><span class="s13">THREE</span><span class="s1">.</span><span class="s13">Color</span><span class="s1">(</span><span class="s15">0x0055ff</span><span class="s1">);<span class="Apple-converted-space"> </span></span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p8"><span class="s10"></span><br></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s11">for</span><span class="s1"> (</span><span class="s11">let</span><span class="s1"> i = </span><span class="s12">0</span><span class="s1">; i &lt; </span><span class="s13">PARTICLE_COUNT</span><span class="s1">; i++) {</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">const</span><span class="s1"> mix = </span><span class="s13">Math</span><span class="s1">.random();</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>colors[i*</span><span class="s12">3</span><span class="s1">] = color1.r * mix + color2.r * (</span><span class="s12">1</span><span class="s1">-mix);</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>colors[i*</span><span class="s12">3</span><span class="s1">+</span><span class="s12">1</span><span class="s1">] = color1.g * mix + color2.g * (</span><span class="s12">1</span><span class="s1">-mix);</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>colors[i*</span><span class="s12">3</span><span class="s1">+</span><span class="s12">2</span><span class="s1">] = color1.b * mix + color2.b * (</span><span class="s12">1</span><span class="s1">-mix);</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>particles.geometry.attributes.color.needsUpdate = </span><span class="s11">true</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
+<p class="p8"><span class="s10"></span><br></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">    </span></span><span class="s11">function</span><span class="s1"> animate() {</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>requestAnimationFrame(animate);</span></p>
+<p class="p8"><span class="s10"></span><br></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s11">const</span><span class="s1"> positions = particles.geometry.attributes.position.array;</span></p>
+<p class="p8"><span class="s1"><span class="Apple-converted-space">        </span></span></p>
+<p class="p7"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">// Lerp factor (speed of transition)</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s11">const</span><span class="s1"> lerpSpeed = </span><span class="s12">0.05</span><span class="s1">;</span></p>
+<p class="p8"><span class="s1"><span class="Apple-converted-space">        </span></span></p>
+<p class="p7"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">// Hand interaction logic</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s11">const</span><span class="s1"> attractForce = isHandDetected ? </span><span class="s12">0.05</span><span class="s1"> : </span><span class="s12">0.0</span><span class="s1">;</span></p>
+<p class="p8"><span class="s1"><span class="Apple-converted-space">        </span></span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s11">for</span><span class="s1"> (</span><span class="s11">let</span><span class="s1"> i = </span><span class="s12">0</span><span class="s1">; i &lt; </span><span class="s13">PARTICLE_COUNT</span><span class="s1">; i++) {</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">const</span><span class="s1"> ix = i * </span><span class="s12">3</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">const</span><span class="s1"> iy = i * </span><span class="s12">3</span><span class="s1"> + </span><span class="s12">1</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">const</span><span class="s1"> iz = i * </span><span class="s12">3</span><span class="s1"> + </span><span class="s12">2</span><span class="s1">;</span></p>
+<p class="p8"><span class="s10"></span><br></p>
+<p class="p7"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s1">// Current pos</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">let</span><span class="s1"> px = positions[ix];</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">let</span><span class="s1"> py = positions[iy];</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">let</span><span class="s1"> pz = positions[iz];</span></p>
+<p class="p8"><span class="s10"></span><br></p>
+<p class="p7"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s1">// Target pos</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">let</span><span class="s1"> tx = particleTargetPositions[ix];</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">let</span><span class="s1"> ty = particleTargetPositions[iy];</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">let</span><span class="s1"> tz = particleTargetPositions[iz];</span></p>
+<p class="p8"><span class="s10"></span><br></p>
+<p class="p7"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s1">// If hand detected, add offset to target based on hand position</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">if</span><span class="s1"> (isHandDetected) {</span></p>
+<p class="p7"><span class="s4"><span class="Apple-converted-space">                </span></span><span class="s1">// Map hand x/y (-1 to 1) to 3D space</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s11">const</span><span class="s1"> handX = interactionTarget.x * </span><span class="s12">10</span><span class="s1">;<span class="Apple-converted-space"> </span></span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s11">const</span><span class="s1"> handY = interactionTarget.y * </span><span class="s12">10</span><span class="s1">;<span class="Apple-converted-space"> </span></span></p>
+<p class="p8"><span class="s1"><span class="Apple-converted-space">                </span></span></p>
+<p class="p7"><span class="s4"><span class="Apple-converted-space">                </span></span><span class="s1">// Add noise/flow</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>tx += (</span><span class="s13">Math</span><span class="s1">.random()-</span><span class="s12">0.5</span><span class="s1">) * </span><span class="s12">0.1</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>ty += (</span><span class="s13">Math</span><span class="s1">.random()-</span><span class="s12">0.5</span><span class="s1">) * </span><span class="s12">0.1</span><span class="s1">;</span></p>
+<p class="p8"><span class="s1"><span class="Apple-converted-space">                </span></span></p>
+<p class="p7"><span class="s4"><span class="Apple-converted-space">                </span></span><span class="s1">// Attract or Repel based on shape</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s11">if</span><span class="s1"> (currentShape === </span><span class="s9">'fireworks'</span><span class="s1">) {</span></p>
+<p class="p7"><span class="s4"><span class="Apple-converted-space">                    </span></span><span class="s1">// Explosion effect: particles move away from hand if close</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span></span><span class="s11">const</span><span class="s1"> dx = px - handX;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span></span><span class="s11">const</span><span class="s1"> dy = py - handY;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span></span><span class="s11">const</span><span class="s1"> dist = </span><span class="s13">Math</span><span class="s1">.sqrt(dx*dx + dy*dy);</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span></span><span class="s11">if</span><span class="s1"> (dist &lt; </span><span class="s12">5</span><span class="s1">) {</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                        </span>tx += dx * </span><span class="s12">2</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                        </span>ty += dy * </span><span class="s12">2</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span>}</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>} </span><span class="s11">else</span><span class="s1"> </span><span class="s11">if</span><span class="s1"> (currentShape === </span><span class="s9">'collapse'</span><span class="s1">) {</span></p>
+<p class="p7"><span class="s4"><span class="Apple-converted-space">                    </span></span><span class="s1">// Strong attraction to hand</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span>tx = handX + (tx * </span><span class="s12">0.1</span><span class="s1">);</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span>ty = handY + (ty * </span><span class="s12">0.1</span><span class="s1">);</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>} </span><span class="s11">else</span><span class="s1"> {</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span></span><span class="s14">// Gentle follow</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span>tx += handX * </span><span class="s12">0.5</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span>ty += handY * </span><span class="s12">0.5</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>}</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
+<p class="p8"><span class="s10"></span><br></p>
+<p class="p7"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s1">// Move particle towards target</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>positions[ix] += (tx - px) * lerpSpeed;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>positions[iy] += (ty - py) * lerpSpeed;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>positions[iz] += (tz - pz) * lerpSpeed;</span></p>
+<p class="p8"><span class="s10"></span><br></p>
+<p class="p7"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s1">// Rotation for fun</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">if</span><span class="s1"> (currentShape === </span><span class="s9">'saturn'</span><span class="s1"> || currentShape === </span><span class="s9">'sphere'</span><span class="s1">) {</span></p>
+<p class="p7"><span class="s4"><span class="Apple-converted-space">                 </span></span><span class="s1">// Manual rotation around Y axis simplified</span></p>
+<p class="p7"><span class="s4"><span class="Apple-converted-space">                 </span></span><span class="s1">// Not strictly necessary as the lerp handles movement, but adds life</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p8"><span class="s10"></span><br></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>particles.geometry.attributes.position.needsUpdate = </span><span class="s11">true</span><span class="s1">;</span></p>
+<p class="p8"><span class="s1"><span class="Apple-converted-space">        </span></span></p>
+<p class="p7"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">// Slowly rotate the whole system if no hand</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s11">if</span><span class="s1"> (!isHandDetected) {</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>particles.rotation.y += </span><span class="s12">0.002</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>} </span><span class="s11">else</span><span class="s1"> {</span></p>
+<p class="p7"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s1">// Slight tilt towards hand</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>particles.rotation.y += (interactionTarget.x - particles.rotation.y) * </span><span class="s12">0.05</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>particles.rotation.x += (-interactionTarget.y - particles.rotation.x) * </span><span class="s12">0.05</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p8"><span class="s10"></span><br></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>renderer.render(scene, camera);</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
+<p class="p8"><span class="s10"></span><br></p>
+<p class="p7"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s1">// --- MediaPipe Hands Setup ---</span></p>
+<p class="p8"><span class="s1"><span class="Apple-converted-space">    </span></span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">    </span></span><span class="s11">const</span><span class="s1"> videoElement = document.getElementById(</span><span class="s9">'input_video'</span><span class="s1">);</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">    </span></span><span class="s11">const</span><span class="s1"> statusElement = document.getElementById(</span><span class="s9">'current-gesture'</span><span class="s1">);</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">    </span></span><span class="s11">const</span><span class="s1"> loadingElement = document.getElementById(</span><span class="s9">'loading'</span><span class="s1">);</span></p>
+<p class="p8"><span class="s10"></span><br></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">    </span></span><span class="s11">function</span><span class="s1"> onResults(results) {</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>loadingElement.style.display = </span><span class="s9">'none'</span><span class="s1">;</span></p>
+<p class="p8"><span class="s1"><span class="Apple-converted-space">        </span></span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s11">if</span><span class="s1"> (results.multiHandLandmarks &amp;&amp; results.multiHandLandmarks.length &gt; </span><span class="s12">0</span><span class="s1">) {</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>isHandDetected = </span><span class="s11">true</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">const</span><span class="s1"> landmarks = results.multiHandLandmarks[</span><span class="s12">0</span><span class="s1">];</span></p>
+<p class="p8"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
+<p class="p7"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s1">// 1. Detect Hand Position (Use Index Finger Tip and Wrist average for stability)</span></p>
+<p class="p7"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s1">// Coordinates are 0-1. Convert to centered -1 to 1.</span></p>
+<p class="p7"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s1">// Note: MediaPipe x is inverted for selfie mode (mirrored), so 1-x.</span></p>
+<p class="p7"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s1">// But we applied scaleX(-1) to video CSS, so logic needs care.</span></p>
+<p class="p7"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s1">// Let's standardise: Left on screen = -1, Right = 1.</span></p>
+<p class="p8"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">const</span><span class="s1"> x = (</span><span class="s12">1</span><span class="s1"> - landmarks[</span><span class="s12">8</span><span class="s1">].x) * </span><span class="s12">2</span><span class="s1"> - </span><span class="s12">1</span><span class="s1">; </span><span class="s14">// Index finger tip x</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">const</span><span class="s1"> y = -(landmarks[</span><span class="s12">8</span><span class="s1">].y * </span><span class="s12">2</span><span class="s1"> - </span><span class="s12">1</span><span class="s1">);<span class="Apple-converted-space">    </span></span><span class="s14">// Index finger tip y (inverted 3D Y)</span></p>
+<p class="p8"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
+<p class="p7"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s1">// Smooth damping</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>interactionTarget.x += (x - interactionTarget.x) * </span><span class="s12">0.2</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>interactionTarget.y += (y - interactionTarget.y) * </span><span class="s12">0.2</span><span class="s1">;</span></p>
+<p class="p8"><span class="s10"></span><br></p>
+<p class="p7"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s1">// 2. Gesture Recognition (Counting Fingers)</span></p>
+<p class="p7"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s1">// Tips: 8(Index), 12(Middle), 16(Ring), 20(Pinky)</span></p>
+<p class="p7"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s1">// PIPs (Knuckles): 6, 10, 14, 18</span></p>
+<p class="p8"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">const</span><span class="s1"> isFingerUp = (tipIdx, pipIdx) =&gt; {</span></p>
+<p class="p7"><span class="s4"><span class="Apple-converted-space">                </span></span><span class="s1">// If tip is higher (smaller y) than pip</span></p>
+<p class="p7"><span class="s4"><span class="Apple-converted-space">                </span></span><span class="s1">// Check orientation? Assume upright hand for simplicity</span></p>
+<p class="p7"><span class="s4"><span class="Apple-converted-space">                </span></span><span class="s1">// Using distance from wrist (0) is more robust for rotation</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s11">const</span><span class="s1"> dTip = dist(landmarks[tipIdx], landmarks[</span><span class="s12">0</span><span class="s1">]);</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s11">const</span><span class="s1"> dPip = dist(landmarks[pipIdx], landmarks[</span><span class="s12">0</span><span class="s1">]);</span></p>
+<p class="p7"><span class="s4"><span class="Apple-converted-space">                </span></span><span class="s11">return</span><span class="s4"> dTip &gt; dPip * </span><span class="s12">1.2</span><span class="s4">; </span><span class="s1">// Tip significantly further than knuckle</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>};</span></p>
+<p class="p8"><span class="s10"></span><br></p>
+<p class="p7"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s1">// Thumb is special (check x distance relative to wrist/index base)</span></p>
+<p class="p7"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s1">// Simplified: check if tip is far from index base</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">const</span><span class="s1"> isThumbUp = () =&gt; {</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s11">const</span><span class="s1"> dTip = dist(landmarks[</span><span class="s12">4</span><span class="s1">], landmarks[</span><span class="s12">17</span><span class="s1">]); </span><span class="s14">// dist to pinky base</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s11">const</span><span class="s1"> dBase = dist(landmarks[</span><span class="s12">2</span><span class="s1">], landmarks[</span><span class="s12">17</span><span class="s1">]);</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s11">return</span><span class="s1"> dTip &gt; dBase * </span><span class="s12">1.2</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>};</span></p>
+<p class="p8"><span class="s10"></span><br></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">let</span><span class="s1"> count = </span><span class="s12">0</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">if</span><span class="s1"> (isThumbUp()) count++;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">if</span><span class="s1"> (isFingerUp(</span><span class="s12">8</span><span class="s1">, </span><span class="s12">6</span><span class="s1">)) count++;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">if</span><span class="s1"> (isFingerUp(</span><span class="s12">12</span><span class="s1">, </span><span class="s12">10</span><span class="s1">)) count++;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">if</span><span class="s1"> (isFingerUp(</span><span class="s12">16</span><span class="s1">, </span><span class="s12">14</span><span class="s1">)) count++;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">if</span><span class="s1"> (isFingerUp(</span><span class="s12">20</span><span class="s1">, </span><span class="s12">18</span><span class="s1">)) count++;</span></p>
+<p class="p8"><span class="s10"></span><br></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>fingerCount = count;</span></p>
+<p class="p8"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
+<p class="p7"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s1">// State Machine for Shapes</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">let</span><span class="s1"> newShape = currentShape;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">let</span><span class="s1"> statusText = </span><span class="s9">""</span><span class="s1">;</span></p>
+<p class="p8"><span class="s10"></span><br></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">switch</span><span class="s1">(count) {</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s11">case</span><span class="s1"> </span><span class="s12">0</span><span class="s1">:<span class="Apple-converted-space"> </span></span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span>newShape = </span><span class="s9">'collapse'</span><span class="s1">;<span class="Apple-converted-space"> </span></span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span>statusText = </span><span class="s9">"Fist: Collapse"</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span></span><span class="s11">break</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s11">case</span><span class="s1"> </span><span class="s12">1</span><span class="s1">:<span class="Apple-converted-space"> </span></span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span>newShape = </span><span class="s9">'sphere'</span><span class="s1">;<span class="Apple-converted-space"> </span></span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span>statusText = </span><span class="s9">"1 Finger: Sphere"</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span></span><span class="s11">break</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s11">case</span><span class="s1"> </span><span class="s12">2</span><span class="s1">:<span class="Apple-converted-space"> </span></span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span>newShape = </span><span class="s9">'heart'</span><span class="s1">;<span class="Apple-converted-space"> </span></span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span>statusText = </span><span class="s9">"2 Fingers: Heart"</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span></span><span class="s11">break</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s11">case</span><span class="s1"> </span><span class="s12">3</span><span class="s1">:<span class="Apple-converted-space"> </span></span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span>newShape = </span><span class="s9">'flower'</span><span class="s1">;<span class="Apple-converted-space"> </span></span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span>statusText = </span><span class="s9">"3 Fingers: Flower"</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span></span><span class="s11">break</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s11">case</span><span class="s1"> </span><span class="s12">4</span><span class="s1">:<span class="Apple-converted-space"> </span></span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span>newShape = </span><span class="s9">'saturn'</span><span class="s1">;<span class="Apple-converted-space"> </span></span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span>statusText = </span><span class="s9">"4 Fingers: Saturn"</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span></span><span class="s11">break</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s11">case</span><span class="s1"> </span><span class="s12">5</span><span class="s1">:<span class="Apple-converted-space"> </span></span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span>newShape = </span><span class="s9">'fireworks'</span><span class="s1">;<span class="Apple-converted-space"> </span></span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span>statusText = </span><span class="s9">"Open Hand: Fireworks"</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span></span><span class="s11">break</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s11">default</span><span class="s1">:<span class="Apple-converted-space"> </span></span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span>statusText = </span><span class="s9">"Unknown Gesture"</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
+<p class="p8"><span class="s10"></span><br></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">if</span><span class="s1"> (newShape !== currentShape) {</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>setTargetShape(newShape);</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>statusElement.innerText = statusText;</span></p>
+<p class="p8"><span class="s10"></span><br></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>} </span><span class="s11">else</span><span class="s1"> {</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>isHandDetected = </span><span class="s11">false</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>statusElement.innerText = </span><span class="s9">"Waiting for hand..."</span><span class="s1">;</span></p>
+<p class="p8"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
+<p class="p7"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s1">// Return to center slowly</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>interactionTarget.x *= </span><span class="s12">0.95</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>interactionTarget.y *= </span><span class="s12">0.95</span><span class="s1">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
+<p class="p8"><span class="s10"></span><br></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">    </span></span><span class="s11">function</span><span class="s1"> dist(p1, p2) {</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s11">return</span><span class="s1"> </span><span class="s13">Math</span><span class="s1">.sqrt(</span><span class="s13">Math</span><span class="s1">.pow(p1.x - p2.x, </span><span class="s12">2</span><span class="s1">) + </span><span class="s13">Math</span><span class="s1">.pow(p1.y - p2.y, </span><span class="s12">2</span><span class="s1">) + </span><span class="s13">Math</span><span class="s1">.pow(p1.z - p2.z, </span><span class="s12">2</span><span class="s1">));</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
+<p class="p8"><span class="s10"></span><br></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">    </span></span><span class="s11">const</span><span class="s1"> hands = </span><span class="s11">new</span><span class="s1"> </span><span class="s13">Hands</span><span class="s1">({locateFile: (file) =&gt; {</span></p>
+<p class="p10"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s11">return</span><span class="s4"> </span><span class="s1">`https://cdn.jsdelivr.net/npm/@mediapipe/hands/</span><span class="s4">${file}</span><span class="s1">`</span><span class="s4">;</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">    </span>}});</span></p>
+<p class="p8"><span class="s10"></span><br></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">    </span>hands.setOptions({</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>maxNumHands: </span><span class="s12">1</span><span class="s1">,</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>modelComplexity: </span><span class="s12">1</span><span class="s1">,</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>minDetectionConfidence: </span><span class="s12">0.5</span><span class="s1">,</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>minTrackingConfidence: </span><span class="s12">0.5</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">    </span>});</span></p>
+<p class="p8"><span class="s10"></span><br></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">    </span>hands.onResults(onResults);</span></p>
+<p class="p8"><span class="s10"></span><br></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">    </span></span><span class="s11">const</span><span class="s1"> cameraUtils = </span><span class="s11">new</span><span class="s1"> </span><span class="s13">Camera</span><span class="s1">(videoElement, {</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>onFrame: </span><span class="s11">async</span><span class="s1"> () =&gt; {</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">await</span><span class="s1"> hands.send({image: videoElement});</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>},</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>width: </span><span class="s12">320</span><span class="s1">,</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>height: </span><span class="s12">240</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">    </span>});</span></p>
+<p class="p8"><span class="s10"></span><br></p>
+<p class="p7"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s1">// --- Boot Sequence ---</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">    </span>initThree();</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">    </span>animate();</span></p>
+<p class="p5"><span class="s1"><span class="Apple-converted-space">    </span>cameraUtils.start();</span></p>
+<p class="p8"><span class="s10"></span><br></p>
+<p class="p2"><span class="s3">&lt;/</span><span class="s1">script</span><span class="s3">&gt;</span></p>
+<p class="p2"><span class="s3">&lt;/</span><span class="s1">body</span><span class="s3">&gt;</span></p>
+<p class="p2"><span class="s3">&lt;/</span><span class="s1">html</span><span class="s3">&gt;</span></p>
+</body>
+</html>
