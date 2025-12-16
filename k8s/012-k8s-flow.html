@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kubernetes Workload Flow (Dark Mode)</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* Animation Keyframes */
+        @keyframes flow-x {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        @keyframes flow-y {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100%); }
+        }
+        .animate-flow-x {
+            animation: flow-x 1s linear infinite;
+        }
+        .animate-flow-y {
+            animation: flow-y 1s linear infinite;
+        }
+        
+        /* Transitions */
+        .component-box {
+            transition: all 0.5s ease;
+        }
+        .connection-line {
+            transition: opacity 0.3s ease;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-slate-950 font-sans text-slate-200 p-4 md:p-8 flex flex-col items-center">
+
+    <!-- Header -->
+    <header class="mb-8 text-center max-w-2xl">
+        <h1 class="text-3xl md:text-4xl font-extrabold text-white mb-2">
+            Kubernetes Workload Flow
+        </h1>
+        <p class="text-slate-400">
+            Visualizing the lifecycle of a Pod creation from kubectl to running container.
+        </p>
+    </header>
+
+    <!-- Main Visualization Area -->
+    <div class="w-full max-w-5xl bg-slate-900 rounded-2xl shadow-2xl border border-slate-800 overflow-hidden flex flex-col md:flex-row">
+        
+        <!-- Left: Animation Canvas -->
+        <div class="flex-1 p-8 bg-slate-950/50 relative overflow-hidden">
+            
+            <!-- Labels -->
+            <div class="absolute top-4 left-4 text-xs font-semibold text-slate-500 uppercase tracking-wider border border-slate-700 px-2 py-1 rounded bg-slate-900">
+                Control Plane
+            </div>
+            <div class="absolute bottom-4 right-4 text-xs font-semibold text-slate-500 uppercase tracking-wider border border-slate-700 px-2 py-1 rounded bg-slate-900">
+                Worker Node
+            </div>
+
+            <div class="flex flex-col h-full justify-center space-y-8">
+                
+                <!-- Row 1: User & Control Plane Components -->
+                <div class="flex justify-center items-center space-x-4 md:space-x-8">
+                    <!-- User Component -->
+                    <div id="comp-user" class="component-box relative flex flex-col items-center justify-center p-4 rounded-xl border-2 border-slate-700 bg-slate-800 text-slate-400 scale-100">
+                        <i data-lucide="user" class="icon mb-2 text-slate-500 w-8 h-8"></i>
+                        <span class="label font-bold text-sm text-center text-slate-400">User</span>
+                        <span class="text-xs text-slate-500 mt-1">kubectl</span>
+                        <div class="ping-indicator hidden absolute -top-1 -right-1 flex h-3 w-3">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-3 w-3 bg-blue-500"></span>
+                        </div>
+                    </div>
+                    
+                    <!-- Line: User <-> API -->
+                    <div id="line-user-api" class="connection-line w-12 h-0.5 flex items-center justify-center opacity-20">
+                        <div class="bg-slate-700 w-full h-full relative overflow-hidden">
+                            <div class="flow-bar absolute bg-blue-500 h-full w-full hidden"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Control Plane Box -->
+                    <div class="p-6 border-2 border-dashed border-slate-700 rounded-2xl bg-slate-900 relative">
+                        <span class="absolute -top-3 left-4 bg-slate-900 px-2 text-xs font-bold text-slate-500">Master Node</span>
+                        <div class="grid grid-cols-2 gap-4 md:gap-8">
+                            <!-- API Server -->
+                            <div id="comp-apiserver" class="component-box relative flex flex-col items-center justify-center p-4 rounded-xl border-2 border-slate-700 bg-slate-800 text-slate-400 scale-100">
+                                <i data-lucide="server" class="icon mb-2 text-slate-500 w-8 h-8"></i>
+                                <span class="label font-bold text-sm text-center text-slate-400">API Server</span>
+                                <div class="ping-indicator hidden absolute -top-1 -right-1 flex h-3 w-3">
+                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                                    <span class="relative inline-flex rounded-full h-3 w-3 bg-blue-500"></span>
+                                </div>
+                            </div>
+
+                            <!-- Etcd -->
+                            <div id="comp-etcd" class="component-box relative flex flex-col items-center justify-center p-4 rounded-xl border-2 border-slate-700 bg-slate-800 text-slate-400 scale-100">
+                                <i data-lucide="database" class="icon mb-2 text-slate-500 w-8 h-8"></i>
+                                <span class="label font-bold text-sm text-center text-slate-400">Etcd</span>
+                                <span class="text-xs text-slate-500 mt-1">Store</span>
+                                <div class="ping-indicator hidden absolute -top-1 -right-1 flex h-3 w-3">
+                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                                    <span class="relative inline-flex rounded-full h-3 w-3 bg-blue-500"></span>
+                                </div>
+                            </div>
+
+                            <!-- Scheduler -->
+                            <div id="comp-scheduler" class="component-box relative flex flex-col items-center justify-center p-4 rounded-xl border-2 border-slate-700 bg-slate-800 text-slate-400 scale-100">
+                                <i data-lucide="activity" class="icon mb-2 text-slate-500 w-8 h-8"></i>
+                                <span class="label font-bold text-sm text-center text-slate-400">Scheduler</span>
+                                <div class="ping-indicator hidden absolute -top-1 -right-1 flex h-3 w-3">
+                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                                    <span class="relative inline-flex rounded-full h-3 w-3 bg-blue-500"></span>
+                                </div>
+                            </div>
+
+                            <!-- Controller Manager (Placeholder) -->
+                            <div class="opacity-20 grayscale pointer-events-none">
+                                <div class="relative flex flex-col items-center justify-center p-4 rounded-xl border-2 border-slate-700 bg-slate-800 text-slate-400 scale-100">
+                                    <i data-lucide="settings" class="mb-2 text-slate-600 w-8 h-8"></i>
+                                    <span class="font-bold text-sm text-center text-slate-500">C-Manager</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Network Boundary -->
+                <div class="flex justify-center items-center">
+                    <div class="h-12 border-l-2 border-dashed border-slate-700"></div>
+                </div>
+
+                <!-- Row 2: Worker Node -->
+                <div class="flex justify-center">
+                    <div class="p-6 border-2 border-slate-700 rounded-2xl bg-slate-900 relative w-full max-w-2xl">
+                        <span class="absolute -top-3 left-4 bg-slate-900 px-2 text-xs font-bold text-slate-500">Worker Node</span>
+                        
+                        <div class="flex justify-around items-center">
+                            <!-- Kubelet -->
+                            <div id="comp-kubelet" class="component-box relative flex flex-col items-center justify-center p-4 rounded-xl border-2 border-slate-700 bg-slate-800 text-slate-400 scale-100">
+                                <i data-lucide="cpu" class="icon mb-2 text-slate-500 w-8 h-8"></i>
+                                <span class="label font-bold text-sm text-center text-slate-400">Kubelet</span>
+                                <div class="ping-indicator hidden absolute -top-1 -right-1 flex h-3 w-3">
+                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                                    <span class="relative inline-flex rounded-full h-3 w-3 bg-blue-500"></span>
+                                </div>
+                            </div>
+                            
+                            <!-- Line: Kubelet <-> CRI -->
+                            <div id="line-kubelet-cri" class="connection-line w-12 h-0.5 flex items-center justify-center opacity-20">
+                                <div class="bg-slate-700 w-full h-full relative overflow-hidden">
+                                    <div class="flow-bar absolute bg-blue-500 h-full w-full hidden"></div>
+                                </div>
+                            </div>
+
+                            <!-- CRI -->
+                            <div id="comp-cri" class="component-box relative flex flex-col items-center justify-center p-4 rounded-xl border-2 border-slate-700 bg-slate-800 text-slate-400 scale-100">
+                                <i data-lucide="box" class="icon mb-2 text-slate-500 w-8 h-8"></i>
+                                <span class="label font-bold text-sm text-center text-slate-400">CRI</span>
+                                <span class="text-xs text-slate-500 mt-1">Docker</span>
+                                <div class="ping-indicator hidden absolute -top-1 -right-1 flex h-3 w-3">
+                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                                    <span class="relative inline-flex rounded-full h-3 w-3 bg-blue-500"></span>
+                                </div>
+                            </div>
+
+                            <!-- Line: CRI <-> Pod -->
+                            <div id="line-cri-pod" class="connection-line w-12 h-0.5 flex items-center justify-center opacity-20">
+                                <div class="bg-slate-700 w-full h-full relative overflow-hidden">
+                                    <div class="flow-bar absolute bg-blue-500 h-full w-full hidden"></div>
+                                </div>
+                            </div>
+
+                            <!-- Pod Running Status -->
+                            <div id="comp-pod" class="transition-all duration-700 transform border-2 rounded-xl p-4 flex flex-col items-center bg-slate-800 border-slate-700 scale-90 opacity-50">
+                                <i data-lucide="check-circle-2" id="pod-icon" class="w-8 h-8 text-slate-600 transition-colors duration-300"></i>
+                                <span class="text-sm font-bold mt-2 text-slate-400">Pod Running</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Right: Info Panel -->
+        <div class="w-full md:w-80 bg-slate-900 border-l border-slate-800 flex flex-col">
+            <div class="p-6 border-b border-slate-800 bg-slate-800">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Current Step</span>
+                    <span id="step-counter" class="text-xs font-mono bg-slate-700 px-2 py-1 rounded text-slate-300">1/10</span>
+                </div>
+                <h2 id="step-title" class="text-xl font-bold text-white leading-tight min-h-[3.5rem]">
+                    <!-- Title injected by JS -->
+                </h2>
+            </div>
+
+            <div class="p-6 flex-1 flex flex-col">
+                <div class="mb-6">
+                    <label class="text-xs font-bold text-slate-500 uppercase mb-2 block">Action</label>
+                    <p id="step-desc" class="text-slate-300 leading-relaxed text-sm">
+                        <!-- Description injected by JS -->
+                    </p>
+                </div>
+
+                <div class="mb-6">
+                    <label class="text-xs font-bold text-slate-500 uppercase mb-2 block">Action Owner</label>
+                    <div class="flex items-center space-x-2 text-blue-400 bg-slate-800 border border-slate-700 px-3 py-2 rounded-lg text-sm font-medium w-fit">
+                        <i data-lucide="activity" class="w-4 h-4"></i>
+                        <span id="step-owner">
+                            <!-- Owner injected by JS -->
+                        </span>
+                    </div>
+                </div>
+
+                <div class="mt-auto pt-6 border-t border-slate-800">
+                    <!-- Controls Container -->
+                    <div class="flex justify-center items-center space-x-4">
+                        <button id="btn-prev" class="p-3 rounded-full hover:bg-slate-800 text-slate-400 hover:text-white transition-colors" title="Previous">
+                            <i data-lucide="arrow-right" class="rotate-180 w-5 h-5"></i>
+                        </button>
+
+                        <!-- Play/Pause Button -->
+                        <button id="btn-play" class="p-4 rounded-full bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-900/50 transition-all active:scale-95" title="Play / Pause">
+                            <i id="icon-play" data-lucide="play" class="w-6 h-6 hidden fill-current"></i>
+                            <i id="icon-pause" data-lucide="pause" class="w-6 h-6 fill-current"></i>
+                        </button>
+
+                        <!-- Stop Button -->
+                        <button id="btn-stop" class="p-4 rounded-full bg-red-600 hover:bg-red-500 text-white shadow-lg shadow-red-900/50 transition-all active:scale-95" title="Stop">
+                            <i data-lucide="square" class="w-6 h-6 fill-current"></i>
+                        </button>
+
+                        <button id="btn-next" class="p-3 rounded-full hover:bg-slate-800 text-slate-400 hover:text-white transition-colors" title="Next">
+                            <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+                    
+                    <button id="btn-replay" class="w-full mt-4 flex items-center justify-center space-x-2 text-xs font-bold text-slate-500 hover:text-blue-400 transition-colors py-2">
+                        <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+                        <span>RESTART ANIMATION</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Application Logic -->
+    <script>
+        // --- Data ---
+        const STEPS = [
+            {
+                id: 1,
+                title: "1. Command Submission",
+                description: "User submits a deployment request (e.g., `kubectl apply -f pod.yaml`).",
+                actionOwner: "User / Kubectl",
+                from: "user",
+                to: "apiserver",
+                highlight: ["comp-user", "comp-apiserver"],
+            },
+            {
+                id: 2,
+                title: "2. Authentication & Validation",
+                description: "API Server authenticates the user and validates the request schema.",
+                actionOwner: "Kube API Server",
+                from: "apiserver",
+                to: "apiserver",
+                highlight: ["comp-apiserver"],
+            },
+            {
+                id: 3,
+                title: "3. State Persistence",
+                description: "API Server writes the new state (Pod spec) to Etcd datastore.",
+                actionOwner: "Etcd",
+                from: "apiserver",
+                to: "etcd",
+                highlight: ["comp-apiserver", "comp-etcd"],
+            },
+            {
+                id: 4,
+                title: "4. Watch Event (Scheduler)",
+                description: "Scheduler notices a 'Pending' pod with no node assigned via watch mechanism.",
+                actionOwner: "Kube Scheduler",
+                from: "apiserver",
+                to: "scheduler",
+                highlight: ["comp-scheduler", "comp-apiserver"],
+            },
+            {
+                id: 5,
+                title: "5. Scheduling Decision",
+                description: "Scheduler selects the best node based on resources/taints and updates API Server.",
+                actionOwner: "Kube Scheduler",
+                from: "scheduler",
+                to: "apiserver",
+                highlight: ["comp-scheduler", "comp-apiserver"],
+            },
+            {
+                id: 6,
+                title: "6. State Update (Binding)",
+                description: "API Server updates Etcd with the node assignment.",
+                actionOwner: "Kube API Server",
+                from: "apiserver",
+                to: "etcd",
+                highlight: ["comp-apiserver", "comp-etcd"],
+            },
+            {
+                id: 7,
+                title: "7. Watch Event (Kubelet)",
+                description: "Kubelet on the specific Node sees the new assignment via watch.",
+                actionOwner: "Kubelet",
+                from: "apiserver",
+                to: "kubelet",
+                highlight: ["comp-apiserver", "comp-kubelet"],
+            },
+            {
+                id: 8,
+                title: "8. Container Execution",
+                description: "Kubelet instructs the Container Runtime (CRI) to pull image and start container.",
+                actionOwner: "Container Runtime (CRI)",
+                from: "kubelet",
+                to: "cri",
+                highlight: ["comp-kubelet", "comp-cri"],
+            },
+            {
+                id: 9,
+                title: "9. Status Report",
+                description: "Pod starts running. Kubelet updates the pod status back to API Server.",
+                actionOwner: "Kubelet",
+                from: "cri",
+                to: "apiserver",
+                highlight: ["comp-cri", "comp-kubelet", "comp-apiserver"],
+            },
+            {
+                id: 10,
+                title: "10. Workload Live",
+                description: "The Pod is now Running and ready to serve traffic.",
+                actionOwner: "Cluster",
+                from: "pod",
+                to: "pod",
+                highlight: ["comp-pod"],
+            },
+        ];
+
+        // --- State ---
+        let currentStep = 0;
+        let isPlaying = true;
+        let intervalId = null;
+
+        // --- Elements ---
+        const stepCounter = document.getElementById('step-counter');
+        const stepTitle = document.getElementById('step-title');
+        const stepDesc = document.getElementById('step-desc');
+        const stepOwner = document.getElementById('step-owner');
+        const btnPlay = document.getElementById('btn-play');
+        const btnStop = document.getElementById('btn-stop');
+        const btnPrev = document.getElementById('btn-prev');
+        const btnNext = document.getElementById('btn-next');
+        const btnReplay = document.getElementById('btn-replay');
+        const iconPlay = document.getElementById('icon-play');
+        const iconPause = document.getElementById('icon-pause');
+
+        const allComponents = [
+            'comp-user', 'comp-apiserver', 'comp-etcd', 
+            'comp-scheduler', 'comp-kubelet', 'comp-cri', 'comp-pod'
+        ];
+
+        // --- Functions ---
+
+        function updateUI() {
+            const step = STEPS[currentStep];
+
+            // 1. Update Info Panel
+            stepCounter.textContent = `${currentStep + 1}/${STEPS.length}`;
+            stepTitle.textContent = step.title;
+            stepDesc.textContent = step.description;
+            stepOwner.textContent = step.actionOwner;
+
+            // 2. Play/Pause Button State
+            if (isPlaying) {
+                iconPlay.classList.add('hidden');
+                iconPause.classList.remove('hidden');
+            } else {
+                iconPlay.classList.remove('hidden');
+                iconPause.classList.add('hidden');
+            }
+
+            // 3. Reset All Components Styles (Dark Mode Defaults)
+            allComponents.forEach(id => {
+                const el = document.getElementById(id);
+                if (!el) return;
+                
+                // Keep Pod logic separate as it has unique completion styles
+                if (id === 'comp-pod') {
+                     // handled below
+                } else {
+                    // Reset to default dark grey
+                    el.className = `component-box relative flex flex-col items-center justify-center p-4 rounded-xl border-2 transition-all duration-500 border-slate-700 bg-slate-800 text-slate-400 scale-100`;
+                    // Reset icons inside
+                    const icon = el.querySelector('.icon');
+                    const label = el.querySelector('.label');
+                    if(icon) icon.classList.replace('text-blue-400', 'text-slate-500');
+                    if(label) label.classList.replace('text-white', 'text-slate-400');
+                    
+                    // Hide ping
+                    const ping = el.querySelector('.ping-indicator');
+                    if(ping) ping.classList.add('hidden');
+                }
+            });
+
+            // 4. Highlight Active Components (Dark Mode Active)
+            step.highlight.forEach(id => {
+                const el = document.getElementById(id);
+                if (!el) return;
+
+                if (id === 'comp-pod') return; // Handled separately
+
+                // Set Active Styles
+                el.className = `component-box relative flex flex-col items-center justify-center p-4 rounded-xl border-2 transition-all duration-500 border-blue-500 bg-blue-900/30 shadow-[0_0_20px_rgba(59,130,246,0.2)] scale-105 z-10`;
+                
+                const icon = el.querySelector('.icon');
+                const label = el.querySelector('.label');
+                if(icon) icon.classList.replace('text-slate-500', 'text-blue-400');
+                if(label) label.classList.replace('text-slate-400', 'text-white');
+                
+                const ping = el.querySelector('.ping-indicator');
+                if(ping) ping.classList.remove('hidden');
+            });
+
+            // 5. Handle Connections (Flow Lines)
+            
+            // Helper to toggle line
+            const setLine = (lineId, isActive) => {
+                const line = document.getElementById(lineId);
+                const bar = line.querySelector('.flow-bar');
+                if (isActive) {
+                    line.classList.remove('opacity-20');
+                    line.classList.add('opacity-100');
+                    bar.classList.remove('hidden');
+                    bar.classList.add('animate-flow-x');
+                } else {
+                    line.classList.add('opacity-20');
+                    line.classList.remove('opacity-100');
+                    bar.classList.add('hidden');
+                    bar.classList.remove('animate-flow-x');
+                }
+            };
+
+            // Logic matching React component
+            // Line User->API
+            setLine('line-user-api', step.from === 'user' || step.to === 'user');
+            
+            // Line Kubelet->CRI
+            const kubeletActive = step.highlight.includes('comp-kubelet');
+            const criActive = step.highlight.includes('comp-cri');
+            setLine('line-kubelet-cri', kubeletActive && criActive);
+            
+            // Line CRI->Pod
+            setLine('line-cri-pod', step.to === 'pod');
+
+
+            // 6. Handle Pod Final State (Dark Mode)
+            const podEl = document.getElementById('comp-pod');
+            const podIcon = document.getElementById('pod-icon');
+            if (currentStep >= 9) { // Step 10 (index 9) is completion
+                podEl.className = 'transition-all duration-700 transform border-2 rounded-xl p-4 flex flex-col items-center bg-green-900/20 border-green-500 scale-110 shadow-lg';
+                podIcon.classList.replace('text-slate-600', 'text-green-400');
+            } else {
+                podEl.className = 'transition-all duration-700 transform border-2 rounded-xl p-4 flex flex-col items-center bg-slate-800 border-slate-700 scale-90 opacity-50';
+                podIcon.classList.replace('text-green-400', 'text-slate-600');
+            }
+        }
+
+        function startTimer() {
+            if (intervalId) clearInterval(intervalId);
+            intervalId = setInterval(() => {
+                if (currentStep < STEPS.length - 1) {
+                    currentStep++;
+                    updateUI();
+                } else {
+                    isPlaying = false;
+                    clearInterval(intervalId);
+                    updateUI();
+                }
+            }, 2500);
+        }
+
+        function stopTimer() {
+            if (intervalId) clearInterval(intervalId);
+            intervalId = null;
+        }
+
+        function togglePlay() {
+            isPlaying = !isPlaying;
+            if (isPlaying) {
+                // If at end, restart
+                if (currentStep >= STEPS.length - 1) {
+                    currentStep = 0;
+                }
+                startTimer();
+            } else {
+                stopTimer();
+            }
+            updateUI();
+        }
+
+        function stopAnimation() {
+            isPlaying = false;
+            currentStep = 0;
+            stopTimer();
+            updateUI();
+        }
+
+        function nextStep() {
+            isPlaying = false;
+            stopTimer();
+            if (currentStep < STEPS.length - 1) {
+                currentStep++;
+                updateUI();
+            }
+        }
+
+        function prevStep() {
+            isPlaying = false;
+            stopTimer();
+            if (currentStep > 0) {
+                currentStep--;
+                updateUI();
+            }
+        }
+
+        function reset() {
+            isPlaying = true;
+            currentStep = 0;
+            startTimer();
+            updateUI();
+        }
+
+        // --- Event Listeners ---
+        btnPlay.addEventListener('click', togglePlay);
+        btnStop.addEventListener('click', stopAnimation);
+        btnNext.addEventListener('click', nextStep);
+        btnPrev.addEventListener('click', prevStep);
+        btnReplay.addEventListener('click', reset);
+
+        // --- Init ---
+        // Initialize Icons
+        lucide.createIcons();
+        
+        // Start Loop
+        updateUI();
+        startTimer();
+
+    </script>
+</body>
+</html>
