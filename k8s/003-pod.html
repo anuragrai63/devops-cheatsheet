@@ -250,7 +250,7 @@ kubectl create configmap cfg --from-literal=k=v</div>
                     </div>
                     <div>
                         <span class="code-label text-purple-600">2. Native Sidecar (YAML)</span>
-                        <div class="code-block h-32 border-purple-500">initContainers:
+                        <div class="code-block h-32 border-purple-500">containers:
 - name: log-agent
   image: fluentd
   restartPolicy: Always # Magic Flag</div>
